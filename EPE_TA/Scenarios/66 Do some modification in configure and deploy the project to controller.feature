@@ -60,7 +60,12 @@ Then Verify Action message in notification pannel project browser in project exp
 Examples:
   | SlNo. | context menu                         | project browser3                                 | Controller      |
   | 1     | Deploy Changes / Undo Online Changes | Deploy Changes / Undo Online Changes (Completed) | M580_Standalone |
-  
+
+@Deploy_Changes_for__M580_Standalone3
+Examples:
+  | SlNo. | context menu                         | project browser3                                 | Controller      |
+  | 1     | Deploy Changes / Undo Online Changes | Deploy Changes / Undo Online Changes (Completed) | M580_Standalone3 |
+   
 @TC_EPE_EC_000
 @test000
 Scenario Outline: Deploy Changes for Controller M580 Standalone with OK pop up

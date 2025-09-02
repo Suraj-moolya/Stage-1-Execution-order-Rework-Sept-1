@@ -500,12 +500,16 @@ def select_value_listview_SVP(val):
         Log.Error("No items found in the list view.")
         return
     for list in list_items:
-        if val in list.DataContext.Identifier.OleValue:
+        if list.DataContext.Identifier.OleValue == val:
             Applicationutility.wait_in_seconds(1000, 'Wait')
             list.Click()
             Applicationutility.wait_in_seconds(2000, 'Wait')
             break
-
+        else:
+          Log.Message(f'{list.DataContext.Identifier.OleValue} is present')
+    else:
+      Log.Error(f'The value {val} is not present in list')
+      
 ###############################################################################
 # Function: Double_click_on_header_OC
 # Description: Double-clicks on a specific header in the Operation Client.

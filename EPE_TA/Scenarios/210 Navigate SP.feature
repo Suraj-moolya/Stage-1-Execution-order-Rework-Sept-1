@@ -66,12 +66,20 @@ Scenario Outline: Map the workstation and verify nic cards available for mapping
 When I Map workstation available for respective service and engine for supervision project as '<Service_Engine>' 
 Then Verify Action message in notification pannel container dock in project explorer as '<notification panel>'
 
-@Map_service_engines_to_workstation_1
+@Map_service_engines_to_workstation_2
 Examples:
   | SlNo. | Service_Engine                          | notification panel                 |
   | 1     | Alarm_1_P$$Not Assigned$$Workstation_2  | Map Service Executable (Completed) |
   | 2     | IOServer_1$$Not Assigned$$Workstation_2 | Map Service Executable (Completed) |
   | 3     | Report_1_P$$Not Assigned$$Workstation_2 | Map Service Executable (Completed) |
+
+@Map_All_4_service_engines_to_workstation_2
+Examples:
+  | SlNo. | Service_Engine                          | notification panel                 |
+  | 1     | Alarm_1_P$$Not Assigned$$Workstation_2  | Map Service Executable (Completed) |
+  | 2     | IOServer_1$$Not Assigned$$Workstation_2 | Map Service Executable (Completed) |
+  | 3     | Report_1_P$$Not Assigned$$Workstation_2 | Map Service Executable (Completed) |
+  | 4     | Trend_1_P$$Not Assigned$$Workstation_2  | Map Service Executable (Completed) |
 
   
   

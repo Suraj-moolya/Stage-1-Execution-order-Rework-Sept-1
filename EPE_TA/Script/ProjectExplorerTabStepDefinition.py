@@ -17,7 +17,7 @@ def step_impl(projectBrowser1):
 @when("I Select context menu item EC project browser in project explorer as {arg}")
 def step_impl(projectBrowser2):
     """I Select context menu item EC project browser in project explorer as '<project browser2>'"""
-#    Applicationutility.wait_for_execution()
+    Applicationutility.wait_in_seconds(1500, 'Wait')
     obj.textboxprojectbrowserselectcontextmenuitemec(projectBrowser2)
     
 @when("I Select controller in context menu as {arg}")
@@ -29,6 +29,7 @@ def step_impl(controller):
 @when("I rename the ControlProject as {arg}")
 def step_impl(controller_name):
     """I rename the ControlProject as '<controller_name>'"""
+    Applicationutility.wait_in_seconds(1000, 'Wait')
     obj.textboxprojectbrowserrename(controller_name)        
   
 @when("I Wait for Execution project browser in project explorer")

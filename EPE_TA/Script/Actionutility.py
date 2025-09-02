@@ -205,6 +205,8 @@ def modal_dialog_window_button(button_name):
     take_screenshot('Taking Screenshot of the Message Window.')
     for button in buttons_list:
       if button_name in str(button.WPFControlText) :
+        if not button.Enabled:
+          Applicationutility.wait_in_seconds(5000, 'Wait')
         button.click()
         Log.Checkpoint('Clicked ' + str(button.WPFControlText) + ' button.')
         break

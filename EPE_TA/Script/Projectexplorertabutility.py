@@ -2167,6 +2167,7 @@ def change_FBD_Value(param):
       i.DblClick()
       Sys.Keys(desired_variable)
       Sys.Keys("[Enter]")
+      break
   else:
     Log.Error(f"Source variable '{source_variable}' not found in FBD section.")
     Applicationutility.take_screenshot()
