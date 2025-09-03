@@ -55,7 +55,7 @@ Examples:
 Scenario Outline: Check the Verify Password dialog box
 When I Click on Nodes System Explorer Node in system explorer as '<Systems Explorer>'
 And I navigate to explorers MainToolBar in system explorer as '<MainToolBar1>'
-Then Verify export_System1_Export_Popup_AE Export in ec windows explorer as 'Enter the password that is set'
+Then Verify export_System1_Export_Popup_AE Export in ec windows explorer as 'Enter the System Access password that is set'
 When I Enter Controller Password deploy screen TE Confirm Password box in topology as '<Password box>'
 And I click modal dialog window Modal dialog window in message box as '<Modal dialog window>'
 Examples:

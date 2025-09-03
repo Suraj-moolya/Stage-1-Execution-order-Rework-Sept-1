@@ -150,9 +150,10 @@ def search_template_browser_AE(search_text):
 def drag_composite_template_drop_app_browser_system1_AE(param):
     template, version = param.split('$$')
     Applicationutility.wait_in_seconds(2500, 'wait')
-    template_ = f'*{template}'
+    template_ = f'${template}'
     template_item = aet_obj.templatesbrowsertextbox.object.FindChild(['Item.Identifier.OleValue'], [template_] , 1000)
-    template_item.WaitProperty('Visible', True, 5000)
+    template_item1 = aet_obj.templatesbrowsertextbox.object.FindChild(['Item.Identifier.OleValue'], [template] , 1000)
+    #template_item.WaitProperty('Visible', True, 5000)
     if template_item.Exists:
         #if str(version) == str(template_item.Item.ViewModel.Version.OleValue):
           fromx = template_item.ScreenLeft
@@ -160,6 +161,10 @@ def drag_composite_template_drop_app_browser_system1_AE(param):
           Log.Message(f"The object selected to drag is: {template_item.Item.Identifier.OleValue} with version '{template_item.Item.ViewModel.Version.OleValue}")
 #        else:
 #          Log.Error(f"Template '{template_item.Item.Identifier.OleValue}' with version '{template_item.Item.ViewModel.Version.OleValue}' not Visible in template browser.")
+    elif template_item1.Exists:
+          fromx = template_item1.ScreenLeft
+          fromy = template_item1.ScreenTop
+          Log.Message(f"The object selected to drag is: {template_item1.Item.Identifier.OleValue} with version '{template_item1.Item.ViewModel.Version.OleValue}")
     else:
       Log.Error(f"Template '{template}' with version '{version}' not found in template browser.")
     Applicationutility.wait_in_seconds(1000, 'Wait')
