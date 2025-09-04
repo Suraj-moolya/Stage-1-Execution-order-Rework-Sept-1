@@ -31,6 +31,10 @@ Examples:
   | SlNo. | facet_name        | instance_names | button_name | tabname   | container dock1      | generation_state | Button | Message     |
   | 1     | MotorGP_1_MotorGP | Fail$$Stopped  | Yes         | MotorGP_1 | System_1$$ReGenerate | OutOfDate        | Yes    | (Completed) |
   
+@Instance_Editor_by_selecting_MotorGP_1_MotorGP_from_Assignments_Check_Fail$$Stopped_System1_Generate
+Examples:
+  | SlNo. | facet_name        | instance_names | button_name | tabname   | container dock1    | generation_state | Button | Message     |
+  | 1     | MotorGP_1_MotorGP | Fail$$Stopped  | Yes         | MotorGP_1 | System_1$$Generate | OutOfDate        | Yes    | (Completed) |
   
 @TC_EPE_SWF_0014
 @test0014
