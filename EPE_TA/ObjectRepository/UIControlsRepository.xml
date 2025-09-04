@@ -128,7 +128,7 @@
              <UIControl Element="System_1folder_SystemExplorerScreen" Name="WPFObject('ExplorerNode', '', 2)" Parent="EngineeringClient_" />
              <UIControl Element="projectexplorertab_SystemExplorerScreen" Name="WPFObject('ProjectBrowserPaneGroup')" Parent="EngineeringClient_" />
              <UIControl Element="Restore_SystemExplorerScreen" Name="WPFObject('MenuItem', 'Restore', *)" Parent="EngineeringClient_" />
-             <UIControl Element="SystemExplorerCanvas_SystemExplorerScreen" Name="WPFObject('Canvas', '*', 1)" Parent="EngineeringClient_" />
+             <UIControl Element="SystemExplorerCanvas_SystemExplorerScreen" Name="WPFObject('CoreGraph', '', 1)" Parent="EngineeringClient_" />
              <UIControl Element="Warningpopup_SystemExplorerScreen" Name="WPFObject('MessageWindow')" Parent="EngineeringClient_" />
              <UIControl Element="PopupOk_SystemExplorerScreen" Name="WPFObject('Button', 'OK', 1)" Parent="EngineeringClient_" />
              <UIControl Element="PopupClose_SystemExplorerScreen" Name="WPFObject('MessageWindow')" Parent="EngineeringClient_" />

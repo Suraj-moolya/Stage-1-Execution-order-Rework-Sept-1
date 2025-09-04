@@ -348,11 +348,13 @@ def Pre_Condition_Navigation_SE():
     if tab.IsActive:
       if str('Systems Explorer') in str(tab.WPFControlText):
         Log.Message("Already in Systems Explorer") 
+        break
       else:
         navigate_to_explorers("System Explorer")
         return
-  Applicationutility.take_screenshot()
-  Log.Error("No active tab found for navigation to Systems Explorer")
+  else:
+       Applicationutility.take_screenshot()
+       Log.Error("No active tab found for navigation to Systems Explorer")
         
 ###############################################################################
 # Function : Pre_Condition_check_for_system_Create_System_SE3
