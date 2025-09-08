@@ -122,6 +122,18 @@ Examples:
   | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2 | Topology Explorer Tree3        | Topology Explorer Tree4        | Button |
   | 1     | M580_Standalone3        | Physical Connections    | M580_Standalone3 0$$SE_Network | M580_Standalone3 2$$SE_Network | OK     |
   
+  
+Scenario Outline: Map EtherNet IP device to Controller
+When I Right Click on nodes System Explorer Node in system explorer as '<Topology Explorer Tree1>'
+And I Select context menu item EC project browser in project explorer as '<Topology Explorer Tree2>'
+And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree3>'
+And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree4>'
+When I click modal dialog window project browser in project explorer as '<Button>'
+
+@Map_EtherNet_IP_device_to_Controller_M580_HSBY_1
+Examples:
+  | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2 | Topology Explorer Tree3   | Topology Explorer Tree4   | Button |
+  | 1     | M580_HSBY_1             | Physical Connections    | M580_HSBY_1 0$$SE_Network | M580_HSBY_1 2$$SE_Network | OK     |
 
 
 

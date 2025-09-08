@@ -63,9 +63,15 @@ Examples:
 
 @Deploy_Changes_for__M580_Standalone3
 Examples:
-  | SlNo. | context menu                         | project browser3                                 | Controller      |
+  | SlNo. | context menu                         | project browser3                                 | Controller       |
   | 1     | Deploy Changes / Undo Online Changes | Deploy Changes / Undo Online Changes (Completed) | M580_Standalone3 |
-   
+
+@Deploy_Changes_for__M580_HSBY_1
+Examples:
+  | SlNo. | context menu                         | project browser3                                 | Controller  |
+  | 1     | Deploy Changes / Undo Online Changes | Deploy Changes / Undo Online Changes (Completed) | M580_HSBY_1 |
+
+     
 @TC_EPE_EC_000
 @test000
 Scenario Outline: Deploy Changes for Controller M580 Standalone with OK pop up
@@ -155,7 +161,7 @@ Then Verify Action message in notification pannel project browser in project exp
 
 @Save_and_Close_Control_project_editor
 Examples:
-  | SlNo. | project browser2                         |
+  | SlNo. | project browser2   |
   | 1     | Editor (Completed) |
 
   

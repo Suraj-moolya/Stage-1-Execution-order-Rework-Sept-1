@@ -162,6 +162,7 @@ def step_impl(tabname):
 @when("I Perform action on the Folder by Clicking on {arg} in Topology Explorer")
 def step_impl(button):
     """I Close the Folder by Clicking on '<button>' in Topology Explorer"""
+    Applicationutility.wait_in_seconds(1000, 'Wait')
     obj.OpenClosefolderTE(button)
     
 @then("I Verify Folder Renamed as {arg} in Topology Explorer is Expanded")

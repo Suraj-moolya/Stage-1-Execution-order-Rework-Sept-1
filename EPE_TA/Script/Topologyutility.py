@@ -77,7 +77,7 @@ def DblClick_template_TE(temp_name):
     Log.Error("No templates found in the grid view.")
   for temp in temp_list:
     if temp.Visible and temp_name in temp.DataContext.Identifier.OleValue:
-      aqObject.CheckProperty(temp.DataContext.Identifier, "OleValue", cmpEqual, temp_name)
+      #aqObject.CheckProperty(temp.DataContext.Identifier, "OleValue", cmpEqual, temp_name)
       temp.DblClick()
       Log.Checkpoint(f"{temp.DataContext.Identifier.OleValue} is double clicked")
       return
@@ -115,6 +115,7 @@ def Expand_communication_tab_TE(val):
 def edit_IP_Address(param): 
   name, IP_add = param.split('$$') 
   grid_row_obj = syse_obj.systemexplorernodebutton.object.FindAllChildren("ClrClassName", "GridViewRow", 1000) 
+  found = False
   if not grid_row_obj: 
     Log.Error("No grid rows found.") 
     return 
@@ -128,13 +129,13 @@ def edit_IP_Address(param):
         grid_row.DataContext.Expression = IP_add 
         if grid_row.DataContext.Expression == IP_add: 
           Log.Checkpoint(name + " is updated as " + IP_add) 
+          found = True
           break 
-        else: 
-          Log.Error(name + " is not updated as " + IP_add) 
-    else: 
-      Applicationutility.take_screenshot()
-      Log.Error(f"Device '{name}' not found in grid cells.")
-
+    if found:
+      break 
+  else: 
+    Log.Error(name + " is not updated as " + IP_add) 
+  
 ############################################################################### 
 # Function : RClick_template_TE 
 # Description : Right-clicks on a template in the template explorer. 

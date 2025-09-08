@@ -962,9 +962,9 @@ def set_ip_and_subnet(ip_address, subnet_mask):
         text_box.Keys(value)
         Log.Checkpoint(f"Set {field_name} to {value}")
         break
-    else:
-      Applicationutility.take_screenshot()
-      Log.Error(f"No matching field found for TextBox with AutomationId: {text_box.WPFControlAutomationId}")
+  else:
+    Applicationutility.take_screenshot()
+    Log.Error(f"No matching field found for TextBox with AutomationId: {text_box.WPFControlAutomationId}")
   
   
 def stbproperties_close_button():

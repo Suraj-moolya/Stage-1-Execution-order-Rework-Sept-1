@@ -26,7 +26,12 @@ Examples:
 Examples:
   | SlNo. | Controller       | Topology Explorer Tree1 | Modal dialog window2 | Modal dialog window3 | Modal Dialog Window 14                | Modal Dialog Window 15                    | Notification Pannel6    |
   | 1     | M580_Standalone3 | Deploy Data             | 182.233.63.1         | OK                   | MessageBox$$modaldialogwindow1textbox | MessageBox$$modaldialogwindow1textbox$$OK | Deploy Data (Completed) |
-  
+
+@Check_Deploy_Data__182.233.63.1__M580_HSBY_1
+Examples:
+  | SlNo. | Controller  | Topology Explorer Tree1 | Modal dialog window2 | Modal dialog window3 | Modal Dialog Window 14                | Modal Dialog Window 15                    | Notification Pannel6    |
+  | 1     | M580_HSBY_1 | Deploy Data             | 182.233.63.1         | OK                   | MessageBox$$modaldialogwindow1textbox | MessageBox$$modaldialogwindow1textbox$$OK | Deploy Data (Completed) |
+      
 @Check_Deploy_Data__182.233.63.8__M580_Standalone3
 Examples:
   | SlNo. | Controller       | Topology Explorer Tree1 | Modal dialog window2 | Modal dialog window3 | Modal Dialog Window 14                | Modal Dialog Window 15                    | Notification Pannel6    |

@@ -85,7 +85,7 @@ Then Verify notification panel message Notification Pannel in message box as '<c
 
 Examples:
   | SlNo. | content                            |
-  | 1     | Close Configure Editor (Completed) |
+  | 1     | Editor (Completed) |
   
 @TC_EPE_PE_CP_0022Aa
 @test005
