@@ -94,6 +94,7 @@ Examples:
   | SlNo. | project browser1 | context menu        | Button |
   | 1     | M580_Standalone2 | Manage Peer to Peer | Next   |
   
+  
 @TC_EPE_PE_CP_0001
 @test0001
 Scenario Outline: Manage Peer to Peer and configure communication 

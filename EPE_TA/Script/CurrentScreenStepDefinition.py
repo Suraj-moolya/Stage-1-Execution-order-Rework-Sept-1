@@ -40,8 +40,7 @@ def step_impl(password):
 @when("I close Logical window in controller configuration window")
 def step_impl():
     """I Enter pssword in '<password>' field in Controller password grid popup"""
-    obj.closebuttontm()
-    
+    obj.closebuttontm()  
     
 @when("I change the controller protection to disable")
 def step_impl():
@@ -79,6 +78,7 @@ def step_impl():
 @when("I close PLC Bus window in controller configuration window")
 def step_impl():
     """I close PLC Bus window in controller configuration window"""
+    Applicationutility.wait_in_seconds(3000, 'Wait')
     obj.closebuttonplcbus()
     
     

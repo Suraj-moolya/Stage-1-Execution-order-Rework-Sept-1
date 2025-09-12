@@ -955,13 +955,17 @@ def set_ip_and_subnet(ip_address, subnet_mask):
     "IP address": ip_address,
     "Subnet Mask": subnet_mask
   }
+  found = False
   text_boxes = topo_obj.stbpropertiesbutton.object.FindAllChildren("ClrClassName", "TextBox", 50)
   for text_box in text_boxes:
     for field_name, value in field_values.items():
       if field_name in text_box.WPFControlAutomationId:
         text_box.Keys(value)
         Log.Checkpoint(f"Set {field_name} to {value}")
+        found = True
         break
+  if found:
+    pass
   else:
     Applicationutility.take_screenshot()
     Log.Error(f"No matching field found for TextBox with AutomationId: {text_box.WPFControlAutomationId}")
