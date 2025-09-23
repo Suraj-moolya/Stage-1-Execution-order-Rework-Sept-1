@@ -21,6 +21,10 @@ Examples:
   | 2     | MotorGP_1       | M580_Safety | OK     |
   | 3     | AnalogInputGP_1 | M580_Safety | OK     |
 
+@Assign_Instance_to_Containers_in_M580_Safety_91099
+Examples:
+  | SlNo. | controller      | section     | Button |
+  | 1     | ValveGP_1       | M580_Safety | OK     |
   
 @TC_EPE_SWF_0001
 @test0001
@@ -54,6 +58,16 @@ Examples:
 Examples:
   | SlNo. | param                      | Button |
   | 1     | System_1$$M580_Standalone3 | OK     |
+  
+@Assign_Instance_from_system_to_M580_Safety_Containers_in_PE
+Examples:
+  | SlNo. | param                 | Button |
+  | 1     | System_1$$M580_Safety | OK     |
+  
+@Assign_Instance_from_system_to_M580_Safety2_Containers_in_PE
+Examples:
+  | SlNo. | param                  | Button |
+  | 1     | System_1$$M580_Safety2 | OK     |
   
   
 @Assign_Instance_from_system_to_different_Containers_in_Supervision_PE

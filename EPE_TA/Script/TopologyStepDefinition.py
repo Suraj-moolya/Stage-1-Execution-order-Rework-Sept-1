@@ -6,6 +6,9 @@ from RefineOfflineWorkFlow import RefineOfflineWorkFlow
 import CommonUtil
 import Applicationutility
 import Topologyexplorerutility
+import Actionutility
+import Topologyutility
+import Controlexpertutility
 
 obj=TopologyWorkFlow()
 sobj=SystemExplorerScreenWorkFlow()
@@ -79,7 +82,8 @@ def step_impl(topologyExplorerTree2):
 def step_impl(topologyExplorerTree1):
     """I DblClick template TE Topology Explorer Tree in topology as '<Topology Explorer Tree1>'"""
     obj.textboxtopologyexplorertreedblclicktemplatete(topologyExplorerTree1)
-    
+
+@when ("I Expand Topology Explorer Tree in topology as {arg}")    
 @when("I Expand communication tab TE Topology Explorer Tree in topology as {arg}")
 def step_impl(topologyExplorerTree2):
     """I Expand communication tab TE Topology Explorer Tree in topology as '<Topology Explorer Tree2>'"""
@@ -109,6 +113,11 @@ def step_impl(topologyExplorerTree3):
 def step_impl(main_folder, subfolder, final_item):
     """I double-click on '<main_folder>' '<subfolder>' and '<final_item>' in the catalog browser"""
     obj.doubleclickcatalogbrowserte(main_folder, subfolder, final_item)
+
+@when(r'I double-click on device {arg} in the catalog browser')
+def step_impl(device):
+    """I double-click on device '<device>' in the catalog browser"""
+    Topologyexplorerutility.double_click_device(device)
 
 @when("I set the IP address to '(.*)' and subnet mask to '(.*)' in STBIsland properties")
 def step_impl(ip_address, subnet_mask):
@@ -426,5 +435,167 @@ def step_impl(confirmPasswordBox3):
 def step_impl():
     """I Double click on the Automatic blocking of service port on standby CPU in service port"""
     obj.checkboxcheckautomaticblocking()
-    
 
+@when("I Click on a button in MDI Configuration window as {arg}")
+def step_impl(button_name):
+    """I Click on a button in MDI Confighuration window as '<button_name>'"""
+    obj.Clickabuttoninmdiconfigurationwindow(button_name)
+    
+@when("I Click on a outline item in DTM browser as {arg}")
+def step_impl(outline_item):
+    """I Click on a outline item in DTM browser as '<outline_item>'"""
+    obj.clickonoutlineitemdtmbrowser(outline_item)  
+
+@when("I Click on a button in PRM config as {arg}")
+def step_impl(button_name):
+    """I Click on a button in PRM config as '<button_name>'"""
+    obj.clickabuttoninPRMconfig(button_name)    
+    
+@when("I edit the ip configuration in PRM config as {arg}")
+def step_impl(param):
+    """I edit the ip configuration in PRM config as '<param>'"""
+    obj.editipadressPRMconfig(param)   
+
+@when("I assign the station address in PRM config as {arg}")
+def step_impl(param):
+    """I assign the station address in PRM config as '<param>'"""
+    obj.assignstationaddressPRMconfig(param)
+
+@when("I click on the station address in PRM config as {arg}")
+def step_impl(Identifier):
+    """I click on the station address in PRM config as '<Identifier>'"""
+    obj.clickonstationaddressPRMconfig(Identifier)
+
+@when("I add a device in add device modal dialog window TE configuration as {arg}")
+def step_impl(device):
+    """I add a device in add device modal dialog window TE configuration as'<device>'"""
+    obj.selectdeviceinadddevicemodaldialogwindow(device)
+
+@when("I perform up arrow using keyboard actions")
+def step_impl():
+    """I perform paste using keyboard actions"""
+    Actionutility.Up_arrow_keyboard_action()
+        
+@when("I perform down arrow using keyboard actions")
+def step_impl():
+    """I perform paste using keyboard actions"""
+    Actionutility.Down_arrow_keyboard_action()
+    
+@when("I perform left arrow using keyboard actions")
+def step_impl():
+    """I perform paste using keyboard actions"""
+    Actionutility.Left_arrow_keyboard_action()
+    
+@when("I perform right arrow using keyboard actions")
+def step_impl():
+    """I perform paste using keyboard actions"""
+    Actionutility.Right_arrow_keyboard_action()
+
+@when("I perform delete using keyboard actions")
+def step_impl():
+    """I perform delete using keyboard actions"""
+    Actionutility.Delete_keyboard_action()
+    
+    
+      
+       
+
+    
+@when("I Double-clicking the {arg} item in the STB Config toolbar")
+def step_impl(menu):
+    """I Double-clicking the '<menu>' item in the STB Config toolbar"""
+    Topologyutility.select_toolbar_Menu_in_STB_Config(menu)
+    
+@when("I Select {arg} in the STB Config toolbar")
+def step_impl(menuitem):
+    """I Select '<menuitem>' in the STB Config toolbar"""
+    Topologyutility.select_toolbar_Menu_Item_in_STB_Config(menuitem)
+    
+@when("I Select {arg} in Baud Rate Window")
+def step_impl(budrate):
+    """I Select '<budrate>' in Baud Rate Window"""
+    Topologyutility.set_baudrate(budrate)
+    
+@when("I Click {arg} button in Baud Rate Window")
+def step_impl(btn):
+    """I Click '<btn>' button in Baud Rate Window"""
+    Topologyutility.click_button_in_advantys(btn)
+    
+@when("I Click {arg} button in Baud Rate Window PopUP")
+def step_impl(btn):
+    """I Click '<btn>' button in Baud Rate Window PopUP"""
+    Topologyutility.click_button_in_advantys_popup(btn)
+    
+@when("I Select {arg} Radio button in STB Connection Settings")
+def step_impl(btn):
+    """I Select '<btn>' Radio button in STB Connection Settings"""
+    Topologyutility.select_Radio_Button_in_stb(btn)
+    
+@when("I Set Ip Address in STB Connection Settings as {arg}")
+def step_impl(ip):
+    """I Set Ip Address in STB Connection Settings as '<ip>'"""
+    Topologyutility.set_ip_parts(ip)
+    
+@when("I Click button in STB Connection Window as {arg}")
+def step_impl(btn):
+    """I Click button in STB Connection Window as '<btn>'"""
+    Topologyutility.select_Button_in_stb_connection_window(btn)
+    
+@when("I Click button in Data Transfer window in STB Configuration as {arg}")
+def step_impl(btn):
+    """I Click button in Data Transfer window in STB Configuration as '<btn>'"""
+    Topologyutility.Select_button_in_Data_Tranfer(btn)
+    
+@then("I Verify Notification pannel in STB Configure window as {arg}")
+def step_impl(msg):
+    """I Verify Notification pannel in STB Configure window as '<msg>'"""
+    Topologyutility.verify_notification_in_stb(msg)
+    
+@then("I Verify Instance '(.*)' status '(.*)' in Refine Window")
+def step_impl(instance, status):
+    """I Verify Instance '<instance>' status '<status>' in Refine Window"""
+    Topologyutility.verify_instance(instance, status)
+    
+@then("I verify the controller manage password failure message as {arg}")
+def step_impl(param):
+    """I verify the controller manage password failure message as <param>"""
+    Topologyutility.Verify_manage_password_failure_controller(param)
+    
+@then("I Verify that Default Controller Configuration should be in refine offline as {arg}")
+def step_impl(param):
+    """I Verify that Default Controller Configuration should be in refine offline"""
+    obj.verifydefualtconfigurationcontroller(param)    
+
+@when("I Navigate through tropology Controller_1 Configuration window refline offline in  menubar as {arg}")
+def step_impl(menu):
+    """I Navigate through tropology Controller_1 Configuration window refline offline in  menubar as {arg}"""
+    obj.clickmenubaritemintopologyconfigurationinrefineofflinewindow(menu) 
+    
+@when("I dialog window select Item Topology Explorer Tree in topology as {arg}")
+def step_impl(topologyExplorerTree3):
+    """I dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree>'"""
+    obj.configureethernetnetworkinphysicalconnectionte(topologyExplorerTree3)
+    
+@when("I enter a values in testbox item in memory start and length as {arg}")
+def step_impl(topologyExplorerTree3):
+    """I enter a values in testbox item in memory start and length as '<Values>'"""
+    obj.MemorystartandMemorylength(memory_start, memory_length)
+
+@when("I select protocol {arg} in Confirm Refine Online")
+def step_impl(protocol):
+  Topologyutility.select_protocol_in_confirm_refine_online(protocol)
+
+
+@when("I enter password {arg} in Controller Password Window")
+def step_impl(password):
+  Topologyutility.enter_password(password)
+
+
+@when("I click the button {arg} in Controller Password Window")
+def step_impl(button):
+  Topologyutility.click_button_in_controller_password(button)
+
+
+@when("I click the button {arg} in Confirm Refine Online")
+def step_impl(button):
+  Topologyutility.click_button_in_confirm_refine_online(button)

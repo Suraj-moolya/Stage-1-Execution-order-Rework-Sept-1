@@ -10,6 +10,7 @@ from EngineeringClient import EngineeringClient
 from RefineOffline import RefineOffline
 from TopologyExplorerTab import TopologyExplorerTab
 from MessageBox import MessageBox
+import Applicationexplorertabutility
 
 topology_obj =  Topology()
 aet_obj = ApplicationExplorerTab()
@@ -92,7 +93,7 @@ def DblClick_template_TE(temp_name):
 # Example : Expand_communication_tab_TE("Communication") 
 ############################################################################### 
 def Expand_communication_tab_TE(val): 
-  val = "Communication" 
+#  val = "Communication" 
   sections = syse_obj.systemexplorernodebutton.object.FindAllChildren("ClrClassName", "GroupHeaderRow", 1000) 
   if not sections: 
     Log.Error("No sections found.") 
@@ -131,11 +132,10 @@ def edit_IP_Address(param):
           Log.Checkpoint(name + " is updated as " + IP_add) 
           found = True
           break 
-    if found:
-      break 
-  else: 
+  if not found: 
     Log.Error(name + " is not updated as " + IP_add) 
-  
+    Applicationutility.take_screenshot()
+    
 ############################################################################### 
 # Function : RClick_template_TE 
 # Description : Right-clicks on a template in the template explorer. 
@@ -336,3 +336,273 @@ def Enter_Controller_Password_deploy_screen_TE(password):
     PW_box.SetText("")  
     PW_box.Keys(password)
     Log.Message(f"Password entered in the field: {'*' * len(password)}")
+    
+###############################################################################
+# Function   : select_toolbar_Menu_in_STB_Config
+# Description: Finds and double-clicks the specified toolbar item in the STB 
+#              Configuration window. Logs success if the item is found and 
+#              clicked, otherwise logs an error.
+# Parameter  : menu (str) - The ObjectIdentifier of the toolbar menu item 
+#                           to be selected.
+# Example    : select_toolbar_Menu_in_STB_Config("Island")
+###############################################################################
+    
+def select_toolbar_Menu_in_STB_Config(menu):
+  for item in topo_obj.stbconfigwindowtoolbar.object.FindAllChildren("ObjectType", "MenuItem", 10):
+    if getattr(item, "ObjectIdentifier", "").strip() == menu:
+      item.DblClick()
+      Log.Checkpoint(f"Double-clicking toolbar item: {item.ObjectIdentifier}")
+      break
+  else:
+    Log.Error(f"Toolbar item '{menu}' not found in STB Config.")
+    
+###############################################################################
+# Function   : select_toolbar_Menu_Item_in_STB_Config
+# Description: Finds and clicks the specified toolbar menu item in the STB 
+#              Configuration window. Logs success if the item is found and 
+#              clicked, otherwise logs an error.
+# Parameter  : menu (str) - The ObjectIdentifier of the toolbar menu item 
+#                           to be selected.
+# Example    : select_toolbar_Menu_Item_in_STB_Config("Build")
+###############################################################################
+    
+def select_toolbar_Menu_Item_in_STB_Config(menu):
+  for item in topo_obj.stbconfigtoolbarmenuitem.object.FindAllChildren("ObjectType", "MenuItem", 10):
+    if getattr(item, "ObjectIdentifier", "").strip() == menu:
+      item.Click()
+      Log.Checkpoint(f"Clicking toolbar menu item: {item.ObjectIdentifier}")
+      break
+  else:
+    Log.Error(f"Toolbar item '{menu}' not found in STB Config.")
+    
+###############################################################################
+# Function   : set_baudrate
+# Description: Finds the baud rate combo box in the Baud Rate window and selects
+#              the specified value. Logs a checkpoint if the selection is 
+#              successful, otherwise logs an error.
+# Parameter  : value (str) - The baud rate value to select in the combo box.
+# Example    : set_baudrate("500 kbps")
+###############################################################################
+    
+def set_baudrate(value):
+  for item in topo_obj.baudratewindow.object.FindAllChildren("WndClass", "ThunderRT6ComboBox", 10):
+    try:
+      if not value.endswith(" "):
+        value += " "
+      item.ClickItem(value)
+      Log.Checkpoint(f"Selected baud rate: {item.wText}")
+    except Exception as e:
+      Log.Error(f"Could not select '{value}' in combo box: {e}")
+      
+###############################################################################
+# Function   : click_button_in_advantys
+# Description: Finds the specified button in the Advantys Baud Rate window 
+#              and clicks it. Logs a checkpoint if the button is clicked 
+#              successfully; logs an error if the button is not found or 
+#              the click fails.
+# Parameter  : button (str) - The caption of the button to click.
+# Example    : click_button_in_advantys("OK")
+###############################################################################
+      
+def click_button_in_advantys(button):
+  try:
+    for btn in topo_obj.baudratewindow.object.FindAllChildren("WndClass", "ThunderRT6CommandButton", 10):
+      if button in btn.WndCaption:
+        btn.Click()
+        Log.Checkpoint(f"{btn.WndCaption} clicked.")
+        return
+    Log.Error(f"Button '{button}' not found in Advantys window.")
+  except Exception as e:
+    Log.Error(f"Could not click '{button}': {e}")
+    
+###############################################################################
+# Function   : click_button_in_advantys_popup
+# Description: Finds the specified button in the Advantys Baud Rate window 
+#              and clicks it. Logs a checkpoint if the button is clicked 
+#              successfully; logs an error if the button is not found or 
+#              the click fails.
+# Parameter  : button (str) - The caption of the button to click.
+# Example    : click_button_in_advantys_popup("OK")
+###############################################################################    
+    
+def click_button_in_advantys_popup(button):
+  try:
+    for btn in topo_obj.stbmessageboxpopup.object.FindAllChildren("WndClass", "ThunderRT6CommandButton", 10):
+      if button in btn.WndCaption:
+        btn.Click()
+        Log.Checkpoint(f"{button} clicked.")
+        return
+    Log.Error(f"Button '{button}' not found in Advantys Popup window.")
+  except Exception as e:
+    Log.Error(f"Could not click '{button}': {e}")
+    
+
+def select_Radio_Button_in_stb(rbutton):
+  for item in topo_obj.connectionsettingwindow.object.FindAllChildren('WndClass', 'ThunderRT6OptionButton', 10):
+    if item.WndCaption == rbutton:
+      Log.Checkpoint(f'{item.Caption} Selected.')
+      item.click()
+      break
+  else:
+    Log.Error(f'{rbutton} Not Found')
+  
+def set_ip_parts(ip_address):
+  ip_parts = ip_address.split('.')
+  text_boxes = topo_obj.connectionsettingwindow.object.FindAllChildren('Name', 'VBObject(txtI*)', 10)
+  for i, text_box in enumerate(text_boxes):
+    if i < len(ip_parts):
+      text_box.SetText(ip_parts[i])
+      Log.Checkpoint(f"Set {text_box.Name} to {ip_parts[i]}")
+  else:
+    if not text_boxes:
+      Log.Error(f"Failed to set IP address: {ip_address}. No matching text boxes found.")
+      
+def select_Button_in_stb_connection_window(button):
+  for item in topo_obj.connectionsettingwindow.object.FindAllChildren('WndClass', 'ThunderRT6CommandButton', 10):
+    if button in item.WndCaption:
+      Log.Checkpoint(f'{item.Caption} Selected.')
+      item.click()
+      break
+  else:
+    Log.Error(f'{button} Not Found')
+    
+    
+def Select_button_in_Data_Tranfer(button):
+  try:
+    for btn in topo_obj.stbmessageboxpopup.object.FindAllChildren("WndClass", "ThunderRT6CommandButton", 10):
+      if button in btn.WndCaption:
+        Log.Checkpoint(f"{button} clicked.")
+        btn.Click()
+        return
+    Log.Error(f"Button '{button}' not found in Data Transfer window.")
+  except Exception as e:
+    Log.Error(f"Could not click '{button}': {e}")
+    
+import time    
+def verify_notification_in_stb(expected_text, timeout=30, interval=1):
+  n = topo_obj.notificantionpannelstb.object
+  get_last = lambda: n.wText.strip().splitlines()[-1].split(" - ", 1)[-1] if n.wText else ""
+  end = time.time() + timeout
+  while time.time() < end:
+    last = get_last()
+    if last == expected_text:
+      Log.Checkpoint(f"'{expected_text}' found in Notification Panel (last message)")
+      return
+    time.sleep(interval)
+  Log.Error(f"'{expected_text}' not found as last message. Last Actual: {last}")
+  
+  
+def verify_instance(instance_name, expected_status):
+  refoff_obj.mdiwindowtextbox.object.Maximize()
+  diagram_window = refoff_obj.fbdsectionwindowtextbox.object
+  diagram_window.Click()
+  seen = set()
+  text_objects = []
+  def check_texts(texts):
+    found_instance = False
+    for text in texts:
+      if instance_name in text:
+        found_instance = True
+        continue
+      if found_instance:
+        if text == expected_status:
+          Log.Checkpoint(f"{instance_name} → {expected_status}")
+          return True, None
+        return False, text
+    return False, None
+  children = diagram_window.FindAllChildren("Name", "TextObject*", 100)
+  for child in children:
+    text = getattr(child, "Text", "")
+    if not text or text in seen:
+      continue
+    seen.add(text)
+    text_objects.append(text)
+  found, status = check_texts(text_objects)
+  if found:
+    return True
+  prev_count = len(seen)
+  for _ in range(49):
+    diagram_window.MouseWheel(-5)
+    aqUtils.Delay(200)
+    children = diagram_window.FindAllChildren("Name", "TextObject*", 100)
+    for child in children:
+      text = getattr(child, "Text", "")
+      if not text or text in seen:
+        continue
+      seen.add(text)
+      text_objects.append(text)
+    found, status = check_texts(text_objects[prev_count:])
+    if found:
+      return True
+    if len(seen) == prev_count:
+      break
+    prev_count = len(seen)
+  if status:
+    Log.Error(f"{instance_name} did not reach status {expected_status}. Actual status: {status}")
+  else:
+    Log.Error(f"{instance_name} did not reach status {expected_status}. No status found.")
+  return False
+  
+def Verify_manage_password_failure_controller(param):
+    Applicationutility.wait_in_seconds(1000, 'Wait')
+    field, Tooltip_Message = param.split("$$")
+    if "Password" == field:
+      obj = topo_obj.newpasswordboxtextbox.object
+      if Tooltip_Message in obj.ToolTip.OleValue:
+        Log.Checkpoint(f'The Message "{obj.ToolTip.OleValue}" is visible')
+      else:
+        Log.Error(f'The Message "{Tooltip_Message}" is not visible')
+    elif "Confirm Password" == field:
+      obj = topo_obj.ConfirmPasswordboxtextbox.object
+      if Tooltip_Message in obj.ToolTip.OleValue:
+        Log.Checkpoint(f'The Message "{obj.ToolTip.OleValue}" is visible')
+      else:
+        Log.Error(f'The Message "{Tooltip_Message}" is not visible')
+    elif "Current Password" == field:
+      obj = topo_obj.oldpasswordboxboxtextbox.object
+      if Tooltip_Message in obj.ToolTip.OleValue:
+        Log.Checkpoint(f'The Message "{obj.ToolTip.OleValue}" is visible')
+      else:
+        Log.Error(f'The Message "{Tooltip_Message}" is not visible')
+    else:
+      Applicationutility.take_screenshot()
+      Log.Error(f"Unknown field '{field}' provided for password entry")
+      
+      @when("I Click on export System1 Export Popup AE buttons Export in ec windows explorer as {arg}")
+      @when("I Click on buttons in pop up message as {arg}")
+      def step_impl(ok):
+          """I Click on export System1 Export Popup AE buttons Export in ec windows explorer as 'OK'"""
+          obj.buttonexportclickonexportsystem1exportpopupaebuttons(ok)
+
+def select_protocol_in_confirm_refine_online(item_text):
+  for combo in topology_obj.confirmationrefineonline.object.FindAllChildren("ClrClassName", "RadComboBox", 100):
+    combo.ClickItem(item_text)
+    Log.Checkpoint(f"Selected {combo.Wtext}")
+    break
+  else:
+    Log.Error(f"Item '{item_text}' not found")
+    
+def enter_password(password):
+  for item in topology_obj.controllerpasswordwindow.object.FindAllChildren("ClrClassName", "PasswordBox", 100):
+    item.wText = password
+    Log.Checkpoint("Password Entered in controller Password TextBox")
+    break
+  else:
+    Log.Error(f'Password text box not found')
+  
+def click_button_in_controller_password(button):
+  for btn in topology_obj.controllerpasswordwindow.object.FindAllChildren("ClrClassName", "Button", 100):
+    if btn.WPFControlText == button:
+      btn.Click()
+      Log.Checkpoint(f'{btn.WPFControlText} clicked in Controller Password Window')
+      break
+  else:
+    Log.Error(f'{button} not found')
+    
+def click_button_in_confirm_refine_online(button):
+  for btn in topology_obj.confirmationrefineonline.object.FindAllChildren("ClrClassName", "Button", 100):
+    if btn.WPFControlText == button:
+      btn.WaitProperty("Enabled", True, 5000); btn.Click()
+      Log.Checkpoint(f"{btn.WPFControlText} clicked")
+      return
+  Log.Error(f"{button} not found")

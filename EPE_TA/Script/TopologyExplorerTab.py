@@ -227,3 +227,43 @@ class TopologyExplorerTab(MapBase):
     def templatebrowsertab(self):
         """templatebrowsertab"""
         return self.get_element("TemplateBrowser_TopologyExporerTab")
+
+    @property
+    def prmgensettingsconfigure(self):
+        """prmgensettings"""
+        return self.get_element("PRMgensettingsconfigure_TopologyExplorerTab")
+              
+    @property
+    def stbconfigwindowtoolbar(self):
+        """stbconfigwindow"""
+        return self.get_element("STBConfigWindowToolbar_TopologyExporerTab")
+              
+    @property
+    def stbconfigtoolbarmenuitem(self):
+        """stbconfigtoolbarmenuitem"""
+        return self.get_element("ToolPopUPSTB_TopologyExporerTab")
+              
+    @property
+    def baudratewindow(self):
+        """baudratewindow"""
+        return self.get_element("BaudRateSTB_TopologyExporerTab")
+              
+    @property
+    def stbmessageboxpopup(self):
+        """stbmessageboxpopup"""
+        return self.get_element("MessageBoxSTB_TopologyExporerTab")
+              
+    @property
+    def connectionsettingwindow(self):
+        """connectionsettingwindow"""
+        return self.get_element("ConnectionSettingSTB_TopologyExporerTab")
+              
+    @property
+    def notificantionpannelstb(self):
+        """notificantionpannelstb"""
+        return self.get_element("NotificationPannelSTB_TopologyExporerTab")
+        
+    @property
+    def controllerprop(self):
+        """controllerprop"""
+        return self.get_element("ControllerProperties_TopologyExporerTab")

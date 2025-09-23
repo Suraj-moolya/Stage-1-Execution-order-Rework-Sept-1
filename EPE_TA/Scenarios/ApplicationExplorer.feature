@@ -360,6 +360,19 @@ Examples:
   | 9     | SPRealGP           | SPRealGP$$1.0.16       |
   | 10    | ValveGP            | ValveGP$$1.0.100       |
 
+@Templates_for_builds_from_91009
+Examples:
+  | SlNo. | Templates browser1 | Templates browser2        |
+  | 1     | MotorGP            | MotorGP$$1.0.123          |
+  | 2     | MotorGP            | MotorGP$$1.0.123          |
+  | 3     | ValveGP            | ValveGP$$1.0.100          |
+  | 4     | ValveGP            | ValveGP$$1.0.100          |
+  
+@Template_for_link_editor
+Examples:
+  | SlNo. | Templates browser1 | Templates browser2        |
+  | 1     | Analog             | AnalogOutputGP$$1.0.94    |
+  | 2     | Analog             | AnalogInputGP$$1.0.141    |
   
 
 @TC_EPE_AE_0018

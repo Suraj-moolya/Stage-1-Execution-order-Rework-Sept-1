@@ -8,7 +8,7 @@ When I RClick on Block Refine Offline project browser in project explorer as '<p
 And I selected Unlock in refine offline
 #And I Unlock Dialog popup Unlock in refine offline as 'Yes'
 And I select '<button>' in New Device PopUp Window
-#And I Delete link Refine Offline Unlock in refine offline as 'ChOut'
+And I Delete link Refine Offline Unlock in refine offline as 'ChOut'
 
 @Unlock_for_AnalogOutPut
 Examples:

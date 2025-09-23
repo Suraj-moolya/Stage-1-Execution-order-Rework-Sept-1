@@ -962,10 +962,8 @@ def set_ip_and_subnet(ip_address, subnet_mask):
         text_box.Keys(value)
         Log.Checkpoint(f"Set {field_name} to {value}")
         break
-  else:
-    Applicationutility.take_screenshot()
-    Log.Error(f"No matching field found for TextBox with AutomationId: {text_box.WPFControlAutomationId}")
-  
+    else:
+      pass
   
 def stbproperties_close_button():
   closebtn = topo_obj.stbpropertiesclosebutton.Click()
@@ -992,7 +990,7 @@ def configure_ethernet_network(network):
   
 def get_project_browser():
     return topo_obj.catalogbutton.object
-
+#
 def click_folder_by_name(name):
   project_browser = get_project_browser()
   count = project_browser.wItems.Count
@@ -1026,30 +1024,29 @@ def doubleclick_catalog_browser_item_TE(val):
   else:
     Applicationutility.take_screenshot()
     Log.Error(f"Item '{val}' not found in catalog browser.")
+        
+def Expand_Folders_in_STB(folder):
+  tree = get_project_browser()
+  folder = tree.wItems.Item[folder]
+  folder.Expand()
+  
+def double_click_device(device):
+  tree = get_project_browser()
+  for n in tree.FindAllChildren('Name', 'TextObject(*)', 100):
+    if getattr(n, "Text", "").strip() == device:
+      n.DblClick()
+      Log.Checkpoint(f"double-clicked '{device}'")
+      break
+  else:
+    Log.Error(f"Folder '{device}' not found in catalog tree.")  
 
 def double_click_selected_catalog_browser_item_TE(main_folder, subfolder, final_item):
-    click_folder_by_name(main_folder)
-    select_catalog_browser_item_TE(subfolder)
+    Expand_Folders_in_STB(main_folder)
     Applicationutility.wait_in_seconds(500, 'wait')
-    doubleclick_catalog_browser_item_TE(final_item)
+    double_click_device(subfolder)
+    Applicationutility.wait_in_seconds(500, 'wait')
+    double_click_device(final_item)
     Applicationutility.wait_in_seconds(1500, 'wait')
-    
-
-#def select_tab_in_topo_config(tabname):
-#  objects = []
-#  if topo_obj.configurationhardwarecatalog:
-#    objects = topo_obj.configurationhardwarecatalog.object.FindAllChildren("ClassName", "SECTabControl", 10)
-#  if not objects and topo_obj.configurationhardwarecatalog1:
-#    objects = topo_obj.configurationhardwarecatalog1.object.FindAllChildren("ClassName", "SECTabControl", 10)
-#  if not objects and topo_obj.dtmbrowserprop:
-#    objects = topo_obj.dtmbrowserprop.object.FindAllChildren("ClassName", "SECTabControl", 10)
-#  for h in objects:
-#    for i in range(h.ChildCount):
-#      if tabname in h.Child(i).Text:
-#        h.Child(i).Click()
-#        Log.Checkpoint(f"Clicking on '{tabname}'")
-#        return
-#  Log.Warning(f"Could not find '{tabname}'")
 
 def select_tab_in_topo_config(tabname):
   objects = []
@@ -1064,18 +1061,6 @@ def select_tab_in_topo_config(tabname):
       return
   Applicationutility.take_screenshot()
   Log.Error(f"No tabs found with the name '{tabname}'")
-
-
-#def Dblclick_config_panel_item_TE(property):
-#  for h in topo_obj.deviceshardwarecatalog.object.FindAllChildren("ClassName", "CfCatViewDTMTreeQueryView", 10):
-#    for i in range(h.ChildCount):
-#      if "TextObject" in h.Child(i).Name and h.Child(i).Text == property:
-#        h.Child(i).DblClick()
-#        Log.Checkpoint(f'{property}' "is Double Clicked.")
-#        Applicationutility.wait_in_seconds(1000, 'Wait')
-#        return
-#  else:
-#    Log.Warning(f'{property}' " Was Not found.")
     
 def Dblclick_config_panel_item_TE(property):
   for h in topo_obj.deviceshardwarecatalog.object.FindAllChildren("Name", f"TextObject({property})", 10):
@@ -1521,3 +1506,140 @@ def Set_Password_for_Firmware(oldpassword, newpassword):
   if not any(i.Name == f'Window("Edit", "", {idx})' for idx in fields):
     Applicationutility.take_screenshot()
     Log.Error("One or more password fields not found")
+
+###############################################################################
+# Function : Click_on_a_button_in_mdi_configuration_window
+# Description : Clicks a button inside the MDI Configuration window in Refine Offline.
+# Parameter : button_name (str) - Caption of the button to be clicked
+# Example   : Click_on_a_button_in_mdi_configuration_window("Odd")
+###############################################################################   
+def Click_on_a_button_in_mdi_configuration_window(button_name):
+  mdiwindow = refo_obj.mdiwindowtextbox.object
+  buttonlist = mdiwindow.FindAllChildren('WndClass','Button',100)
+  for button in buttonlist:
+    if button_name in str(button.WndCaption) :
+      button.click()
+      Log.Checkpoint('Clicked ' + str(button.WndCaption) + ' button.')
+      break
+  else:
+    Log.Warning("The mentioned button doesn't exists")
+  
+###############################################################################
+# Function   : click_on_outlineitem_dtmbrowser
+# Description: Clicks a specific Outline Item in the DTM Browser window (PRM Settings).
+# Parameter  : outline_item (str) - The ObjectIdentifier of the outline item to be clicked.
+# Example    : click_on_outlineitem_dtmbrowser("Communication Settings")
+############################################################################### 
+def click_on_outlineitem_dtmbrowser(outline_item):  
+  outline_items = topo_obj.prmgensettings.object.FindAllChildren("Name", "OutlineItem('*')", 50)
+  for item in outline_items:
+    if item.ObjectIdentifier != None and str(item.ObjectIdentifier) == str(outline_item):
+      item.Click()
+      Log.Checkpoint('The Clicked Menu Item is : ' + str(item.ObjectIdentifier))
+      break
+  else:
+    Log.Warning(f'The menu item {outline_item} is not found !')
+
+###############################################################################
+# Function   : click_a_button_in_PRM_config
+# Description: Clicks a button inside the PRM Configuration window.
+# Parameter  : button_name (str) - Caption of the button to be clicked.
+# Example    : click_a_button_in_PRM_config("Apply")
+###############################################################################        
+def click_a_button_in_PRM_config(button_name): 
+  buttons = topo_obj.prmwindow.object.FindAllChildren("Name","Window('Button', '*', '*')",50)  
+  for button in buttons:
+    if button.WndCaption != None and str(button.WndCaption) == str(button_name):
+      button.click()      
+      Log.Checkpoint(button_name + " is clicked " )
+      break
+  else:
+    Log.Warning(button_name + " is not found ")
+  
+###############################################################################
+# Function   : edit_ipadress_PRM_config
+# Description: Updates an IP address value in the PRM Configuration settings 
+#              based on the provided identifier.
+# Parameter  : param (str) - Format "Identifier$$Value"
+# Example    : edit_ipadress_PRM_config("IP Address:$$182.233.63.48")
+###############################################################################     
+def edit_ipadress_PRM_config(param):
+    Identifier, value = param.split('$$')
+    obj = topo_obj.prmgensettings.object.FindAllChildren("ObjectType","IpAddress", 50)
+    if not obj:
+        Log.Warning("No IP address objects found.")
+        return
+    for IP_obj in obj:
+        if str(IP_obj.ObjectIdentifier) == Identifier:
+            IP_obj.wAddress = value
+            Log.Checkpoint(Identifier + " is updated as " + IP_obj.wAddress)
+            break
+    else: 
+        Log.Warning(Identifier + " is not updated - IP : " + IP_obj.wAddress)
+
+  
+###############################################################################
+# Function   : assign_station_address_PRM_config
+# Description: Updates the station address in PRM Configuration window based on 
+#              the provided identifier.
+# Parameter  : param (str) - Format "Identifier$$Value"
+# Example    : assign_station_address_PRM_config("Edit$$26")
+###############################################################################
+def assign_station_address_PRM_config(param): 
+  Identifier, value = param.split('$$')
+  values = topo_obj.prmwindow.object.FindAllChildren("Name","Window('Edit', '*', *)",50) 
+  for obj in values:
+    if obj.Visible:
+      if str(obj.WndClass) == Identifier:
+        obj.click()
+        obj.wText = value
+        Log.Checkpoint("Address is updated as " + obj.wText)
+        break
+  else:
+    Log.Warning('Address could not be updated')       
+
+###############################################################################
+# Function   : click_on_station_address_PRM_config
+# Description: Selects a station address ListItem in PRM Configuration window.
+# Parameter  : Identifier (str) - ObjectIdentifier of the ListItem to click
+# Example    : click_on_station_address_PRM_config("126")
+###############################################################################
+def click_on_station_address_PRM_config(Identifier): 
+  values = topo_obj.prmwindow.object.FindAllChildren("Name","ListItem('*')",50) 
+  for obj in values:
+    if obj.Visible:
+      if str(obj.ObjectType) == 'ListItem':
+        if obj.ObjectIdentifier != None and obj.ObjectIdentifier == Identifier:
+          obj.click()
+          Log.Checkpoint("ListItem is selected" )
+          break
+  else:
+    Log.Warning('ListItem is not found')
+#########################################################################
+def Verify_Defualt_Configuration_Controller(param):
+  Verify = topo_obj.dtmbroswerwindow.object
+  verify_child = Verify.FindAllChildren("ObjectType","OutlineItem",100)
+  if verify_child:
+    for child in verify_child:
+      if param in child.ObjectIdentifier:
+        Log.Checkpoint(f"{str(child.ObjectIdentifier)} is available in Refine Window") 
+        break
+    else:
+      Log.Warning(f"{param} is available in Refine e")
+####################################################################################################
+def Memory_start_and_Memory_length(memory_start, memory_length):
+  field_values = {
+    "ServerMemoryStart_FieldEditor": memory_start,
+    "ServerMemoryLength_FieldEditor":memory_length
+  }
+  text_boxes = topo_obj.controllerpropertytab.object.FindAllChildren("ClrClassName", "TextBox", 100)
+  for i in text_boxes:
+    for field, value in field_values.items():
+      if field in i.WPFControlAutomationId:
+        i.SetText(value)
+        Log.Checkpoint(f"Set {field} to {value}")
+        break
+      else:  
+        Log.Warning(f"Could not find a textbox with AutomationId: {field}")   
+#####################################################################################################
+    

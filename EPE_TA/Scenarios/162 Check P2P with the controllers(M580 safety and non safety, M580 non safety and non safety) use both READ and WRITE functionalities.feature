@@ -29,6 +29,7 @@ Examples:
 @test00
 Scenario Outline: Create Consecutive variable and select HMI option under Data Editor window when the table is blank
 When I Enter Consecutive Variable name and select HMI option under Data Editor window and enter parameters as '<param>'
+
 @Create_consecutivevariable_as_Moolya
 Examples:
   | SlNo. | param                    |
@@ -48,6 +49,16 @@ Examples:
 Examples:
   | SlNo. | param                |
   | 1     | ValveGP_2_OPV$$7$$SE |
+  
+@Create_consecutivevariable_by_clicking_on_ValveGP_1_OPV_and_create_variable_Test1
+Examples:
+  | SlNo. | param                   |
+  | 1     | ValveGP_1_OPV$$6$$Test1 |
+  
+@Create_consecutivevariable_by_clicking_on_ValveGP_2_OPV_and_create_variable_Test2
+Examples:
+  | SlNo. | param                   |
+  | 1     | ValveGP_2_OPV$$6$$Test2 |
     
     
 @TC_EPE_PE_CP_00
@@ -74,6 +85,16 @@ Examples:
 Examples:
   | SlNo. | param        |
   | 1     | Moolya2$$INT |
+  
+@Change_Test1_bool_value_to_INT
+Examples:
+  | SlNo. | param      |
+  | 1     | Test1$$INT |
+  
+@Change_Test2_bool_value_to_INT
+Examples:
+  | SlNo. | param      |
+  | 1     | Test2$$INT |
 
   
   
@@ -99,17 +120,18 @@ Examples:
 Scenario Outline: Manage Peer to Peer and configure communication 
 When I RClick control project browser project browser in project explorer as '<project browser1>'
 And I Select context menu item EC project browser in project explorer as '<context menu>'
+And I select modal dialog window combobox value in project explorer as '<ComobBox $ Value>'
 When I click modal dialog window project browser in project explorer as '<Button>'
 
-@Manage_P2P_M580_Standalone
+@Manage_P2P_M580_Standalone_config_P2P_M580_Standalone2
 Examples:
-  | SlNo. | project browser1 | context menu        | Button |
-  | 1     | M580_Standalone  | Manage Peer to Peer | Next   |
+  | SlNo. | project browser1 | context menu        | Button | ComobBox $ Value          |
+  | 1     | M580_Standalone  | Manage Peer to Peer | Next   | Project$$M580_Standalone2 |
   
-@Manage_P2P_M580_Standalone2
+@Manage_P2P_M580_Standalone2_config_P2P_M580_Standalone3
 Examples:
-  | SlNo. | project browser1 | context menu        | Button |
-  | 1     | M580_Standalone2 | Manage Peer to Peer | Next   |
+  | SlNo. | project browser1 | context menu        | Button | ComobBox $ Value          |
+  | 1     | M580_Standalone2 | Manage Peer to Peer | Next   | Project$$M580_Standalone3 |
   
 
 @TC_EPE_PE_CP_0039
@@ -121,6 +143,15 @@ Examples:
   | SlNo. | server                         |
   | 1     | PES_CONST_TRUE$$PES_CONST_TRUE |
   
+Scenario Outline: Drag remote variable to sorce variable with pop up
+When I Drag and drop from remote varaibles to source variables in P2P as '<server>'
+And I selected Rename Pop up Ok in message box
+
+@Drag_and_drop_remote_varaible_ValveGP_1_OPV_to_source_variable_ValveGP_1_OPV
+Examples:
+  | SlNo. | server                         |
+  | 1     | ValveGP_1_OPV$$ValveGP_1_OPV |
+    
 @TC_EPE_PE_CP_0039a
 @test0039
 Scenario Outline: Drag remote variable to sorce variable from Moolya to SE
@@ -128,10 +159,16 @@ When I Drag and drop from remote varaibles to source variables in P2P as '<serve
 
 @Drag_and_drop_remote_varaibles_Moolya1,2_to_source_variables_SE1,2
 Examples: 
-  | SlNo. | server                                                   |
-  | 1     | SE1$$Moolya1                                             |
-  | 2     | SE2$$Moolya2                                             |
-  
+  | SlNo. | server       |
+  | 1     | SE1$$Moolya1 |
+  | 2     | SE2$$Moolya2 |
+
+@Drag_and_drop_remote_varaibles_SE1,2_to_source_variables_Moolya1,2
+Examples: 
+  | SlNo. | server       |
+  | 1     | Moolya1$$SE1 |
+  | 2     | Moolya2$$SE2 |  
+
 @Drag_and_drop_remote_varaibles_Moolya1,2_and_templates_to_source_variables_SE1,2_and_templates
 Examples: 
   | SlNo. | server                                                   |
@@ -170,7 +207,7 @@ Examples:
 @TC_EPE_PE_CP_0039c
 @test0039
 Scenario Outline: Close tab 
-When I Close the Tab by Clicking on Close in EC as '<tabname>'
+When I Close the Tab by Clicking on Close in EC as "<tabname>"
 
 @close_M580_Standalone2.ControlExecutable_1.Manage
 Examples:

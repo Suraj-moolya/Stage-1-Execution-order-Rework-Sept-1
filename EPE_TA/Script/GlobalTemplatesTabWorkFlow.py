@@ -54,6 +54,10 @@ class GlobalTemplatesTabWorkFlow:
         """globaltemplatestab_obj.toolboxbutton"""
         GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.toolboxbutton.click()
         
+    def buttondocumentoutlineselected(self):
+        """globaltemplatestab_obj.documentoutlinebutton"""
+        GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.documentoutlinebutton.click()
+        
         
     def textboxtoolbooxtabledraganddroptoolboxitemcompositeeditorgte(self,name):
         """textboxtoolbooxtabledraganddroptoolboxitemcompositeeditorgte"""
@@ -206,10 +210,14 @@ class GlobalTemplatesTabWorkFlow:
             Globaltemplatesutility.GlobalTemplates_Import(path, folder, file)
         except Exception as ex:
             raise Exception(ex) from ex
-                ##
+                
     def rclickcontroltemplateheader(self):
         """globaltemplatestab_obj.controltemplateheader"""
         GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.controltemplateheader.right_click()
+        
+    def clickcontroltemplateheader(self):
+        """globaltemplatestab_obj.controltemplateheader"""
+        GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.controltemplateheader.click()
         
     def rclickmotortemplateheader(self):
         """globaltemplatestab_obj.motortemplateheader"""
@@ -230,6 +238,10 @@ class GlobalTemplatesTabWorkFlow:
     def rclicksupervisiontemplateheader(self):
         """globaltemplatestab_obj.supervisiontemplateheader"""
         GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.supervisiontemplateheader.right_click()
+
+    def clicksupervisiontemplateheader(self):
+        """globaltemplatestab_obj.supervisiontemplateheader"""
+        GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.supervisiontemplateheader.click()
         
     def rclickgeniestemplateheader(self):
         """globaltemplatestab_obj.geniestemplateheader"""
@@ -267,11 +279,11 @@ class GlobalTemplatesTabWorkFlow:
             raise Exception(ex) from ex
                 
     def clickeditmenuitem(param):
-         """clickeditmenuitem"""
-         try:
-             Globaltemplatesutility.Click_edit_menuitem(param)
-         except Exception as ex:
-             raise Exception(ex) from ex  
+        """clickeditmenuitem"""
+        try:
+            Globaltemplatesutility.Click_edit_menuitem(param)
+        except Exception as ex:
+            raise Exception(ex) from ex  
                  
     def verifychangeslogwindow():
         """verifychangeslogwindow"""
@@ -280,4 +292,185 @@ class GlobalTemplatesTabWorkFlow:
         except Exception as ex:
             raise Exception(ex) from ex
 
-                   
+    def clickainputsignalfaceteditorheader(self):
+            """globaltemplatestab_obj.AInputSignalheadertext"""
+            GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.AInputSignalheadertext.click()
+            
+    def clickDOblockinterfaceeditorheader(self):
+            """globaltemplatestab_obj.Doblockinterfaceeditor"""
+            GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.Doblockinterfaceeditor.click()   
+            
+    def verifytemplateisinrenamingstateinterfaceeditor(self,Identifier):
+            """verifytemplateisinrenamingstateinterfaceeditor"""
+            try:
+                Globaltemplatesutility.verify_module_renaming_state_interface_editor(Identifier)
+            except Exception as ex:
+                raise Exception(ex) from ex             
+
+    def clickeditormenuitem(self,param):
+        """clickeditormenuitem"""
+        try:
+            Globaltemplatesutility.click_editor_menuitem(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def verifyheaderpanelitemsEC(self,header_value):
+        """verifyheaderpanelitemsEC"""
+        try:
+            Globaltemplatesutility.verify_header_panel_items_EC(header_value)
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def verifytemplateontheeditorwindowGT(self,template):
+        """verifytemplateontheeditorwindowGT"""
+        try:
+            Globaltemplatesutility.verify_the_template_on_the_editor_window_GT(template)
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def verifyelementontheeditorwindowGT(self,element):
+        """verifyelementontheeditorwindowGT"""
+        try:
+            Globaltemplatesutility.verify_element_on_the_editor_window_GT(element)
+        except Exception as ex:
+            raise Exception(ex) from ex
+      
+    def selectallkey(self):
+        """selectallkey"""
+        try:
+            Globaltemplatesutility.selectall_key()
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def copykey(self):
+        """copykey"""
+        try:
+            Globaltemplatesutility.copy_key()
+        except Exception as ex:
+            raise Exception(ex) from ex
+                
+    def pastekey(self):
+        """pastekey"""
+        try:
+            Globaltemplatesutility.paste_key()
+        except Exception as ex:
+            raise Exception(ex) from ex           
+    
+    def verifyGTwarningmessage(self, param):
+        """verifyGTwarningmessage"""
+        try:
+            Globaltemplatesutility.verify_warning_text_in_GT_pane(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+                        
+    def findandentersearchtext(self, param):
+        """findandentersearchtext"""
+        try:
+            Globaltemplatesutility.find_and_search_text(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+                    
+    def findandRclicksearchtext(self, param):
+        """findandRclicksearchtext"""
+        try:
+            Globaltemplatesutility.find_and_right_click_search_text_GTE(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+     
+    def rclickElement(self, param):
+        """rclickElement"""
+        try:
+            Globaltemplatesutility.right_click_on_Elements_in_GTE(param)
+        except Exception as ex:
+            raise Exception(ex) from ex        
+        
+    def rclickFunction(self, param):
+        """rclickFunction"""
+        try:
+            Globaltemplatesutility.right_click_on_Func(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def rclickInputValue(self, param):
+        """rclickInputValue"""
+        try:
+            Globaltemplatesutility.right_click_on_InputValue_in_GTE(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def rclickSystemParameter(self, param):
+        """rclickSystemParameter"""
+        try:
+            Globaltemplatesutility.right_click_on_Parameter_in_GTE(param)
+        except Exception as ex:
+            raise Exception(ex) from ex       
+        
+    def rclickworkspaceGTE(self): 
+        """rclickworkspaceGTE"""
+        GlobalTemplatesTabWorkFlow.globaltemplatestab_obj.compositeeditorreadview.right_click()
+        
+    def rclickGreyhexagon(self, param):
+        """rclickGreyhexagon""" 
+        try:
+            Globaltemplatesutility.right_click_on_grey_hexagon_in_GTE(param)
+        except Exception as ex:
+            raise Exception(ex) from ex 
+        
+    def rclickOrangehexagon(self, param):
+        """rclickOrangehexagon""" 
+        try:
+            Globaltemplatesutility.right_click_on_orange_hexagon_in_GTE(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def rclickblockinInterfaceeditor(self, param): 
+        """rclickblockinInterfaceeditor"""
+        try:
+            Globaltemplatesutility.right_click_on_block_in_Interface_Editor(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def draganddroptoolboxitemtoInterfaceeditor(self, param): 
+        """draganddroptoolboxitemtoInterfaceeditor"""
+        try:
+            Globaltemplatesutility.drag_and_drop_toolbox_item_to_Interface_Editor_GTE(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+                
+    def rclicktransformationiteminInterfaceeditor(self, param): 
+        """rclicktransformationiteminInterfaceeditor"""
+        try:
+            Globaltemplatesutility.right_click_on_transformation_item_in_GTE(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+                    
+    def rclicklinkinInterfaceeditor(self): 
+        """rclicklinkinInterfaceeditor"""
+        try:
+            Globaltemplatesutility.RClick_link_in_Interface_Editor()
+        except Exception as ex:
+            raise Exception(ex) from ex
+                
+    def rclicklinkinCompositeeditor(self, param): 
+        """rclicklinkinCompositeeditor"""
+        try:
+            Globaltemplatesutility.RClick_link_in_Composite_Editor(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def multiselectitemsinGTEeditor(self, param): 
+        """multiselectitemsinGTEeditor"""
+        try:
+            Globaltemplatesutility.multiselect_GTE_items(param)
+        except Exception as ex:
+            raise Exception(ex) from ex
+
+    def verifyContextSubMenuItemsEC():
+        """verifyContextSubMenuItemsEC"""
+        try:
+            Globaltemplatesutility.verify_Context_SubMenu_Items_EC()
+        except Exception as ex:
+            raise Exception(ex) from ex
+             
+                     
+

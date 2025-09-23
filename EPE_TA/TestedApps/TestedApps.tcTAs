@@ -100,5 +100,17 @@
 			<testData />
 			<data />
 		</child>
+		<child key="{3F627F04-BD53-42A7-BFBD-CF491503739B}">
+			<config nodeName="SecEDT" autorunOnRecording="False" enabled="True" count="1" useFeaturedRuntimeObject="True" userChangeName="False">
+				<runModeParams activeRunMode="Simple">
+					<param name="RunAs" parameters="" workFolder="" userName="" password="" domain="" />
+					<param name="Profile" parameters="" workFolder="" useProject="False" projectFileName="" overrideProfiler="False" profilerName="" profileRunMode="Silent" AQtimeVersion="0" forceRunMode="False" />
+					<param name="Debug" parameters="" workFolder="" />
+					<param name="Simple" fileName="SecEDT.exe" filePath="C:\Program Files (x86)\Common Files\Schneider Electric Shared\CommonControlExpert\SECURITY\" parameters="" workFolder="" />
+				</runModeParams>
+			</config>
+			<testData />
+			<data />
+		</child>
 	</children>
 </Root>

@@ -229,13 +229,12 @@ def drag_composite_template_drop_app_browser_folder_AE(param):
 ###############################################################################      
     
 def run_drag_and_drop_multiple_times(param, count):
-    count = int(count)
-    for i in range(count):
-        Log.Message(f"Iteration {i + 1} of {count} for param: {param}")
-        try:
-            drag_composite_template_drop_app_browser_folder_AE(param)
-        except Exception as e:
-            Log.Error(f"Error in iteration {i + 1}: {str(e)}")
+  for i in range(count):
+    Log.Message(f"Iteration {i + 1} of {count} for param: {param}")
+    try:
+        drag_composite_template_drop_app_browser_folder_AE(param)
+    except Exception as e:
+        Log.Error(f"Error in iteration {i + 1}: {str(e)}")
     
 ###############################################################################
 # Function : right_click_application_browser_template_AE
@@ -243,19 +242,18 @@ def run_drag_and_drop_multiple_times(param, count):
 # Parameter : param (str) - Template identifier and version in the format 'identifier$$version'.
 ###############################################################################
 def right_click_application_browser_template_AE(param):
-    identifier, version = param.split('$$')
-    app_list = aet_obj.applicationbrowsertextbox.find_children_for_treeviewrow()
-    if app_list:
-        for app_item in app_list:
-            Log.Message(app_item.Item.Identifier.OleValue)
-            if app_item.Visible and str(identifier) in str(app_item.Item.Identifier.OleValue):# and str(version) == str(app_item.Item.ViewModel.TemplateVersion):
-                app_item.ClickR()
-                Log.Message(f"Right-clicked object is: {app_item.Item.Identifier.OleValue}")
-                break
-        else:
-            Log.Error(f"Template '{identifier}' with version '{version}' not found.")
+  identifier, version = param.split('$$')
+  app_list = aet_obj.applicationbrowsertextbox.find_children_for_treeviewrow()
+  if app_list:
+    for app_item in app_list:
+      if identifier in str(getattr(app_item.Item, 'Identifier', None)) and version == str(getattr(app_item.Item.ViewModel, 'TemplateVersion', None)):
+        app_item.ClickR()
+        Log.Message(f"Right-clicked object is: {app_item.Item.Identifier.OleValue}")
+        break
     else:
-        Log.Error("No templates found in the application browser.")
+        Log.Error(f"Template '{identifier}' with version '{version}' not found.")
+  else:
+      Log.Error("No templates found in the application browser.")
   
 ###############################################################################
 # Function : right_click_application_browser_folder_AE
@@ -321,33 +319,46 @@ def verify_folder_and_template_application_browser(identifier):
 # Description: Drags an item from the app browser and drops it into the asset workspace editor.
 # Parameter : template (str) - Identifier of the template to drag.
 ###############################################################################
+    
 def drag_app_browser_drop_asset_workspace_editor_AE(template):
   template_list = aet_obj.applicationbrowsertextbox.object.FindAllChildren('ClrClassName', 'TreeListViewRow', 1000)
-  if template_list:
-    for i in range(len(template_list)):
-      if template_list[i].Visible: 
-        if template in str(template_list[i].DataContext.Identifier.OleValue):
-          fromx = template_list[i].ScreenLeft
-          fromy = template_list[i].ScreenTop
-          Log.Message('The object selected to drag is : ' + str(template_list[i].Item.Identifier.OleValue))
-          break
-  else:
+  fromx, fromy = None, None
+  if not template_list:
     Log.Error("No templates found in the application browser.")
-  
+    return
+  for row_item in template_list:
+    if row_item.Visible:
+      identifier = getattr(row_item.DataContext.Identifier, 'OleValue', None)
+      if identifier and template in str(identifier):
+        fromx = row_item.ScreenLeft
+        fromy = row_item.ScreenTop
+        Log.Message(f'The object selected to drag is: {identifier}')
+        break
+  if fromx is None or fromy is None:
+    Log.Error(f"Template '{template}' not found in the application browser.")
+    return
   Workspace_editor = aet_obj.assertworkspaceeditortextbox.object
   node_element_parent = aet_obj.nodeinstancebutton.object
-  node_element_presence = node_element_parent.FindAllChildren('ClrClassName', 'LinkNodeControl', 1000)
-  n = len(node_element_presence)
+  node_elements = node_element_parent.FindAllChildren('ClrClassName', 'LinkNodeControl', 1000)
+  n = len(node_elements)
+  main_screen = eng_obj.mainscreenbutton
+  base_x = Workspace_editor.ScreenLeft - 300
+  base_y = Workspace_editor.ScreenTop - 300
+  offset_x = 300
+  offset_y = 200
+  col = n % 2
+  row = n // 2
+  drop_x = base_x + (col * offset_x)
+  drop_y = base_y + (row * offset_y)
+  Log.Message(f"Dropping Instance #{n + 1} at X={drop_x}, Y={drop_y}")
+  main_screen.drag(fromx + 20, fromy + 20, drop_x, drop_y)
+
+def sdkl():
+    drag_app_browser_drop_asset_workspace_editor_AE("ATV61AS")
+    drag_app_browser_drop_asset_workspace_editor_AE("ATV71AS")
+    drag_app_browser_drop_asset_workspace_editor_AE("MotorVSGP_1")
+    drag_app_browser_drop_asset_workspace_editor_AE("MotorVSGP_2")
   
-  if n >= 1:
-    tox = node_element_presence[n-1].ScreenLeft
-    tox = tox/2
-    main_screen = eng_obj.mainscreenbutton   
-    main_screen.drag((fromx+15), (fromy+15), tox, 0)
-  else:
-    tox = Workspace_editor.ScreenLeft
-    main_screen = eng_obj.mainscreenbutton   
-    main_screen.drag((fromx+100), (fromy+15), tox, 0)
 
 ###############################################################################
 # Function : verify_Template_node_Asset_Workstation_editor_AE
@@ -443,7 +454,23 @@ def Link_from_ranged_node_to_ranged_node(param):
         node_element.Drag(fromx-15, fromy/2, tox-regulator1, toy-regulator2)
   else:
     Log.Error("No nodes found in the editor.")
-
+    
+def Link_instance_in_AssetWorkspaceEdittor(from_property, from_instance, to_property, to_instance):
+  source, target = None, None
+  for inst in aet_obj.nodeinstancebutton.object.FindAllChildren('ClrClassName', 'InstanceNode', 100):
+    if getattr(inst.DataContext, 'Identifier', '') == from_instance and not source:
+      source = next((p for p in inst.FindAllChildren('ClrClassName', 'TreeViewItem', 100)
+                    if getattr(p.DataContext, 'Identifier', '') == from_property), None)
+    if getattr(inst.DataContext, 'Identifier', '') == to_instance and not target:
+      target = next((p for p in inst.FindAllChildren('ClrClassName', 'TreeViewItem', 100)
+                    if getattr(p.DataContext, 'Identifier', '') == to_property), None)
+  if source is None or target is None:
+    return Log.Error(f"Missing: {from_instance}.{from_property} or {to_instance}.{to_property}")
+  source.Drag(source.Width-1, source.Height//2,
+              target.ScreenLeft-source.ScreenLeft,
+              target.ScreenTop-source.ScreenTop+target.Height//2)
+  Log.Message(f"Linked {from_instance}.{from_property} → {to_instance}.{to_property}")
+  
 ###############################################################################
 # Function : Verify_Link_Status
 # Description: Verifies the link status of instances in the application browser.
@@ -483,7 +510,8 @@ def verify_application_explorer_instance_editor_tab(identifier):
       Log.Error('The instance editor tab was not found : ' + str(identifier))
   else:
     Log.Error("No instance editor tabs found in the application explorer.")
-    
+
+
 ###############################################################################
 # Function : application_explorer_instance_editor_tab_close
 # Description: Closes an instance editor tab in the application explorer.
@@ -1145,7 +1173,10 @@ def template_checkbox(param):
   obj_list = obj.FindAllChildren('ClrClassName', 'TreeListViewRow', 1000)
   if obj_list:
     for item in obj_list:
-      if str(identifier) in str(item.DataContext.ElementFullPath.OleValue):
+      checkbox_name = item.DataContext.ElementFullPath.OleValue 
+      checkbox_ele = checkbox_name.split('|')
+      Log.Message(str(checkbox_ele))
+      if str(identifier) in str(checkbox_ele):
         checkbox = item.FindAllChildren('ClrClassName', 'CheckBox', 1000)
         break
     if int(state) != 0 :
@@ -1744,9 +1775,8 @@ def Search_ApplicationBrowser_textbox(param):
 #ViewModel.DataValid
 #ViewModel.TemplateVersion
 #ViewModel.TemplateIdentifier
-# Example    :  Apply_Filter_ApplicationBrowser("Identifier")  
+# Example    :  Select_Filter_in_ApplicationBrowser("Identifier")  
 ###############################################################################
-    
 def Select_Filter_in_ApplicationBrowser(filter_name):
   Filtericon = aet_obj.applicationbrowsertextbox.object.FindAllChildren("ClrClassName", "FilteringDropDown", 1000)
   Log.Message(len(Filtericon))
@@ -2040,6 +2070,22 @@ def key_action_template_browser_folder(identifier, direction):
       Applicationutility.wait_in_seconds(2000, 'wait')
       break
       
+def extend_right_panel():
+    # get the panel object
+    panel = aet_obj.applicationbrowsertextbox.object
+    delta_px=150
+    extra_right=5
+
+    # start point: middle height, a little to the right of the edge
+    start_x = panel.Width + extra_right
+    start_y = panel.Height // 2
+
+    # drag horizontally
+    panel.Drag(start_x, start_y, start_x + delta_px, start_y)
+
+    aqUtils.Delay(200)
+    Log.Message(f"Extended panel by {delta_px}px (start {extra_right}px outside to the right)")
+
 ###############################################################################
 # Function    : verify_status_instance_editor
 # Description : Verifies that the status of an instance in the Application 
@@ -2151,6 +2197,31 @@ def multiclick_application_browser_template_AE(param):
         else:
           Log.Error(f"{item.DataContext.Identifier.OleValue} with version {item.DataContext.ViewModel.TemplateVersion.OleValue} is not clicked")
           
+########################################################################################
+# Function : Click_module_name_instance_editor
+# Description : Clicks on the specific module name in instance editor.
+# Parameter : identifier (str) - Name of the module.
+#             Example: "Logic"
+########################################################################################
+def Click_module_name_instance_editor(identifier):
+    obj = aet_obj.instanceeditorchecklisttextbox.object
+    obj_list = obj.FindAllChildren('ClrClassName', 'TreeListViewRow', 1000)
+    if not obj_list:
+        Log.Warning("No checkboxes found in the template.")
+        return
+    Log.Message(f'Total items found: {len(obj_list)}')
+    clicked = False
+    for item in obj_list:
+        full_path = item.DataContext.ElementFullPath.OleValue
+        element_parts = full_path.split('|')
+        if str(identifier) in element_parts[-1]:
+            Log.Message(f"Matched Element: {full_path}")
+            item.Click()
+            Log.Message(f"Clicked on checkbox label/value: {element_parts[-1]}")
+            clicked = True
+            break
+    if not clicked:
+      Log.Warning(f"No matching checkbox label found for identifier '{identifier}'")
           
 #######################################################################################
 #test case 90979
@@ -2377,7 +2448,6 @@ def save_instance(inst_value):
         Log.Checkpoint("The instance value does NOT contains '*': " + instance_value)
   else:
         Log.Error("The instance value does contain '*'. Actual value: " + instance_value)
-		
 		
 ###############################################################################
 # Function : instance_column_names
@@ -2683,3 +2753,627 @@ def click_on_grid_view_icon_in_application_browser():
             
    
 ###########################################################################################
+# Function: verify_values_instance_win_AE
+# Description: Verifies whether the specified value exists among the text blocks 
+#              in the Instance Window of the Application Explorer. Logs a 
+#              checkpoint if a match is found.
+# Parameters: value (str) – The text value to verify in the Instance Window.
+###############################################################################
+def verify_values_instance_win_AE(value):
+    try:
+        value_lst = aet_obj.workspacebutton.object.FindAllChildren('ClrClassName', 'TextBlock', 1000)
+        
+        if value_lst:
+            found = False
+            for item in value_lst:
+                if value == str(item.WPFControlText):
+                    Log.Checkpoint(f"Value '{value}' found in Instance Window.")
+                    found = True
+                    break
+            if not found:
+                Log.Error(f"Value '{value}' not found in Instance Window.")
+        else:
+            Log.Error("No TextBlocks found in Instance Window.")
+    
+    except Exception as e:
+        Log.Error(f"Exception occurred while verifying value '{value}': {str(e)}")
+
+###########################################################################################
+# Function: enter_alias_name
+# Description: Finds the property field in the Instance Window of the Application Explorer
+#              that matches the specified value, enters the provided alias into its
+#              associated text box, and verifies that the entry was successful by logging
+#              a checkpoint. Reports errors if the field or text box is not found, or if
+#              the entered value does not match the expected alias.
+# Parameters: param (str) – A string in the format "value$$alias_value", where 'value' is
+#                         the name of the property field to search for, and 'alias_value'
+#                         is the value to enter into the corresponding text box.
+###########################################################################################
+        
+def enter_alias_name(param):
+  value,alias_value=param.split('$$')
+  property_lst=aet_obj.workspacebutton.object.FindAllChildren('ClrClassName', 'PropertyGridField', 1000)
+  if not property_lst:
+        Log.Error("No PropertyGridField elements found.")
+        return
+  for item in property_lst:
+        field_value = getattr(item.DataContext.DisplayName, 'OleValue', '')
+        
+        if value in str(field_value):
+            field_lst = item.FindAllChildren('ClrClassName', 'TextBox', 1000)
+            
+            if not field_lst:
+                Log.Error(f"No TextBox found for field '{value}'")
+                return
+            
+            field_lst[0].Click()
+            Sys.Keys(alias_value)
+            
+            # Checkpoint to verify the alias value is entered
+            entered_value = field_lst[0].wText
+            if alias_value == entered_value:
+                Log.Checkpoint(f"Alias '{alias_value}' successfully entered for field '{value}'.")
+            else:
+                Log.error(f"Alias entry mismatch: expected '{alias_value}', but found '{entered_value}'.")
+
+            return alias_value
+    
+  Log.Error(f"Field with name containing '{value}' not found.")
+
+###########################################################################################
+# Function: uncheck_instance_editor_values
+# Description: Searches for a checkbox in the Instance Editor of the Application Explorer
+#              whose label matches the specified value, and clicks it to uncheck it.
+#              Logs a checkpoint if the checkbox is successfully found and unchecked,
+#              or logs an error if the checkbox is not found.
+# Parameters: value (str) – The text value of the checkbox to be unchecked.
+###########################################################################################
+       
+def uncheck_instance_editor_values(value):
+    value_lst = aet_obj.workspacebutton.object.FindAllChildren('ClrClassName', 'CheckBox', 1000)
+    
+    if not value_lst:
+        Log.Error("No checkboxes found in the instance editor.")
+        return
+    
+    found = False
+
+    for item in value_lst:
+        if value in str(item.WPFControlText):
+            item.Click()
+            Log.Checkpoint(f"Checkbox with value '{value}' was successfully checked.")
+            found = True
+        break
+    
+    if not found:
+        Log.Error(f"Checkbox with value '{value}' not found.")
+
+###########################################################################################
+# Function: verify_folder_alias_value
+# Description: Checks whether a specified alias value is present among the items in the
+#              Instance Browser of the Application Explorer. It searches through all
+#              available entries for an alias identifier that contains the given value,
+#              and logs a checkpoint if found or an error if not found.
+# Parameters: value (str) – The alias name or substring to search for in the instance browser.
+###########################################################################################
+def verify_folder_alias_value(value):          
+    instanceBrowser = aet_obj.applicationbrowsertextbox.object
+    instances = instanceBrowser.FindAllChildren('ClrClassName', 'TreeListViewRow', 1000)
+
+    if not instances:
+        Log.Error("No items found in the instance browser.")
+        return    
+
+    found = False
+
+    for item in instances:
+        if hasattr(item.DataContext, 'AliasIdentifier'):
+            alias_name = str(item.DataContext.AliasIdentifier.OleValue)
+            if value in alias_name:
+                found = True
+                break
+
+    if found:
+        Log.Checkpoint(f"Alias '{value}' is present in the instance browser.")
+    else:
+        Log.Error(f"Alias '{value}' was not found in the instance browser.")
+
+###########################################################################################
+# Function: drag_instance_folder_folder
+# Description: Drags an instance folder from a source location to a target folder within
+#              the Instance Browser of the Application Explorer.
+#              encountered during the process.
+# Parameters: param (str) – A string in the format "template$$folder_name$$move", where:
+#                         template (str) – The identifier substring of the source instance.
+#                         folder_name (str) – The name of the target folder to drop into.
+#                         move (str) – Direction of the move: "UP" to drop above, or any other
+#                                      value to drop below the target folder.
+###########################################################################################
+        
+def drag_instance_folder_folder(param):
+    template, folder_name, move  = param.split('$$')
+    # Find all instance items in the application browser
+    instance_list = aet_obj.applicationbrowsertextbox.object.FindAllChildren('ClrClassName', 'TreeListViewRow', 1000)
+    
+    if not instance_list:
+        Log.Error("No items found in the instance browser.")
+        return
+    
+    fromx = fromy = tox = toy = None
+
+    # Find the instance to drag from
+    for item in instance_list:
+        if item.Panel_ZIndex != 0 and hasattr(item.Item, 'Identifier'):
+          identifier = str(item.Item.Identifier.OleValue)
+          if template in identifier:
+              fromx = item.ScreenLeft
+              fromy = item.ScreenTop
+              Log.Message(f"Found source object: {identifier}")
+              break
+    
+    if fromx is None or fromy is None:
+        Log.Error("Source object '{template}' not found.")
+        return
+
+    # Find the target folder to drop into
+    for app_item in instance_list:
+      if app_item.Panel_ZIndex != 0 and hasattr(app_item.Item, 'Identifier'):
+        identifier = str(app_item.Item.Identifier.OleValue)
+        if app_item.Visible and folder_name in identifier:
+ 
+            tox = app_item.ScreenLeft
+            toy = app_item.ScreenTop
+            Log.Message(f"Target object found: {identifier}")
+            break
+
+    if tox is None or toy is None:
+        Log.Error(f"Target folder '{folder_name}' not found.")
+        return
+
+    # Perform drag and drop action
+    main_screen = eng_obj.mainscreenbutton
+    delta_x = tox - fromx
+    delta_y = toy - fromy
+    
+    if move =='Up':
+      main_screen.drag(fromx+10, fromy+10, 0, delta_y-10)
+    else:
+      main_screen.drag(fromx+10, fromy+10, 0, delta_y+10)
+
+    Applicationutility.wait_in_seconds(1000, 'Waiting after drag')  # Changed to 1 second for practical usage
+    Log.Checkpoint(f"Drag-and-drop operation from '{template}' to '{folder_name}' completed successfully.")
+
+###########################################################################################
+# Function: check_instance_description_and_add_Value_AE_instance_editor
+# Description: Searches for a specified description within the Instance Editor of the
+#              Application Explorer and sets its value based on the parameter type.
+#              The function supports different parameter types including String, Short,
+#              Duration, Integer, and Boolean, and applies the given value accordingly.#              
+# Parameters: param (str) – A string in the format "Description$$Value_to_be_passed", where:
+#                         Description (str) – The description text to search for.
+#                         Value_to_be_passed (str) – The value to set for the matching description.
+###########################################################################################
+    
+def check_instance_description_and_add_Value_AE_instance_editor(param):
+    parameter_value, Description, Value_to_be_passed = param.split('$$')
+    parameter_expand_instance_Editor(parameter_value)
+    des = aet_obj.instancedescriptionbutton.object
+    des_list = des.FindAllChildren('ClrClassName', 'GridViewRow', 1000)
+
+    if not des_list:
+        Log.Warning("No descriptions found in the instance editor.")
+        return
+
+    found = False
+
+    for item in des_list:
+        cells = item.FindAllChildren('ClrClassName', 'GridViewCell', 1000)
+
+        for cell in cells:
+            if Description in str(cell.WPFControlText):
+                found = True
+                Log.Message(f"Found description: '{Description}'")
+                cell.Click()
+                Sys.Keys('[Tab]')
+                Sys.Keys('[Tab]')
+                item.Click((item.Width - 25), (item.Height / 2))
+
+                param_type = item.DataContext.ParameterType
+                try:
+                    if param_type == 'String' or param_type == 'Short':
+                        Sys.Keys(Value_to_be_passed)
+                        Sys.Keys('[Enter]')
+                        Applicationutility.wait_in_seconds(2, 'Wait')
+                        Log.Checkpoint(f"The {param_type} value is set to {item.DataContext.Expression.OleValue}")
+                    
+                    elif param_type == 'Duration' or param_type == 'Integer':
+                        Sys.Keys(int(Value_to_be_passed))
+                        Sys.Keys('[Enter]')
+                        Applicationutility.wait_in_seconds(2, 'Wait')
+                        Log.Checkpoint(f"The {param_type} value is set to {item.DataContext.Expression.OleValue}")
+
+                    elif param_type == 'Boolean':
+                        checkbox = item.FindAllChildren('ClrClassName', 'CheckBox', 1000)
+                        if not checkbox:
+                            Log.Error("Checkbox not found for Boolean parameter.")
+                            return
+                        if checkbox[0].wState != int(Value_to_be_passed):
+                            checkbox[0].ClickButton(int(Value_to_be_passed))
+                            Applicationutility.wait_in_seconds(2, 'Wait')
+                        Log.Checkpoint(f"The checkbox value is set to {checkbox[0].wState}")
+
+                    else:
+                        Log.Error(f"Unsupported parameter type: {param_type}")
+                
+                except Exception as e:
+                    Log.Error(f"Error while setting value: {str(e)}")
+
+                return  # Exit after processing the first matching description
+    if not found:
+        Log.Error(f"Description '{Description}' not found in the instance editor.")
+
+###############################################################################
+# Function: parameter_expand_instance_Editor
+# Description: Searches for a description in the instance editor by matching the 
+#              provided value with the names of description headers. If the header 
+#              is found and is not already expanded, it clicks to expand it.
+# Parameters:
+#   value (str) - The name or part of the name of the description header to search for.
+###############################################################################
+def parameter_expand_instance_Editor(value):    
+    des = aet_obj.instancedescriptionbutton.object
+    des_list = des.FindAllChildren('ClrClassName', 'GroupHeaderRow', 1000)
+
+    if not des_list:
+        Log.Error("No descriptions found in the instance editor.")
+        return
+    
+    found = False
+    for item in des_list:
+        if value in str(item.DataContext.Name.OleValue):
+            found = True
+            if str(item.IsExpanded) == 'False':
+                item.Click()
+                Log.Checkpoint(f"Expanded the description '{value}'.")
+            else:
+                Log.Checkpoint(f"The description '{value}' is already expanded.")
+            break
+    
+    if not found:
+        Log.Error(f"Description with value '{value}' not found in the instance editor.")
+
+###########################################################################################
+# Function: select_template_instance_ediotr
+# Description: Searches for a specific template in the Instance Editor's checklist and
+#              selects it by clicking the corresponding item. The function looks for
+#              items whose element path contains both provided identifiers.
+# Parameters: param (str) – A string in the format "identifier$$identifier1", where:
+#                         identifier (str) – A substring to match within the element path.
+#                         identifier1 (str) – Another substring to match within the element path.
+###########################################################################################       
+def select_template_instance_ediotr(param):
+    identifier, identifier1 = param.split('$$')
+    obj = aet_obj.instanceeditorchecklisttextbox.object
+    obj_list = obj.FindAllChildren('ClrClassName', 'TreeListViewRow', 1000)
+    if not obj_list:
+        Log.Error("No items found in the instance editor checklist.")
+        return
+
+    found = False
+
+    for item in obj_list:
+        checkbox_name = item.DataContext.ElementFullPath.OleValue
+        checkbox_ele = checkbox_name.split('|')
+
+        if str(identifier) in str(checkbox_ele) and str(identifier1) in str(checkbox_ele):
+            item.Click()
+            Log.Checkpoint(f"Template with identifiers '{identifier}' and '{identifier1}' selected.")
+            found = True
+            break
+
+    if not found:
+        Log.Error(f"Template with identifiers '{identifier}' and '{identifier1}' not found in the checklist.")
+
+# Function   : verify_validity_indicator_status_of_instances_in_AE
+# Description: Iterates through all visible application instances in the 
+#              Application Browser (AE) based on their hierarchy level and 
+#              verifies their validity status.
+# Parameter  : None
+# Example    : verify_validity_indicator_status_of_instances_in_AE()
+#########################################################################################
+    
+def verify_validity_indicator_status_of_instances_in_AE():
+    level = 1
+    App_list = aet_obj.applicationbrowsertextbox.object.FindAllChildren("ClrClassName", "TreeListViewRow", 1000)
+    if not App_list:
+        Log.Error("No items found in the application browser.")
+        return
+    while True:
+        found = False
+        for item in App_list:
+            if item.Visible and item.Level == level:
+                found = True
+                identifier = str(item.Item.Identifier.OleValue)
+                if item.DataContext.HasValidationError == False:
+                    Log.Checkpoint(f"Status of {identifier} at level {item.Level} is Valid")
+                elif item.DataContext.HasValidationError == True:
+                    Log.Checkpoint(f"Status of {identifier} at level {item.Level} is Invalid")
+                else:
+                    Log.Error(f"Unknown validation state for {identifier}")
+        if not found:
+            break
+        level += 1
+        Applicationutility.wait_in_seconds(1000, "wait") 
+
+###############################################################################################
+# Function   : drag_instance_from_folder_to_folder_in_AE
+# Description: Drags an instance (like a folder or item) from one location to another 
+#              within the Application Explorer. It finds both the source and target by name 
+#              and performs the drag-and-drop action between them.
+# Parameter  : param (str) - A string with the source and target names, separated by '$$'. 
+# Format     : "SourceName$$TargetName"
+# Example    : drag_instance_from_folder_to_folder_in_AE("MotorGP_1$$Folder_3")
+# This will drag 'MotorGP_1' and drop it into 'Folder_3' in the Application Explorer.
+###############################################################################################
+def drag_instance_from_folder_to_folder_in_AE(param):
+  source_name, target_name = param.split('$$')
+  rows = aet_obj.applicationbrowsertextbox.object.FindAllChildren('ClrClassName', 'TreeListViewRow', 1000)
+  source = next((r for r in rows if getattr(r.Item, "Identifier", None) and str(r.Item.Identifier.OleValue) == source_name), None)
+  target = next((r for r in rows if getattr(r.Item, "Identifier", None) and str(r.Item.Identifier.OleValue) == target_name), None)
+  if source is not None and target is not None:
+    dx, dy = target.ScreenLeft - source.ScreenLeft, target.ScreenTop - source.ScreenTop
+    source.Drag(-1, -1, dx, dy, 500)
+    Log.Checkpoint(f"Successfully dragged '{source_name}' to '{target_name}'.")
+  else:
+    Log.Error(f"Source '{source_name}' or Target '{target_name}' not found in Application Browser.")
+
+    
+##########################################################################################  
+# Function   : shuffle_instance_coulmn_headers
+# Description: Drags and rearranges column headers in the Application Explorer. It finds 
+#              the source and target headers by name and performs the drag-and-drop 
+#              operation to reorder them.
+# Parameter  : param (str) - A string with the source and target header names, separated by '$$'.  
+# Format     : "SourceHeader$$TargetHeader"
+# Example    : shuffle_instance_column_headers("Version$$Template")
+# Headers    : Template, Version ,Data, Link, Assigned State, Description, Area, Path
+# This will drag the 'Version' column header and drop it onto the 'Template' column header.
+##########################################################################################    
+
+def shuffle_instance_column_headers(param):
+  source_name, target_name = param.split('$$')
+  rows = aet_obj.applicationbrowsertextbox.object.FindAllChildren('ClrClassName', 'GridViewHeaderCell', 1000)
+  source = next((r for r in rows if getattr(r, "WPFControlText", None) and str(r.WPFControlText) == source_name), None)
+  target = next((r for r in rows if getattr(r, "WPFControlText", None) and str(r.WPFControlText) == target_name), None)
+  if source is not None and target is not None:
+    dx, dy = target.ScreenLeft - source.ScreenLeft, target.ScreenTop - source.ScreenTop
+    source.Drag(-1, -1, dx, dy, 500)
+    Log.Checkpoint(f"Successfully dragged '{source_name}' to '{target_name}'.")
+  else:
+    Log.Error(f"Source '{source_name}' or Target '{target_name}' not found in Application Browser.")
+    
+    
+    
+############################################################################################### 
+# Function   : Drag_and_expand_application_browser
+# Description: Drags the right edge of the Application Browser window to expand it horizontally.
+# Parameter  : None
+# Example    : Drag_and_expand_application_browser()
+################################################################################################   
+  
+def Drag_and_expand_application_browser():
+    appbrowserwindow = aet_obj.AppBrowserWindowExpand.object
+    width = appbrowserwindow.Width
+    height = appbrowserwindow.Height
+    dx = width - 1 
+    dy = height // 2
+#    appbrowserwindow.HoverMouse(dx, dy)
+#    Applicationutility.wait_in_seconds(500, 'wait')
+    appbrowserwindow.Drag(dx, dy, 400, 0, 500)
+    Log.Checkpoint(f"Application Browser is expanded")
+
+
+
+##############################################################################################
+# Function   : enter_field_name_in_AE
+# Description: Enters a specified value into a designated text field within 
+#              the Folder Properties section of the AE interface.
+# Parameter  : param (str) - A string in the format "AutomationID$$Value", 
+#              where:
+#              - AutomationID: WPF Automation ID of the target text field
+#              - Value       : The text to be entered into the field
+# Example    : enter_field_name_in_AE("Field_Name$$MyValue")
+#              "Alias_FieldEditor$$textinput"
+#              "Description_FieldEditor$$textinput"
+#              "Area_FieldEditor$$textinput"
+##############################################################################################
+
+def enter_field_name_in_AE(param):
+  field, name = param.split('$$')
+  properties = aet_obj.FolderProperties.object.FindAllChildren("ClrClassName", "TextBox", 1000) 
+  for i in properties:
+    if i.WPFControlAutomationId == field:
+      i.Keys(name)
+      Log.Checkpoint(f"{i.WPFControlAutomationId} entered as {name}")
+      break
+  else:
+    Log.Error("Field Editor not found")
+    
+def shg():
+  enter_alias_name_in_AE("Alias_FieldEditor$$Test")
+
+ 
+############################################################################################### 
+# Function   : verify_zoom_buttons
+# Description: Verifies if a zoom button with the specified tooltip text is present within the
+#              workspace toolbar of the application under test.
+# Parameter  : param (str) - The tooltip text of the zoom button to verify.
+# Example    : verify_zoom_buttons("Zoom In (+)")
+###############################################################################################
+
+def verify_zoom_buttons(param):
+    zoom_values = []
+    
+    obj_lst = aet_obj.workspacebutton.object.FindAllChildren('ClrClassName', 'ToolBar', 1000)
+    if obj_lst:
+        for item in obj_lst:
+            zoom_lst = item.FindAllChildren('ClrClassName', 'ContentPresenter', 1000)
+            Log.Message(f"Found {len(zoom_lst)} zoom elements.")
+            
+            if zoom_lst:
+                for zoom in zoom_lst:
+                    if hasattr(zoom, 'ToolTip') and zoom.ToolTip is not None:
+                        tooltip = str(zoom.ToolTip.OleValue).strip()  # Remove extra spaces
+                        zoom_values.append(tooltip)
+                    else:
+                        Log.Message("Zoom element missing ToolTip.")
+    
+    Log.Message(f"Collected zoom tooltips: {zoom_values}")
+    
+    if param in zoom_values:
+        Log.Checkpoint(f"Zoom button '{param}' is present.")
+    else:
+        Log.Error(f"Zoom button '{param}' not found.")
+
+
+    
+############################################################################################### 
+# Function   : verify_link_instance_options
+# Description: Finds a specific link node instance by name, right-clicks on it to open the context
+#              menu, verifies the menu items, and checks if the expected list matches the actual list.
+# Parameter  : param (str) - A string containing the expected list and the instance name separated
+#                           by '$$', e.g. "Option1,Option2$$AnalogOutputGP_1".
+# Example    : verify_link_instance_options("Option1,Option2$$AnalogOutputGP_1")
+###############################################################################################
+def verify_link_instance_options(param):
+    expected_list_str, instance_value = param.split('$$')
+    expected_list = [item.strip() for item in expected_list_str.split(',')]
+    
+    # Perform right-click on the instance
+    if not right_click_instance_link(instance_value):
+        Log.Error(f"Could not right-click on instance '{instance_value}'")
+        return
+    
+    # Verify context menu items
+    actual_context_value = Engineeringclientutility.Verify_ContextMenu_Items()
+    Log.Message(f"Actual context menu items: {actual_context_value}")
+
+    # Compare expected and actual lists
+    if set(expected_list) == set(actual_context_value):
+        Log.Checkpoint("Expected context menu items match the actual items.")
+    else:
+        Log.Error(f"Expected items {expected_list} do not match actual items {actual_context_value}")
+
+        
+def ttt():
+  verify_link_instance_options("Properties, View Assignments,Hide Unbound,Hide Disabled$$AnalogOutputGP_1")
+  
+  
+############################################################################################### 
+# Function   : right_click_instance_link
+# Description: Finds a link node instance by its name and performs a right-click on it.
+# Parameter  : instance_value (str) - The name of the link node instance to right-click.
+# Example    : right_click_instance_link("AnalogOutputGP_1")
+###############################################################################################
+
+def right_click_instance_link(instance_value):
+    obj_lst = aet_obj.workspacebutton.object.FindAllChildren('ClrClassName', 'LinkNodeControl', 1000)
+    
+    if not obj_lst:
+        Log.Error("No LinkNodeControl items found")
+        return False
+    
+    for item in obj_lst:
+        value_lst = item.FindAllChildren('ClrClassName', 'TextBlock', 1000)
+        
+        if value_lst:
+            for value in value_lst:
+                text_value = str(value.Text.OleValue).strip()
+                if text_value == instance_value:
+                    value.ClickR()
+                    Log.Message(f"Right-clicked on instance: {instance_value}")
+                    return True
+    
+    Log.Error(f"Instance '{instance_value}' not found")
+    return False
+
+############################################################################################### 
+# Function   : fetch_instance_sub_values
+# Description: Retrieves all visible text values from 'TextBlock' elements within 'TreeView' controls
+#              in the workspace. These represent the sub-values or details of an instance.
+# Returns    : list - A list of strings containing the text of visible 'TextBlock' elements.
+# Example    : values = fetch_instance_sub_values()
+###############################################################################################
+def fetch_instance_sub_values():
+    sub_values = []
+    obj_lst = aet_obj.workspacebutton.object.FindAllChildren('ClrClassName', 'TreeView', 1000)
+    
+    if not obj_lst:
+        Log.Warning("No TreeView controls found in the workspace.")
+        return sub_values
+    
+    for item in obj_lst:
+        value_lst = item.FindAllChildren('ClrClassName', 'TextBlock', 1000)
+        Log.Message(f"Found {len(value_lst)} TextBlock items in a TreeView.")
+        
+        for text_block in value_lst:
+            if text_block.IsVisible:
+                sub_values.append(text_block.WPFControlText)
+                Log.Message(f"Visible TextBlock added: '{text_block.WPFControlText}'")
+    
+    Log.Message(f"Total visible sub-values found: {len(sub_values)}")
+    return sub_values
+
+    
+############################################################################################### 
+# Function   : verify_filtered_symbol
+# Description: Checks if the filtered symbol (with 'PartFiltered') is visible within the workspace.
+#              It searches through all 'LinkNodeControl' items and verifies if the filtered part is active.
+# Parameter  : value (str) - The name or description of the symbol being verified (used in log messages).
+# Returns    : bool - True if the filter is visible at least once, False otherwise.
+# Example    : verify_filtered_symbol("AnalogOutputGP_1")
+###############################################################################################
+def verify_filtered_symbol(value):
+    obj_lst = aet_obj.workspacebutton.object.FindAllChildren('ClrClassName', 'LinkNodeControl', 1000)
+    
+    if not obj_lst:
+        Log.Error("No LinkNodeControl items found")
+        return False
+    
+    found = False
+    
+    for item in obj_lst:
+        value_lst = item.FindAllChildren('WPFControlName', 'PartFiltered', 1000)
+        
+        if value_lst:  # Ensure the list is not empty
+            if value_lst[0].IsVisible:
+                Log.Checkpoint(f"{value} is selected")
+                found = True
+            else:
+                Log.Checkpoint("No filter is added")
+    
+    return found
+############################################################################################### 
+# Function   : click_instance_option_link
+# Description: Finds an instance link by name, right-clicks it, selects an option from the context menu,
+#              and verifies whether the instance values have changed (e.g., some items are hidden).
+# Parameter  : param (str) - A string containing the instance name and dropdown option separated by '$$'.
+#              Format: "instance_value$$drp_dwn_value"
+# Example    : click_instance_option_link("AnalogOutputGP_1$$Hide Disabled")
+###############################################################################################
+def click_instance_option_link(param):
+    instance_value, drp_dwn_value = param.split('$$')
+    
+    actual_values = fetch_instance_sub_values()
+    right_click_instance_link(instance_value)
+    Engineeringclientutility.select_ContextMenu_Items_EC(drp_dwn_value)
+    expected_values = fetch_instance_sub_values()
+    verify_filtered_symbol(drp_dwn_value)
+    
+    if len(actual_values) != len(expected_values):
+        if drp_dwn_value == "Hide Disabled":
+            Log.Checkpoint(f"Filter applied: '{drp_dwn_value}'. Some values are now hidden.")
+        else:
+            Log.Checkpoint(f"Option '{drp_dwn_value}' selected. Instance values have been updated.")
+    else:
+        Log.Checkpoint(f"Option '{drp_dwn_value}' selected, but no changes were detected in instance values.")

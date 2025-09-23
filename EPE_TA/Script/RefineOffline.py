@@ -198,6 +198,37 @@ class RefineOffline(MapBase):
     def BlockserviceportEIOcheckbox(self):
         """BlockserviceportEIOcheckbox"""
         return self.get_element("BlockserviceportEIO_RefineOffline")
+    
+    @property
+    def NewSectiondropdown(self):
+        """NewSectiondropdown"""
+        return self.get_element("DropDown_NewSection_RefineOffline")
         
+    @property
+    def Maintenancebutton(self):
+        """Maintenancebutton"""
+        return self.get_element("Maintenancebutton_Refineonline")
         
+    @property
+    def Safetybutton(self):
+        """Safetybutton"""
+        return self.get_element("Safetybutton_Refineonline")     
+    
+    @property
+    def Safetytext(self):
+        """Safetytext"""
+        return self.get_element("Safetytext_Refineonline")
         
+    @property
+    def Maintenancetext(self):
+        """Maintenancetext"""
+        return self.get_element("Maintenancetext_Refineonline")
+
+    def NewSectionModelWindow(self):
+        """NewSectionModelWindow"""
+        return self.get_element("ModelWin_NewSection_RefineOffline")
+
+    @property
+    def Propertyconfigurationwindow(self):
+        """Propertyconfigurationwindow"""
+        return self.get_element("Propertyconfigurationwindow_RefineOffline")

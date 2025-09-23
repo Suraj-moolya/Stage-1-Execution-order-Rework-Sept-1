@@ -64,7 +64,7 @@ def verify_FBD_order_containerdock():
   Grid = proj_obj.containerdocktextbox.object.FindAllChildren("ClrClassName","GridViewRow",500)
   
   dict = {}
-  key - list.DataContext.InternalOrder
+  key = list.DataContext.InternalOrder
   
   for list in Grid:
     if Grid:

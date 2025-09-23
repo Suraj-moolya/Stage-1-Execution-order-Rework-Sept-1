@@ -13,7 +13,11 @@ Scenario Outline: Creating multiple instances by dragging and dropping template 
   Examples:
     | SlNo | ApplicationBrowserRoot | TemplatesBrowser1 | TemplateBrowser2           | Count |
     | 1    | System                 | MotorGP           | MotorGP$$1.0.123$$Folder_1 | 5     |
-
+  
+  @DragDrop_Instance_MotorGP_To_Folder_1_Times
+  Examples:
+    | SlNo | ApplicationBrowserRoot | TemplatesBrowser1 | TemplateBrowser2           | Count |
+    | 1    | System                 | MotorGP           | MotorGP$$1.0.123$$Folder_1 | 1     |
 
 @90882_2
 Scenario Outline: Exporting instance from root node of AE

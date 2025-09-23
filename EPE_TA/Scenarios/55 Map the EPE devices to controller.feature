@@ -6,19 +6,46 @@ Scenario Outline: Create IO Device - Modbus TCP
 When I Right Click on nodes System Explorer Node in system explorer as 'Devices'
 And I Select context menu item EC project browser in project explorer as '<context menu>'
 And I Select controller in context menu as '<controller>'
+
 Examples:
   | SlNo. | context menu     | controller |
   | 1     | Create Device-IO | Modbus TCP |
   
+@test0001A
+Scenario Outline: Double Click Device
+When I Double Click on nodes System Explorer Node in system explorer as '<nodename>'
+
+@doubleclick_device
+Examples:
+  | nodename |
+  | Devices  |
+  
+@test0001B
+Scenario Outline: Expand Device
+When I Perform action on the Folder by Clicking on '<button>' in Topology Explorer
+
+@Expand_device
+Examples:
+  | button        |
+  | Devices$$Open |
+  
+@Close_device
+Examples:
+  | button         |
+  | Devices$$Close |
+
   
 @TC_EPE_TE_CN_0021a
 @test001
 Scenario Outline: Map Modbus TCP device to Controller - select template
 When I search template browser EC Topology Explorer Tree in topology as '<Topology Explorer Tree1>'
 And I Select template EC Topology Explorer Tree in topology as '<Topology Explorer Tree2>'
+#And I Perform action on the Folder by Clicking on '<button>' in Topology Explorer
+
+@Device_ETesysTHW
 Examples:
-  | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2 |
-  | 1     | ETesysTHW               | ETesysTHW$$3.1.5        |
+  | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2 | button         |
+  | 1     | ETesysTHW               | ETesysTHW$$3.1.5        | Devices$$Close |
 
   
 @TC_EPE_TE_CN_0021b
@@ -29,10 +56,11 @@ And I Expand communication tab TE Topology Explorer Tree in topology as '<Topolo
 And I edit IP Address Topology Explorer Tree in topology as '<Topology Explorer Tree3>'
 And I edit IP Address Topology Explorer Tree in topology as '<Topology Explorer Tree4>'
 When I Close the Tab by Clicking on Close as '<identifier>'
+
+@ip_for_ETesysTHW
 Examples:
   | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2 | Topology Explorer Tree3   | Topology Explorer Tree4 | identifier |
   | 1     | ETesysTHW               | Communication           | IPAddress$$182.179.243.25 | SubnetMask$$255.255.0.0 | ETesysTHW  |
-
   
   
 @TC_EPE_TE_CN_0021c
@@ -44,10 +72,10 @@ And I modal dialog window select Item Topology Explorer Tree in topology as '<To
 When I click modal dialog window project browser in project explorer as '<Button>'
 And I Perform action on the Folder by Clicking on '<button>' in Topology Explorer
 
+@Ethernet_for_ETesysTHW
 Examples:
   | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2 | Topology Explorer Tree3 | Button | button         |
   | 1     | ETesysTHW               | Physical Connections    | ETesysTHW$$SE_Network   | OK     | Devices$$Close |
-
   
   
 @TC_EPE_TE_CS_0022
@@ -66,6 +94,7 @@ Examples:
 Scenario Outline: Map EtherNet IP device to Controller - select template
 When I search template browser EC Topology Explorer Tree in topology as '<Topology Explorer Tree1>'
 And I Select template EC Topology Explorer Tree in topology as '<Topology Explorer Tree2>'
+
 Examples:
   | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2   |
   | 1     | EIPGenericDeviceHW      | EIPGenericDeviceHW$$1.0.3 |
@@ -90,7 +119,8 @@ Scenario Outline: Map EtherNet IP device to Controller - add Ethernet Network
 When I Right Click on nodes System Explorer Node in system explorer as '<Topology Explorer Tree1>'
 And I Select context menu item EC project browser in project explorer as '<Topology Explorer Tree2>'
 And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree3>'
-And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree4>'
+# The below step is removed in builds after 6400
+#And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree4>'
 When I click modal dialog window project browser in project explorer as '<Button>'
 Examples:
   | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2 | Topology Explorer Tree3       | Topology Explorer Tree4       | Button |
@@ -127,7 +157,8 @@ Scenario Outline: Map EtherNet IP device to Controller
 When I Right Click on nodes System Explorer Node in system explorer as '<Topology Explorer Tree1>'
 And I Select context menu item EC project browser in project explorer as '<Topology Explorer Tree2>'
 And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree3>'
-And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree4>'
+# From Build 6400 the below line has been removed as it is unnecessary
+#And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree4>'
 When I click modal dialog window project browser in project explorer as '<Button>'
 
 @Map_EtherNet_IP_device_to_Controller_M580_HSBY_1

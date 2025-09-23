@@ -30,6 +30,7 @@
 				<child name="GSDAdditionWorkFlow" key="{FC793AC0-71F4-4D5C-9A36-0A5F068240FD}" path="GSDAdditionWorkFlow.py" />
 				<child name="ContentRepositoryWorkFlow" key="{70EB47A7-B84B-4303-80AB-022A5E5D22C0}" path="ContentRepositoryWorkFlow.py" />
 				<child name="ControlProjectWorkFlow" key="{DDD89365-4A35-4F7A-BE6A-9383728098C2}" path="ControlProjectWorkFlow.py" />
+				<child name="SecurityEditorWorkFlow" key="{5BCC4EA4-1E20-46E1-8F72-BC02D5E3F4D7}" path="SecurityEditorWorkFlow.py" />
 			</folder>
 			<folder name="StepDefinitions">
 				<child name="CurrentScreenStepDefinition" key="{001ABD02-E109-4837-B290-55898E939DEF}" path="CurrentScreenStepDefinition.py" />
@@ -51,6 +52,7 @@
 				<child name="GSDAdditionStepDefinition" key="{7EB381B7-67DD-4D5E-B4F1-43DA624D9757}" path="GSDAdditionStepDefinition.py" />
 				<child name="ContentRepositoryStepDefinition" key="{CA1370DC-BA08-4251-883C-6733A5880A3C}" path="ContentRepositoryStepDefinition.py" />
 				<child name="ControlProjectStepDefinition" key="{01D7E5C0-F813-4E13-A6CF-D2F6FC25CF72}" path="ControlProjectStepDefinition.py" />
+				<child name="SecurityEditorStepDefinition" key="{5B63B138-FB17-40AC-A9F9-413689440236}" path="SecurityEditorStepDefinition.py" />
 			</folder>
 			<folder name="WindowsDialogs">
 				<child name="SystemServer" key="{001ABD02-E118-4837-B290-55898E939DEF}" path="SystemServer.py" />
@@ -75,6 +77,7 @@
 				<child name="GSDAddition" key="{80AA10EE-98BB-435C-A689-163CB2B9A7C7}" path="GSDAddition.py" />
 				<child name="ContentRepository" key="{6D22DFE0-0EB6-4E1E-B133-037433714321}" path="ContentRepository.py" />
 				<child name="ControlProjectTab" key="{D5674363-9059-4443-BE81-883229B7BF6E}" path="ControlProjectTab.py" />
+				<child name="SecurityEditor" key="{23755B6B-F809-44FD-BA4C-CF45C7FDE617}" path="SecurityEditor.py" />
 			</folder>
 			<folder name="Utilities">
 				<child name="Applicationutility" key="{001ABD02-E129-4837-B290-55898E939DEF}" path="Applicationutility.py" />
@@ -93,6 +96,7 @@
 				<child name="GSDAdditionutility" key="{F2C1134C-1F44-4DC0-8AE7-A5717EA13C27}" path="GSDAdditionutility.py" />
 				<child name="Contentrepositoryutility" key="{3A3CCD87-46C1-4E47-A69E-EF76AB11B39E}" path="Contentrepositoryutility.py" />
 				<child name="Controlprojectutility" key="{547A717A-DF6D-40A7-9011-07982782E008}" path="Controlprojectutility.py" />
+				<child name="Securityeditorutility" key="{48F43637-59FB-4230-AB17-5A5AA4863D2D}" path="Securityeditorutility.py" />
 			</folder>
 		</folder>
 	</children>

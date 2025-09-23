@@ -94,10 +94,11 @@ def step_impl(areYouSureYouWantToContinue):
     Applicationutility.take_screenshot("Full Screenshot")
   
 @when("I Click on export System1 Export Popup AE buttons Export in ec windows explorer as {arg}")
+@when("I Click on buttons in pop up message as {arg}")
 def step_impl(ok):
     """I Click on export System1 Export Popup AE buttons Export in ec windows explorer as 'OK'"""
     obj.buttonexportclickonexportsystem1exportpopupaebuttons(ok)
-  
+          
 @then("Verify Extracted Template CSV Data and Template Details Export in ec windows explorer as {arg}")
 def step_impl():
     """Verify Extracted Template CSV Data and Template Details Export in ec windows explorer"""

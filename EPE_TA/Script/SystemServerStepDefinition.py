@@ -191,7 +191,7 @@ def step_impl():
 @when("I click on Username dropdown")
 def step_impl():
     """I click on Username dropdown"""
-    Applicationutility.wait_in_seconds(1000, 'Wait')
+    Applicationutility.wait_in_seconds(10000, 'Wait')
     obj.usernamedropdown()
     Applicationutility.wait_in_seconds(1000, 'Wait')
     

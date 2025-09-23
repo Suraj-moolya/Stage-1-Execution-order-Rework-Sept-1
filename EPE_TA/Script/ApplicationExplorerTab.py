@@ -313,6 +313,11 @@ class ApplicationExplorerTab(MapBase):
     def gridortreetextbox(self):
         """gridortreetextbox"""
         return self.get_element("GridVieworTreeView_ApplicationExplorerTab")
+              
+    @property
+    def toolbar(self):
+        """toolbar"""
+        return self.get_element("ToolBar_ApplicationExplorerTab")
         
     @property
     def AssetWorkspaceFilter(self):

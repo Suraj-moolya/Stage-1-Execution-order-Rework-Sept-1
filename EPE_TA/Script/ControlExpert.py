@@ -100,6 +100,19 @@ class ControlExpert(MapBase):
     def additionaloptionstabce(self):
         """toolbarpopwindowce"""
         return self.get_element("Additionaloptions_ControlExpert")
+        
+    @property
+    def functionInputAssistantType(self):
+        """functionInputAssistantType"""
+        return self.get_element("FunctionInputAssistantType_ControlExpert")
 
-
+    @property
+    def columnconfigurationwindow(self):
+        """columnconfigurationwindow"""
+        return self.get_element("ColumnConfigurationwindow_RefineOffline")
+        
+    @property
+    def EIOcommunicationheader(self):
+        """EIOcommunicationheader"""
+        return self.get_element("EIOCommunicationHeader_ControlExpert")
 

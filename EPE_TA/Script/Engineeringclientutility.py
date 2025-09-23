@@ -105,6 +105,26 @@ def clickR_node_SE(node_name):
       break
   else:
     Log.Error(f"Node with name {node_name} not found in System Explorer")
+    
+###############################################################################
+# Function: clickR_node_SE
+# Description: Performs a double-click action on the specified node in the System Explorer.
+# Parameter: node_name (str) - The name of the node to right-click.
+# Example: double_click_node_SE("Node1")
+###############################################################################
+def double_click_node_SE(node_name):
+  SE_node = ses_obj.systemexplorernodebutton.object
+  SE_node_list = SE_node.FindAllChildren("ClrClassName", "ExplorerNode", 50)
+  if not SE_node_list:
+    Log.Error("No nodes found in System Explorer")
+    return
+  for i in range(len(SE_node_list)):
+    name = SE_node_list[i].DataContext.Identifier.OleValue
+    if str(name) == str(node_name):
+      SE_node_list[i].DblClick()
+      break
+  else:
+    Log.Error(f"Node with name {node_name} not found in System Explorer")
   
 ###############################################################################
 # Function: click_node_SE
@@ -179,22 +199,23 @@ def verify_system_folder():
 # Parameter: None
 ###############################################################################
 def Verify_ContextMenu_Items():
-  menu = ses_obj.rclickmenuitemsbutton.object
-  menu_items = menu.FindAllChildren("ClrClassName", "MenuItem", 50)
-  header_list = []
-  if not menu_items:
-    Log.Error("No context menu items found")
-    return
-  for item in menu_items:
-    if item.Visible and item.Enabled:
-      Log.Message(str(item.Header)+" Visible status:"+str(item.Visible))
-      Log.Message(str(item.Header)+" Enabled status:"+str(item.Enabled))
-    else:
-      Log.Message(str(item.Header)+" Visible status:"+str(item.Visible))
-      Log.Message(str(item.Header)+" Enabled status:"+str(item.Enabled))
-  else:
+    menu = ses_obj.rclickmenuitemsbutton.object
+    menu_items = menu.FindAllChildren("ClrClassName", "MenuItem", 50)
+    header_list = []
+    
+    if not menu_items:
+        Log.Error("No context menu items found")
+        return header_list
+    
+    for item in menu_items:
+        header = str(item.Header).strip()  # Ensure header is clean
+        header_list.append(header)
+        
+        Log.Message(f"{header} Visible status: {item.Visible}")
+        Log.Message(f"{header} Enabled status: {item.Enabled}")
+    
     Log.Message("Context menu items verification completed")
-  return header_list
+    return header_list
       
 ###############################################################################
 # Function: Click_on_CreateFolder
@@ -458,6 +479,7 @@ def select_ContextMenu_Items_EC(menu_item):
   if menu_items:
     for item in menu_items:
       if item.Visible and item.Enabled:
+        Applicationutility.wait_in_seconds(1000 , 'wait')
         if item.Header != None and str(item.Header.OleValue) == str(menu_item):
           item.Click()
           Log.Checkpoint('The Context Menu Item clicked is : ' + str(menu_item))
@@ -919,12 +941,12 @@ def Verify_folder_Content_Status_TE(FolderName):
   if not SE_node_list:
     Log.Error("No nodes found in System Explorer")
     return
-  for i in range(len(SE_node_list)): 
-    if SE_node_list[i].DataContext.Identifier.OleValue == FolderName and SE_node_list[i].IsInnerContentExpanded:
-       Log.Message(f'{SE_node_list[i].DataContext.Identifier.OleValue} folder is expanded')
+  for i in range(len(SE_node_list)):
+    if SE_node_list[i].DataContext.Identifier.OleValue == FolderName and SE_node_list[i].IsExpanded:
+       Log.Checkpoint(f'{SE_node_list[i].DataContext.Identifier.OleValue} folder is expanded')
        break
   else:
-    Log.Message(f'{FolderName} folder is not expanded')
+    Log.Error(f'{FolderName} folder is not expanded')
   
 ###############################################################################
 # Function: no_password_system
@@ -952,10 +974,10 @@ def no_password_system(btn):
 def close_the_tab_EC(param):
   tabs = eng_obj.workspacetextbox.find_children_for_closeable_tab_item()
   for tab in tabs:
-    Log.Message(tab.WPFControlText)
     if param in str(tab.DataContext.TitleToolTip):
-        tab.Click((tab.Width-15), (tab.Height/2)) 
-        break
+      Log.Checkpoint("Verified: The '" + tab.WPFControlText + "' tab was closed successfully.")
+      tab.Click((tab.Width-15), (tab.Height/2)) 
+      break
   else:
     Log.Error(f'{param} parameter passed might be wrong')       
 
@@ -999,3 +1021,42 @@ def update_report_details(customer_name, site_name, report_desc, report_author, 
       Log.Error("Data context not found for some report details")
   else:
     Log.Error("Report details updated successfully")
+    
+######################################################################################
+# Function : select_header_panel_items_EC
+# Description : Clicks on the header panel item in Engineering client
+# Parameter : header_value (str) - Name of the header.
+######################################################################################	
+def select_header_panel_items_EC(header_value):
+  header = eng_obj.workspacetextbox.object.FindAllChildren('ClrClassName', 'CloseableTabItem', 50)
+  for header_item in header:
+    if header_item.DataContext.ViewTitle.OleValue == header_value:
+      header_item.Click()
+      Log.Message(f"Header item {header_value} is selected")
+      break
+  else:
+    Log.Error(f"Header item {header_value} not found")
+    
+##########################################################################################
+# Function   : Click_tabs_header_panel_EC
+# Description: Clicks on a tab in the header panel of the workspace based on the tab name.
+# Parameter  : name - The partial or full name of the tab to click.
+# Example    : Click_tabs_header_panel_EC('Sysytems Explorer')
+##########################################################################################       
+def Click_tabs_header_panel_EC(tab_name):
+  header_panel = eng_obj.workspacetextbox.object.FindAllChildren('ClrClassName','CloseableTabItem',100)
+  for items in header_panel:
+    if tab_name in items.WPFControlText:
+      items.Click()
+      Log.Message(f'Clicked on {items.WPFControlText}')
+      break
+  else:
+    Log.Error('No tabs found')    
+###########################################################################################
+# Function: Keyboard_action_Enter
+# Description: Simulates pressing the "Enter" key on the keyboard.
+# Parameter: None
+###############################################################################
+def Keyboard_action_CntlW():
+      Sys.Keys("^w")
+###############################################################################

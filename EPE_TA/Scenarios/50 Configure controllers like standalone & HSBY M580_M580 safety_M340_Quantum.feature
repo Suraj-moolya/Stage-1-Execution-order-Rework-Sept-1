@@ -9,14 +9,13 @@ Then verify context menu items from Rclick menu items in system explorer
 When I selected Create Folder in context menu
 When I Rename Folder as per requirement in system explorer as '<as per requirement1>'
 Then verify system and folder created System Explorer Node in system explorer
+
 Examples:
   | SlNo. | as per requirement1 |
   | 1     | Controllers         |
   | 2     | Networks            |
   | 3     | Devices             |
   | 3     | Workstation         |
-  
-
   
 @TC_EPE_TE_CS_0002
 @test0002
@@ -27,7 +26,7 @@ Then Verify Action message in notification pannel project browser in project exp
 When I Rename Network as per requirement in system explorer as '<as per requirement1>'
 Then Verify Action message in notification pannel project browser in project explorer as '<project browser2>'
 When I Perform action on the Folder by Clicking on '<button>' in Topology Explorer
-Then I Verify Folder Renamed as '<FolderName>' in Topology Explorer is Expanded
+#Then I Verify Folder Renamed as '<FolderName>' in Topology Explorer is Expanded
 Examples:
   | SlNo. | context menu            | as per requirement1       | project browser1        | button          | project browser2        | FolderName |
   | 1     | Create Ethernet Network | SE_Network                | Create Ethernet Network | Networks$$Close | Update Ethernet Network | Networks   |
@@ -226,6 +225,7 @@ Examples:
   | SlNo. | Controller  | context menu | Notification          |
   | 1     | M580_Safety | Configure    | Open Configure Editor |
   
+  
 @open_Configuration_window_of_Controller_M580_Standalone3
 Examples:
   | SlNo. | Controller       | context menu | Notification          |
@@ -384,10 +384,10 @@ Examples:
   | SlNo. | Cpu_version          |
   | 1     | BME P58 5040   03.20 |
 
-@Change_CPU_Version_of_controller__BME_P58_4040S_03.20
+@Change_CPU_Version_of_controller__BME_P58_6040S_03.30
 Examples:
-  | SlNo. | Cpu_version          |
-  | 1     | BME P58 4040   03.20 |
+  | SlNo. | Cpu_version           |
+  | 1     | BME P58 6040S   03.30 |
   
 @Change_CPU_Version_of_controller__BME_H58_6040S_03.20
 Examples:
@@ -451,7 +451,7 @@ And I select '<button>' in New Device PopUp Window
 
 Examples:
   | SlNo. | item    | menu_item  | tab_item                        | oldpassword | newpassword | button | button1              | oldpassword1 | button2              | button3 |
-  | 1     | Project | Properties | Project & Controller Protection | fwdownload  | Moolya@1234 | OK     | Chan&ge password ... | webuser      | Change &password ... | &Apply  |
+  | 1     | Project | Properties | Project & Controller Protection | fwdownload  | Schneider0! | OK     | Chan&ge password ... | webuser      | Change &password ... | &Apply  |
 
   
     

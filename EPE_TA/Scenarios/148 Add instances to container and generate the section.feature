@@ -81,6 +81,24 @@ Examples:
 Examples:
   | SlNo. | containerinstance | contextmenu_item |
   | 1     | System_1          | Collapse All     |
+@Right_Click_M580_Safety_ExpandAll
+Examples:
+  | SlNo. | containerinstance | contextmenu_item |
+  | 1     | M580_Safety       | Expand All       |
+@Right_Click_M580_Safety_Collapse_All
+Examples:
+  | SlNo. | containerinstance | contextmenu_item |
+  | 1     | M580_Safety       | Collapse All     |
+@Right_Click_M580_Safety2_ExpandAll
+Examples:
+  | SlNo. | containerinstance | contextmenu_item |
+  | 1     | M580_Safety2      | Expand All       |
+@Right_Click_M580_Safety2_Collapse_All
+Examples:
+  | SlNo. | containerinstance | contextmenu_item |
+  | 1     | M580_Safety2      | Collapse All     |
+  
+  
 @TC_EPE_SWF_0000
 @test0025
 Scenario Outline: Generate from Containers pane and Click on Modal Dialogue Window

@@ -6,8 +6,10 @@ import Engineeringclientutility
 import Topologyutility
 import Actionutility
 import Topologyexplorerutility
+import Controlexpertutility
 from SystemExplorerScreen import SystemExplorerScreen
 from ControlExpert import ControlExpert
+import Controlexpertutility
 
 class TopologyWorkFlow:
     """TopologyWorkFlow"""
@@ -533,3 +535,86 @@ class TopologyWorkFlow:
                     TopologyWorkFlow.topology_obj.CheckAutomaticBlocking.object.Click()
                 except Exception as ex:
                     raise Exception(ex) from ex
+                    
+    def Clickabuttoninmdiconfigurationwindow(self,button_name):
+                """Clickabuttoninmdiconfigurationwindow"""
+                try:
+                    Topologyexplorerutility.Click_on_a_button_in_mdi_configuration_window(button_name)
+                except Exception as ex:
+                    raise Exception(ex) from ex                  
+                    
+    def clickonoutlineitemdtmbrowser(self,outline_item):
+                """clickonoutlineitemdtmbrowser"""
+                try:
+                    Topologyexplorerutility.click_on_outlineitem_dtmbrowser(outline_item)
+                except Exception as ex:
+                    raise Exception(ex) from ex 
+                    
+    def clickabuttoninPRMconfig(self,button_name):
+                """clickabuttoninPRMconfig"""
+                try:
+                    Topologyexplorerutility.click_a_button_in_PRM_config(button_name)
+                except Exception as ex:
+                    raise Exception(ex) from ex
+    
+    def editipadressPRMconfig(self,param):
+                """editipadressPRMconfig"""
+                try:
+                    Topologyexplorerutility.edit_ipadress_PRM_config(param)
+                except Exception as ex:
+                    raise Exception(ex) from ex  
+                    
+    def assignstationaddressPRMconfig(self,param):
+                """assignstationaddressPRMconfig"""
+                try:
+                    Topologyexplorerutility.assign_station_address_PRM_config(param)
+                except Exception as ex:
+                    raise Exception(ex) from ex
+                    
+    def clickonstationaddressPRMconfig(self,Identifier):
+                """clickonstationaddressPRMconfig"""
+                try:
+                    Topologyexplorerutility.click_on_station_address_PRM_config(Identifier)
+                except Exception as ex:
+                    raise Exception(ex) from ex
+                    
+    def selectdeviceinadddevicemodaldialogwindow(self,device):
+        """selectdeviceinadddevicemodaldialogwindow"""
+        try:
+            Topologyexplorerutility.select_device(device)
+        except Exception as ex:
+            raise Exception(ex) from ex
+                    
+    def verifydefualtconfigurationcontroller(self,param):
+        """ verifydefualtconfigurationcontroller"""
+        try:
+            Topologyexplorerutility.Verify_Defualt_Configuration_Controller(param)
+        except Exception as ex:
+            raise Exception(ex) from ex             
+        
+    def clickmenubaritemintopologyconfigurationinrefineofflinewindow(self,menu):
+        """ clickmenubaritemintopologyconfigurationinrefineofflinewindow"""
+        try:
+            Topologyexplorerutility.click_tools_in_topo_configuration(menu)
+        except Exception as ex:
+            raise Exception(ex) from ex   
+    
+    def MemorystartandMemorylength(self,param):
+            """MemorystartandMemorylength"""
+            try:
+                Topologyexplorerutility.Memory_start_and_Memory_length(param)
+            except Exception as ex:
+                raise Exception(ex) from ex                    
+                    
+                    
+                    
+                    
+                          
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    

@@ -318,6 +318,11 @@ Scenario Outline: Create Asset workspace - 4
     | 3    | System_1  | Create Workspace |
     | 4    | System_1  | Create Workspace |
     
+  @Create_Asset_Workspace
+  Examples:
+    | SlNo | AssetRoot | AssetAction      |
+    | 1    | System    | Create Workspace |
+    
 # ----------------------------------------------------------------
 # NOTE: The following scenario covers:\
 # Double click/click on Enter key on any asset workspace root node

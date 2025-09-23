@@ -293,7 +293,23 @@ class ProjectExplorerTab(MapBase):
     def closetoolbarbutton(self):
         """closetoolbarbutton"""
         return self.get_element("CloseToolBar_ProjectExplorerTab")
-          
         
+    @property
+    def exportimportbutton(self):
+        """exportimportbutton"""
+        return self.get_element("ExportImportHardwareMapping_ProjectExplorerTab") 
         
-       
+    @property
+    def facetsgridmapping(self):
+        """facetsgridmapping"""
+        return self.get_element("FacetsGridHardwareMapping_ProjectExplorerTab") 
+        
+    @property
+    def ceconflictswin(self):
+        """ceconflictswin"""
+        return self.get_element("CEConflictsWindow_ProjectExplorer") 
+        
+    @property
+    def loading(self):
+        """loading"""
+        return self.get_element("Loading_ProjectExplorerTab")

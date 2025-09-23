@@ -633,6 +633,7 @@ Scenario Outline: Navigation To Application Explorer(AE) - Main Tool Bar
 When I navigate to explorers MainToolBar in system explorer as '<MainToolBar3>'
 Then verify Tabs Explorer tab in system explorer as '<Explorer tab4>'
 
+@Navigate_AE
 Examples:
   | SlNo. | MainToolBar3         | Explorer tab4        |
   | 1     | Application Explorer | Application Explorer |
@@ -658,3 +659,18 @@ Then verify control expert instances in task manager detail list in task manager
 Examples:
   | SlNo. | Control Participant Max Instance |
   | 02    | 4                                |
+
+
+Scenario Outline: Close Similar tabs 
+When I close similar tab by clicking on Close in EC as "<tabname>"
+
+@close_Manage_tabs_in_PE
+Examples:
+  | SlNo. | tabname    |
+  | 1     | Manage     |
+
+@close_Assignment_tabs_in_PE
+Examples:
+  | SlNo. | tabname    |
+  | 2     | Assignment |
+  

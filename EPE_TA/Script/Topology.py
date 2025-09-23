@@ -84,5 +84,15 @@ class Topology(MapBase):
     def CheckAutomaticBlocking(self):
         """PasswordControlBoxtextbox"""
         return self.get_element("CheckAutomaticBlocking_Topology")
+        
+    @property
+    def confirmationrefineonline(self):
+        """confirmationrefineonline"""
+        return self.get_element("ConfirmationRefineOnline_TopologyExporerTab")
+        
+    @property
+    def controllerpasswordwindow(self):
+        """controllerpasswordwindow"""
+        return self.get_element("ControllerPasswordWindow_TopologyExporerTab")
   
               

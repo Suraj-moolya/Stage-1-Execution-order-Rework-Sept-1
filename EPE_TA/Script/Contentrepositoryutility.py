@@ -194,9 +194,6 @@ def right_click_identifier_in_content_repository(identifier_value):
         Log.Error(f"Error while right-clicking identifier '{identifier_value}': {str(e)}")        
 
 
-     
-        
-
 def select_ContextMenu_Items_EC(menu_item):
   menu = eng_obj.rclickmenutextbox.object
   menu_items = menu.FindAllChildren("ClrClassName", "*MenuItem", 50)
@@ -210,11 +207,6 @@ def select_ContextMenu_Items_EC(menu_item):
   else:
     Log.Warning(f'The Context menu item {menu_item} not found !')
   Applicationutility.wait_in_seconds(4000, 'wait')
-
-
-def test2():
-  right_click_folder_in_content_repository("sample")
-  select_ContextMenu_Items_EC("Edit Content")
   
   
 ###############################################################################
@@ -235,10 +227,12 @@ def enter_identifier_name_in_content_repository(new_identifier):
 
         Sys.Keys(new_identifier)
         Sys.Keys("[Enter]")
-
-        output = obj_lst[0].DataContext.Identifier.OleValue
-        if str(output) == str(new_identifier):
-            Log.Checkpoint(f"Identifier name successfully updated to: {new_identifier}")
+        Applicationutility.wait_in_seconds(2000,'wait')
+        for i in range(len(obj_lst)):
+          output = obj_lst[i].DataContext.Identifier.OleValue
+          if str(output) == str(new_identifier):
+              Log.Checkpoint(f"Identifier name successfully updated to: {new_identifier}")
+              break
         else:
             Log.Error(f"Failed to update identifier. Expected: '{new_identifier}', Found: '{output}'")
 
@@ -383,3 +377,230 @@ def verify_workframe_title_contains_text(expected_text):
 
     except Exception as e:
         Log.Error(f"Error while verifying WorkFrame title: {str(e)}")
+        
+##########################################################################################
+#Function :expand_nodes_CR_editor_Hierarchy_level
+#Description : Double clciks and expands the nodes in CR editor page based on its hierarchy level
+#Parameter :identifier,hierarchy level(str) - name of the node and hierarchy level of the node
+#Example : expand_nodes_CR_editor("Global Root$$1")
+##########################################################################################    
+def expand_nodes_CR_editor_Hierarchy_level(param):
+  identifier,hierarchy = param.split("$$")
+  CR_node = ses_obj.systemexplorernodebutton.object
+  CR_node_list = CR_node.FindAllChildren("ClrClassName", "ExplorerNode", 50)
+  if CR_node_list:
+    for items in CR_node_list:
+      if items.DataContext.Identifier.OleValue == identifier:
+        if hierarchy in str(items.HierarchyLevel):
+          items.DblClick()
+          Log.Message(f"Double clicked on {items.DataContext.Identifier.OleValue} with hierarchy {items.HierarchyLevel}")
+  else:
+    Log.Warning(f"No click performed ")
+
+##########################################################################################
+#Function :Rclick_nodes_CR_editor
+#Description : Right clciks on the nodes in CR editor page based on its hierarchy level
+#Parameter :identifier,hierarchy level(str) - name of the node and hierarchy level of the node
+#Example : Rclick_nodes_CR_editor("User Contents$$3")
+##########################################################################################    
+def Rclick_nodes_CR_editor(param):
+  identifier,hierarchy = param.split("$$")
+  CR_node = ses_obj.systemexplorernodebutton.object
+  CR_node_list = CR_node.FindAllChildren("ClrClassName", "ExplorerNode", 50)
+  if CR_node_list:
+    for items in CR_node_list:
+      if items.DataContext.Identifier.OleValue == identifier:
+        if hierarchy in str(items.HierarchyLevel):
+          items.ClickR()
+          Log.Message(f"Right clicked on {items.DataContext.Identifier.OleValue} with hierarchy {items.HierarchyLevel}")
+  else:
+    Log.Warning(f"No click performed ")
+  
+##########################################################################################
+#Function :Verify_nodes_CR
+# Description: Verifies the nodes present in the CR editor page based on its hierarchy level
+# Parameter: None
+##########################################################################################       
+def Verify_nodes_CR():
+  CR_node = ses_obj.systemexplorernodebutton.object
+  CR_node_list = CR_node.FindAllChildren("ClrClassName", "ExplorerNode", 50)
+  if CR_node_list:
+    for items in CR_node_list:
+      if items.IsVisible == True:
+        if items.DataContext.Identifier.OleValue and items.HierarchyLevel:
+          Log.Checkpoint(f"{items.DataContext.Identifier.OleValue} is at HierarchyLevel {items.HierarchyLevel} on CR editor screen")
+  else:
+    Log.Warning(f"No nodes available")
+    
+##########################################################################################91918
+# Function :Verify_folders_created_editable_CR
+# Description: Verifies the nodes created in the CR editor page are editable or not
+# Parameter: identifier,hierarchy level(str) - name of the node and hierarchy level of the node
+# Examples :  Verify_folders_created_editable_CR('Folder_1$$4')
+##########################################################################################    
+def Verify_folders_created_editable_CR(param):
+  identifier,hierarchy = param.split("$$")
+  CR_node = ses_obj.systemexplorernodebutton.object
+  CR_node_list = CR_node.FindAllChildren("ClrClassName", "ExplorerNode", 50)
+  if CR_node_list:
+    for item in CR_node_list:
+      if item.IsEditing:
+        if item.DataContext.Identifier.Olevalue == identifier:
+          if str(item.HierarchyLevel) == hierarchy:  
+            Log.Message(f'The {item.DataContext.Identifier.Olevalue} with {item.HierarchyLevel} is created and is in editing state')
+            break
+      else:
+        Log.Warning(f"The {item.DataContext.Identifier.Olevalue} with {item.HierarchyLevel} is created and not in editing state")
+  else:
+    Log.Warning(f"No nodes available")    
+
+##########################################################################################
+# Function :editing_nodes_CR_editor
+# Description: Edits the nodes in the CR editor page - F2 key
+# Parameter: identifier,hierarchy level(str) - name of the node and hierarchy level of the node
+# Examples :  Verify_folders_created_editable_CR('Folder_1$$4')
+##########################################################################################
+def editing_nodes_CR_editor(param):
+  identifier,hierarchy = param.split("$$")
+  CR_node = ses_obj.systemexplorernodebutton.object
+  CR_node_list = CR_node.FindAllChildren("ClrClassName", "ExplorerNode", 50)
+  if CR_node_list:
+    for items in CR_node_list:
+      if items.DataContext.Identifier.OleValue == identifier:
+        if hierarchy in str(items.HierarchyLevel):
+          items.Click()
+          Sys.Keys('[F2]')
+          Sys.Keys('[BS]')
+          Log.Message(f"clicked on {items.DataContext.Identifier.OleValue} with hierarchy {items.HierarchyLevel}")
+  else:
+    Log.Warning(f"No click performed ")         
+
+##########################################################################################
+# Function :update_folder_prop
+# Description: updates the folder properties in CR editor page
+# Parameter: identifier,field,value - name of folder,field - either Identifier or Description and 
+#             value - new name
+# Examples :  update_folder_prop('Folder_1$$Identifier$$Newname')
+##########################################################################################
+def update_folder_prop(param):
+  identifier, field, value = param.split('$$')
+  items = ses_obj.systemexplorernodebutton.object.FindAllChildren("ClrClassName", "Grid", 1000)
+  if not items: Applicationutility.take_screenshot(); Log.Error("No system explorer nodes found."); return
+  for item in items:
+    dc = getattr(item, "DataContext", None)
+    if hasattr(dc, "Identifier") and str(dc.Identifier) == identifier:
+      if hasattr(dc, field):
+        setattr(dc, field, value)
+        Log.Checkpoint(f"Updated {field} to '{value}' for node '{identifier}'")
+      else:
+        Applicationutility.take_screenshot(); Log.Error(f"Field '{field}' not found in DataContext.")
+      break
+  else:
+    Applicationutility.take_screenshot(); Log.Error(f"No matching node found for identifier '{identifier}'")
+
+##########################################################################################
+# Function :verify_folder_prop_name_valid
+# Description: Verifies the new name to folder is valid or not
+# Parameter: None
+##########################################################################################
+def verify_folder_prop_name_valid():
+  fol_id = ses_obj.validatefoldernamevalid.object
+  fol_chd = fol_id.FindAllChildren("WPFControlAutomationId", "Identifier_FieldEditor", 1000)
+  for item in fol_chd:
+    if item.tooltip != None:
+      if hasattr(item, 'ToolTip'):
+        Log.Warning(f" {item.ToolTip} ")
+        Applicationutility.wait_in_seconds(1500, 'Wait')
+    else:
+      Log.Message(f'The folder was updated with {item.Text}')    
+
+##########################################################################################
+# Function   : Content_is_in_editing_state
+# Description: Checks whether the content repository textbox is in editing state or not.
+# Parameter  : None
+##########################################################################################
+def verify_Content_is_in_editing_state():
+  text_blk = con_obj.contentrepositorytextbox.object
+  if text_blk.DataContext.IsEditing is True:
+    Log.Message('The textbox is editing state')
+  else:
+    Log.Error('The node is not in editing state')
+
+##########################################################################################
+# Function   : Verify_Content_list_of_created_content
+# Description: Verifies if the created content with specific Identifier, Version, and Date 
+#              exists in the content list. Logs checkpoints if found; logs error otherwise.
+# Parameter  : param (str) - A string containing Identifier, Version, and Date separated by '$$'
+##########################################################################################
+def Verify_Content_list_of_created_content():
+#  Identifier,version,Date = param.split('$$')
+  icon = eng_obj.workspacetextbox.object.FindAllChildren('ClrClassName','GridViewRow',1000)
+  for item in icon:
+    if item.DataContext.Identifier.OleValue:
+      if item.DataContext.Version.OleValue:
+        if item.DataContext.DateTime.OleValue:
+           Log.Checkpoint(f'name : {item.DataContext.Identifier.OleValue}')
+           Log.Checkpoint(f'version : {item.DataContext.Version.OleValue}')
+           Log.Checkpoint(f'Date : {item.DataContext.DateTime.OleValue}')
+           break
+  else:
+    Log.Error('There is no information ')
+
+##########################################################################################
+# Function   : rename_content_validation
+# Description: Enters a value into the workspace text box to rename content and validates 
+#              whether the entered name is valid or shows a tooltip with an error.
+# Parameter  : Enter_value (str) - The value to be entered as the new content name.
+##########################################################################################
+def rename_content_validation(Enter_value):
+  column_box = con_obj.workframecontroltextbox.object
+  text_box = column_box.FindChild('ClrClassName','GridViewCell',100).FindChild('ClrClassName','TextBox',100)
+  Sys.Keys('[F2]')
+  Applicationutility.wait_in_seconds(2000, 'Wait')
+  text_box.Keys(Enter_value)
+  Sys.Keys('[Enter]')   
+  Applicationutility.wait_in_seconds(2000, 'Wait')
+  if column_box.DataContext.HasErrors:
+    if text_box.ToolTip.OleValue:
+      Log.Warning(f'No deafault name or invalid : {text_box.ToolTip.OleValue} ')
+      return
+  else:
+    updated_obj = eng_obj.workspacetextbox.object.FindChild('ClrClassName','TextBlock',1000)
+    Log.Checkpoint(f'Identifier has a valid text : {updated_obj.WPFControlText}')
+
+##########################################################################################
+# Function   : rclick_on_content
+# Description: Performs a right-click on a content item in the workspace grid based on 
+#              a matching identifier.
+# Parameter  : identifier - The identifier string to search within the grid row.
+# Example    : rclick_on_content('Folder_1')
+##########################################################################################     
+def rclick_on_content(identifier):
+  Content_text = eng_obj.workspacetextbox.object.FindChild('ClrClassName','GridViewRow',1000)
+  if Content_text.Visible:
+    if identifier in Content_text.DataContext.Identifier.OleValue:
+      Content_text.ClickR()
+      Log.Checkpoint(f'RClicked on {Content_text.DataContext.Identifier.OleValue}')
+  else:
+    Log.Error('No object found with specified identifier')
+    
+##########################################################################################
+# Function   : Select_filters_created_content
+# Description: Selects a filter in the workspace grid based on the given filter name.
+# Parameter  : filter_name - The name of the filter column to be clicked.
+# Example    : Select_filters_created_content('Identifier')
+##########################################################################################    
+def Select_filters_created_content(filter_name):
+  Filtericon = eng_obj.workspacetextbox.object.FindAllChildren('ClrClassName','FilteringDropDown',1000)
+  for i in Filtericon:
+    if filter_name == i.Column.UniqueName.OleValue:
+      i.Click()
+      Log.Checkpoint(f"{i.Column.UniqueName.OleValue} filter is clicked")
+      Applicationutility.take_screenshot()
+      break
+  else:
+    Log.Error(f"{filter_name} not found")
+        
+  
+  
+  

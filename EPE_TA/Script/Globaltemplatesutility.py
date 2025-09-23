@@ -59,11 +59,12 @@ def search_and_double_click_search_text_GTE(param):
 def search_and_right_click_search_text_GTE(param):
   search_text, identifier, version = param.split('$$')
   search_box = gte_obj.globaltemplatesearchtextbox
-  search_box.click()
-  Applicationutility.wait_in_seconds(1000, 'wait')
-  search_box.sys_keys(search_text)
+  searchbox___ = search_box.object.FindChild('ClrClassName', 'SearchComboBox', 10)
+  searchbox___.Keys('^A')
+  searchbox___.Keys('[BS]')
+  searchbox___.Keys(search_text)
+  searchbox___.Keys('[Enter]')
   Applicationutility.wait_in_seconds(3000, 'wait')
-  search_box.sys_keys('[Enter]')
   search_list = search_box.find_children_for_grid_view_row()
   assert search_list is not None, "Search results could not be retrieved"
   if not search_list:
@@ -72,15 +73,15 @@ def search_and_right_click_search_text_GTE(param):
   else:
     item_found = False
     for item in search_list:
-      if str(identifier) in str(item.DataContext.Identifier.OleValue) and str(version) in str(item.DataContext.Version.OleValue):
-        item.ClickR()
-        item_found = True
-        break
+      if item.DataContext is not None:
+        if str(identifier) in str(item.DataContext.Identifier.OleValue) and str(version) in str(item.DataContext.Version.OleValue):
+          item.ClickR()
+          item_found = True
+          break
     if not item_found:
       Applicationutility.take_screenshot()
       Log.Error("Matching item not found in search results.")
   Applicationutility.wait_in_seconds(3000, 'wait')
- 
 
 ###############################################################################
 # Function : rclick_idedntifier_explorer_GTE
@@ -178,12 +179,15 @@ def verify_search_box_message_GTE(search_text):
 #             Example: "Global Templates"
 ###############################################################################
 def verify_title_bar(tabname):
-  titlebar = gte_obj.titlebartab.object
-  if titlebar.DataContext.HeaderText == tabname:
-    Log.Checkpoint(f"Successfully navigated to '{tabname}'.")
-  else:
-    Applicationutility.take_screenshot()
-    Log.Error(f"Navigation error: Expected '{tabname}', but currently on '{titlebar.DataContext.HeaderText}'.")
+  titlebar = gte_obj.framehostcontainergte.object.FindAllChildren('ClrClassname','CloseableTabItem',100)
+  for title in titlebar:
+    if title.IsActive:
+      if tabname in title.DataContext.TitleToolTip.OleValue:
+        Log.Checkpoint(f"Successfully navigated to {title.DataContext.TitleToolTip.OleValue}")
+        break
+      else:
+        Applicationutility.take_screenshot()
+        Log.Error(f"Navigation error")
 
 ###############################################################################
 # Function : select_tab_in_gtw
@@ -643,6 +647,102 @@ def new_template_save_as_window_gte():
   except Exception as e:
     Log.Error(f"Error: {e}")
     
+###############################################################################
+# Function   : right_click_on_Func
+# Description: Finds a FunctionNodeControl by its Identifier (e.g., "FanIn_1"),
+#              right-clicks it,
+# Parameter  : function_name (str) - The Identifier of the function node 
+# Example    : right_click_on_Func("FanIn_1")
+#              right_click_on_Func("CrDocument_1")
+###############################################################################
+
+def right_click_on_Func(function_name):
+  for node in gte_obj.compositeeditorreadview.object.FindAllChildren("ClrClassName", "FunctionNodeControl", 100):
+    if node.DataContext.Identifier == function_name:
+      node.ClickR(node.Width // 2, 5)
+      Log.Checkpoint(f"Right-clicked on Element '{node.DataContext.Identifier}'.")
+      break
+  else:
+      Log.Warning(f"Element '{function_name}' not found")
+      
+###############################################################################
+# Function   : paste_function
+# Description: Clicks into the Composite Editor workspace and pastes the
+#              previously copied function using Ctrl+V.
+# Example    : paste_function()
+###############################################################################     
+      
+def paste_function():
+  ws = gte_obj.compositeeditorworkspacebutton.object
+  if ws.Exists:
+    ws.Click()
+    Sys.Keys("^v")
+    Log.Checkpoint("Pasted function into workspace using Ctrl+V")
+  else:
+    Log.Warning("Composite Editor workspace not found")
+    
+###############################################################################
+# Function   : click_and_verify
+# Description: Finds a PortNodeControl by its Identifier, clicks it, and verifies
+#              that the node is selected successfully.
+# Parameter  : identifier (str) - The Identifier of the PortNodeControl
+# Example    : click_and_verify("A")
+###############################################################################
+    
+def click_and_verify(identifier):
+  for node in gte_obj.interfacecontrolgte.object.FindAllChildren("ClrClassName", "PortNodeControl", 100):
+    if node.DataContext.Identifier == identifier:
+      node.Click(node.Width // 2, 5)
+      aqObject.CheckProperty(node, "IsSelected", cmpEqual, True)
+      Log.Checkpoint(f"Node '{node.DataContext.Identifier}' clicked and selected.")
+      break
+  else:
+    Log.Warning(f"Node '{identifier}' not found")
+    
+###############################################################################
+# Function   : verify_unselect
+# Description: Clicks outside in the Interface Control window to unselect the
+#              given PortNodeControl and verifies it is deselected.
+# Parameter  : identifier (str) - The Identifier of the PortNodeControl
+# Example    : verify_unselect("A")
+###############################################################################
+
+def verify_unselect(identifier):
+  for node in gte_obj.interfacecontrolgte.object.FindAllChildren("ClrClassName", "PortNodeControl", 100):
+    if node.DataContext.Identifier == identifier:
+      gte_obj.interfacecontrolgte.object.Click()
+      aqObject.CheckProperty(node, "IsSelected", cmpEqual, False)
+      Log.Checkpoint(f"Node '{identifier}' unselected after clicking outside.")
+      break
+  else:
+    Log.Warning(f"Node '{identifier}' not found")
+    
+###############################################################################
+# Function   : select_area_and_verify
+# Description: Double-clicks the given item in popup and asserts that a
+#              ParameterNodeControl is selected in Composite Editor.
+# Parameter  : param_name (str) - Name to show in popup
+# Example    : select_area_and_verify("$Area")
+###############################################################################
+
+def select_area_and_verify(param_name):
+  area = next(
+    (b for b in eng_obj.userdropdownmenuitemtextbox.object.FindAllChildren("ClrClassName", "Border", 100)
+     if param_name in str(getattr(getattr(b, "DataContext", None), "NameToShow", ""))),
+    None
+  )
+  assert area is not None, f"Item '{param_name}' not found in popup"
+  area.DblClick()
+  Log.Checkpoint(f"Double-clicked '{param_name}' in popup")
+  node = next(
+    (n for n in gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", "ParameterNodeControl", 100)
+     if getattr(n, "IsSelected", False) and getattr(getattr(n, "DataContext", None), "Identifier", None)),
+    None
+  )
+  assert node is not None, "No selected 'ParameterNodeControl' found in Composite Editor"
+  aqObject.CheckProperty(node, "IsSelected", cmpEqual, True)
+  Log.Checkpoint(f"Verified selected: {getattr(node.DataContext, 'Identifier', node.FullName)}")
+
 ######################################################################################   
 # Function : Right_click_on_the_editor_window_GT
 # Description : Performs a right-click on composite editor window in the Global Templates Window.
@@ -663,17 +763,15 @@ def Right_click_on_the_editor_window_GT():
 # Parameter : prop (str) - The name of the tab to verify
 #             Example: "Global Templates"
 ############################################################################################  
-
 def verify_viewmode_Composite_editor(param):
-  views = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'MenuItem', 100)
-  for item in views:
-    if item.Exists and item.Enabled:
-      if str(item.Header.OleValue) == str(param):
-        Log.Checkpoint("editor is in view mode.")
-        break
-      else:
-        Log.Warning(f"editor is NOT in '{param}' view mode.")
-        
+  for item in gte_obj.framehostcontainergte.object.FindAllChildren('ClrClassName','EditorControl', 100):
+    if param in str(item.DataContext.TitleBarText):
+      Log.Checkpoint(f"{item.DataContext.TitleBarText} editor is in view mode.")
+      break
+      
+  else:
+     Log.Error(f"No editor with title containing '{param}' is in view mode.")
+             
 ############################################################################################ 
 # Function : Click_edit_menuitem
 # Description : perform to click menubar item in the Global Templates Window.
@@ -687,8 +785,8 @@ def Click_edit_menuitem(param):
         item.click()
         Log.Checkpoint(f"{param} menu item is clicked")
         break
-      else:
-        Log.Warning(f"{param} menu item not found.")    
+  else:
+    Log.Warning(f"{param} menu item not found.")    
 
 ############################################################################################ 
 # Function : verify_changeslog_window
@@ -704,29 +802,29 @@ def verify_changeslog_window():
    
 ##############################################################################################
 # Function : click_editor_menuitem
-# Description :perform to click editor menu in the Global Templates Window.
+# Description :perform to click Composite/Facet editor menu in the Global Templates Window.
 # Parameter : prop (str) - The name of the menu to click
 #             Example: "Global Templates"
 ###########################################################################################
 def click_editor_menuitem(param):
-    items = gte_obj.compositeeditorreadview.object.FindChild('ClrClassName', 'Path', 1000)
-    if param in items.DataContext.TitleBarText.OleValue:
-            items.click()
-            Log.Checkpoint(f"Clicked on editor menuitem: {param}")
+    for items in gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'Path', 1000):
+      if param in str(getattr(items.DataContext, "TitleBarText", None)):
+        items.Click()
+        Log.Checkpoint(f"Clicked on editor menuitem: {param}")
+        break
     else:
-        Log.Error(f"No editor menuitem found with text containing '{param}'")
-
+        Log.Error(f"Editor menuitem '{param}' was not found.")
 ##############################################################################################          
 # Function :verify_header_panel_items_EC
-# Description : perform to verify header panel items closed in the Global Templates Window.
+# Description : perform to verify header panel items in the Global Templates Window.
 # Parameter : prop (str) - The name of the window to verify
 #             Example: "Global Templates"
 #################################################################################################3
 def verify_header_panel_items_EC(header_value):
   if eng_obj.workspacetextbox.object.Exists:
-      Log.Checkpoint(f"{header_value} verify tab is closed ")
+      Log.Checkpoint(f"{header_value} tab is displayed ")    
   else:
-   Log.Error(f"{header_value} verify tab is displayed ")
+   Log.Error(f"{header_value} tab is not found ")
    
 ##################################################################################################
 # Function :verify_Context_SubMenu_Items_EC
@@ -747,6 +845,38 @@ def verify_Context_SubMenu_Items_EC():
       break
   else:
     Log.Error('Context menu items verification completed') 
+
+########################################################################################
+# Function : verify_the_template_on_the_editor_window_GT
+# Description : Verifies the template present in the Global Templates Editor Window.
+# Parameter : template (str) - Name of the template.
+#             Example: "$AInputGP_UL (1.0.42)"
+########################################################################################
+def verify_the_template_on_the_editor_window_GT(template):
+  editor = gte_obj.compositeeditorworkspacebutton.object.FindAllChildren('ClrClassName','IncludeNodeControl','100')
+  for obj in editor:
+    if obj.Visible:
+      if obj.DataContext.DisplayType != None and obj.DataContext.DisplayType== template:
+        Log.Checkpoint(f'{template} is present in the editor window')
+        break
+  else:
+    Log.Error(f'{template} is not present in the editor window')
+    
+######################################################################################
+# Function : verify_element_on_the_editor_window_GT
+# Description : Verifies the element present in the Global Templates Editor Window.
+# Parameter : template (str) - Name of the element.
+#             Example: "Analyzer PV SP"
+######################################################################################	
+def verify_element_on_the_editor_window_GT(element):
+  editor = gte_obj.compositeeditorworkspacebutton.object.FindAllChildren('ClrClassName','InputValueNodeControl',100)
+  for obj in editor:
+    if obj.Visible:
+      if obj.DataContext.Value.OleValue == element:
+        Log.Checkpoint(f'{element} is present in the editor window')
+        break
+  else:
+    Log.Error(f'{element} is not present in the editor window')
 
 ###############################################################################
 # Function   : Click_on_select_item_in_new_item_tab
@@ -887,3 +1017,630 @@ def verify_item_created_under_path(param):
       Log.Error(f'identifier is not updated as {Identifier} under path {node_name}')
   else:
     Log.Error(f'The element not found : {node_name} ')
+
+###############################################################################################
+# Function : selectall_key
+# Description: Selects all text in the active editor using Ctrl + A.
+# Parameter : None
+# Example : selectall_key()
+###############################################################################     
+def selectall_key():
+  gte_obj.compositeeditorreadview.object.Click()
+  Sys.Keys('^a')
+  Applicationutility.wait_in_seconds(3000, 'wait')
+  
+###############################################################################  
+# Function : copy_key
+# Description: Copies the selected text using Ctrl + C.
+# Parameter : None
+# Example : copy_key()
+############################################################################### 
+def copy_key():
+  Sys.Keys('^c')
+  Applicationutility.wait_in_seconds(3000, 'wait')
+
+###############################################################################  
+# Function : paste_key
+# Description: Pastes the clipboard content using Ctrl + V.
+# Parameter : None
+# Example : paste_key()
+###############################################################################  
+def paste_key():
+  Sys.Keys('^v')
+  Applicationutility.wait_in_seconds(3000, 'wait')
+
+###############################################################################  
+# Function : verify_warning_text_in_GT_pane
+# Description: Verifies if the warning message is displayed
+#              in the pane of the Global Template Editor. Logs a checkpoint if
+#              found,otherwise logs an error.
+# Parameter : None
+# Example : verify_warning_text_in_GT_pane("message")
+#           "Please select only one object."
+#           "Unable to add the items in view mode"
+###############################################################################
+def verify_warning_text_in_GT_pane(message):
+  text = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'TextBlock', 1000)
+  for i in text:
+    if i.Text.OleValue == message:
+      Log.Checkpoint(f"{i.Text.OleValue} message is displayed")
+      break
+  else:
+    Log.Error("Warning message not found")
+
+###################################################################################################  
+# Function : find_and_search_text
+# Description: Opens the Find dialog in the editor using Ctrl + F, enters the given text,
+#              and initiates the search by pressing Enter. Includes wait time before and after input.
+# Parameter : text (str) – The text to be searched within the editor.
+# Example : find_and_search_text("SampleText")
+####################################################################################################
+def find_and_search_text(text):
+  gte_obj.compositeeditorreadview.object.Click()
+  Sys.Keys('^f')
+  Applicationutility.wait_in_seconds(3000, 'wait') 
+  Sys.Keys(text) 
+  Sys.keys('[Enter]')
+  Applicationutility.wait_in_seconds(5000, 'wait')
+  
+#############################################################################################################  
+# Function : find_and_right_click_search_text_GTE
+# Description: Searches for a text block in the Global Template Editor (GTE) with the specified identifier
+#              and performs a right-click on it if found in column 1. Logs an error if no match is found.
+# Parameter : identifier (str) – The text to search and right-click on in the editor.
+# Example : find_and_right_click_search_text_GTE("MyFacetName")
+############################################################################################################  
+def find_and_right_click_search_text_GTE(identifier):
+  search_text = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'TextBlock', 1000)
+  for text in search_text:
+    if text.WPFControlText == identifier:
+      text.ClickR()
+      break
+  else:
+      Log.Error("Matching item not found in search results.")
+  Applicationutility.wait_in_seconds(3000, 'wait')
+  
+#####################################################################################################  
+# Function   : right_click_on_Elements_in_GTE
+# Description: Performs a right-click on a specified element (by identifier) 
+#              inside the GTE composite editor view.
+# Parameter  : identifier (str) – The name/identifier of the element/interface to right-click.
+# Example    : right_click_on_Elements_in_GTE("Control")
+#              right_click_on_Elements_in_GTE("GroupData")
+######################################################################################################
+def right_click_on_Elements_in_GTE(identifier):
+  Editor = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'GraphNodeHeader', 100)
+  for element in Editor:
+    if element.DataContext.Identifier.OleValue == identifier:
+      element.ClickR()
+      Log.Checkpoint(f"Right-clicked on Element '{element.DataContext.Identifier.OleValue}'")
+      break
+  else:
+      Log.Error(f"{identifier} not found in the GTE Editor.")
+
+####################################################################################################  
+# Function   : right_click_on_InputValue_in_GTE
+# Description: Performs a right-click on an input value node in the GTE editor
+#              identified by the given identifier.
+# Parameter  : identifier (str) – The display value identifier of the input node to right-click.
+# Example    : right_click_on_InputValue_in_GTE("InputValue1")
+####################################################################################################  
+  
+def right_click_on_InputValue_in_GTE(identifier):
+  Editor = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'InputValueNodeControl', 100)
+  for input in Editor:
+    if input.DataContext.DisplayInformation.OleValue == identifier:
+      input.ClickR()
+      Log.Checkpoint(f"Right-clicked on input value '{input.DataContext.DisplayInformation.OleValue}'")
+      break
+  else:
+      Log.Error(f"{identifier} not found in the GTE Editor.")
+  
+###############################################################################  
+# Function   : right_click_on_Parameter_in_GTE
+# Description: Performs a right-click on a parameter node in the GTE editor
+#              matching the specified identifier.
+# Parameter  : identifier (str) – The identifier of the parameter node to right-click.
+# Example    : right_click_on_Parameter_in_GTE("$Area")
+###############################################################################
+        
+def right_click_on_Parameter_in_GTE(identifier):
+  Editor = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'ParameterNodeControl', 100)
+  for param in Editor:
+    if param.DataContext.Identifier.OleValue == identifier:
+      param.ClickR()
+      Log.Checkpoint(f"Right-clicked on Parameter '{param.DataContext.Identifier.OleValue}'")
+      break
+  else:
+      Log.Error(f"{identifier} not found in the GTE Editor.")
+      
+########################################################################################  
+# Function   : right_click_on_grey_hexagon_in_GTE
+# Description: Performs a right-click on a grey hexagon (DeferredPortControl) node 
+#              in the GTE editor identified by the given description.
+# Parameter  : identifier (str) – The description of the grey hexagon node to right-click.
+# Example    : right_click_on_grey_hexagon_in_GTE("Limit Alarm Input Selection")
+########################################################################################  
+  
+def right_click_on_grey_hexagon_in_GTE(identifier):
+  Editor = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'DeferredPortControl', 100)
+  for hexa in Editor:
+    if hexa.DataContext.Description == identifier:
+      hexa.ClickR()
+      Log.Checkpoint(f"Right-clicked on grey hexagon '{hexa.DataContext.Description}'")
+      break
+  else:
+      Log.Error(f"{identifier} not found in the GTE Editor.")
+      
+#########################################################################################  
+# Function   : right_click_on_orange_hexagon_in_GTE
+# Description: Performs a right-click on an orange hexagon (DeferredPortControl) node
+#              in the GTE editor identified by the specified identifier.
+# Parameter  : identifier (str) – The identifier of the orange hexagon node to right-click.
+# Example    : right_click_on_orange_hexagon_in_GTE("DeferredPort_32")
+#########################################################################################  
+  
+def right_click_on_orange_hexagon_in_GTE(identifier):
+  Editor = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'DeferredPortControl', 100)
+  for hexa in Editor:
+    if hexa.DataContext.Identifier.OleValue == identifier:
+      hexa.ClickR()
+      Log.Checkpoint(f"Right-clicked on orange hexagon '{hexa.DataContext.Identifier.OleValue}'")
+      break
+  else:
+      Log.Error(f"{identifier} not found in the GTE Editor.")
+      
+##########################################################################################
+# Function   : Click_Toolbaritem_Select_variable_window
+# Description: Clicks a toolbar item in the Select Variable window based on the tooltip text.
+# Parameter  : param - The tooltip text of the toolbar item to click.
+# Example    : Click_Toolbaritem_Select_variable_window('Add Variable')
+##########################################################################################    
+
+def Click_Toolbaritem_Select_variable_window(param):
+  views = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'Button', 100)
+  for item in views:
+    if item.Visible:
+      if item.DataContext.ToolTip.OleValue == param:
+        item.click()
+        Log.Checkpoint(f"{param} menu item is clicked")
+        break
+      else:
+        Log.Warning(f"{param} menu item not found.")
+        
+
+##########################################################################################
+# Function   : Right_click_module_of_template
+# Description: Performs a right-click on a module in the template editor based on the 
+#              provided description.
+# Parameter  : Description - The partial or full description of the module to be right-clicked.
+# Example    : Right_click_module_of_template('moduleDescription')
+##########################################################################################        
+def Right_click_module_of_template(Identifier):
+  module = gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", 'GraphNodeHeader', 100)
+  Log.Message(len(module))
+  for item in module:
+    if item.DataContext.Identifier.OleValue == Identifier:
+      item.ClickR()
+      Log.Checkpoint(f'Clicked on {item.DataContext.Identifier.OleValue}')
+      break
+  else:
+    Log.Error('The module does not exists')
+    
+##########################################################################################
+# Function   : check_connecter_tooltip_by_text
+# Description: Checks the tooltip of a connector in the template editor using its display text.
+# Parameter  : display_text - The partial or full text of the connector to locate.
+# Example    : check_connecter_tooltip_by_text('ConnectorName')
+##########################################################################################    
+def check_connecter_tooltip_by_text(display_text):
+  Link = gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", 'TextBlockTrimmer', 100)
+  for text in Link:
+    if display_text in text.WPFControlText:
+      Log.Checkpoint(f'The tooltip for the connector : {display_text} is {text.ToolTip.OleValue}')
+      break
+  else:
+    Log.Error('The connector is not available')
+
+##########################################################################################
+# Function   : Rclick_on_connector_composite_editor_GT
+# Description: Performs a right-click on a connector in the composite editor using the 
+#              provided connector name.
+# Parameter  : connector_name - The partial or full name of the connector to be right-clicked.
+# Example    : Rclick_on_connector_composite_editor_GT('ConnectorName')
+##########################################################################################        
+def Rclick_on_connector_composite_editor_GT(connector_name):
+  target_links =  gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", 'TextBlockTrimmer', 100)
+  for text in Link:
+    if connector_name in text.WPFControlText:
+      text.ClickR()
+      Log.Checkpoint(f'right clicked on {display_text}')
+      break
+  else:
+    Log.Error('The connector is not available')
+    
+###############################################################################
+# Function   : click_Panes in GTE 
+# Description: Maps pane names to objects, waits for them, verifies visibility,
+#              logs position on screen, and clicks.
+###############################################################################
+  
+def Verify_and_Click_Elements_In_GTE(elem):
+  if elem.WaitProperty("Exists", True, 30000):
+    aqObject.CheckProperty(elem, "VisibleOnScreen", cmpEqual, True)
+    sw, sh, cx, cy = Sys.Desktop.Width, Sys.Desktop.Height, elem.ScreenLeft + elem.Width // 2, elem.ScreenTop + elem.Height // 2
+    Log.Checkpoint(f"{elem.WPFControlText} is visible at {'Top' if cy < sh//2 else 'Bottom'}-{'Left' if cx < sw//2 else 'Right'}")
+    elem.Click()
+            
+def click_element_rules():
+  elem = gte_obj.elementrulesgte.object
+  Verify_and_Click_Elements_In_GTE(elem)
+
+
+def click_toolbox():
+  elem = gte_obj.toolboxbutton.object
+  Verify_and_Click_Elements_In_GTE(elem)
+
+
+def click_document_outline():
+  elem = gte_obj.documentoutlinebutton.object
+  Verify_and_Click_Elements_In_GTE(elem)
+
+
+def click_browser():
+  elem = gte_obj.browsersgte.object
+  Verify_and_Click_Elements_In_GTE(elem)
+
+
+def click_interface_rules():
+  elem = gte_obj.interfacerulesgte.object
+  Verify_and_Click_Elements_In_GTE(elem)
+
+
+def click_properties():
+  elem = gte_obj.propertiesgte.object
+  Verify_and_Click_Elements_In_GTE(elem)
+    
+def click_dependencytree():
+  elem = gte_obj.dependenciesgte.object
+  Verify_and_Click_Elements_In_GTE(elem)
+    
+def click_externalref():
+  elem = gte_obj.externelrefgte.object
+  Verify_and_Click_Elements_In_GTE(elem)
+    
+def click_usedby():
+  elem = gte_obj.usedbygte.object
+  Verify_and_Click_Elements_In_GTE(elem)
+
+#############################################################################################  
+# Function  : right_click_on_block_in_Interface_Editor
+# Description: Right-clicks on a block (PortNodeControl) in the Interface Editor 
+#              matching the given identifier.
+# Parameter : identifier (str) – The unique identifier of the block to be right-clicked.
+# Example   : right_click_on_block_in_Interface_Editor("Def")
+#             Def, Ref
+#############################################################################################
+def right_click_on_block_in_Interface_Editor(identifier):
+  Editor = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'PortNodeControl', 100)
+  for node in Editor:
+    if node.DataContext.Identifier.OleValue == identifier:
+      node.ClickR(node.Width // 2, 5)
+      Log.Checkpoint(f"Right-clicked on Element '{node.DataContext.Identifier.OleValue}'")
+      break
+  else:
+      Log.Error(f"{identifier} not found in the GTE Editor.")
+      
+############################################################################################  
+# Function   : drag_and_drop_toolbox_item_to_Interface_Editor_GTE
+# Description: Drags a toolbox item by name and drops it into the center of the editor.
+# Parameter  : func (str) – Name of the toolbox item to drag (e.g., "Concat")
+# Example    : drag_and_drop_toolbox_item_to_Interface_Editor_GTE("Concat")
+###########################################################################################
+def drag_and_drop_toolbox_item_to_Interface_Editor_GTE(func):
+    tools = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'TreeListViewRow', 100) 
+    if not tools:
+        Applicationutility.take_screenshot()
+        Log.Error("No tools found in the toolbox.")
+        return
+    for tool in tools:
+        if getattr(tool.DataContext, 'NameToShow', None) and getattr(tool.DataContext.NameToShow, 'OleValue', None) == func:
+            location = gte_obj.compositeeditorreadview.object
+            from_x = tool.Width / 2
+            from_y = tool.Height / 2
+            to_x = location.ScreenLeft + location.Width / 2 - tool.ScreenLeft
+            to_y = location.ScreenTop + location.Height / 2 - tool.ScreenTop
+            tool.Drag(from_x, from_y, to_x, to_y)
+
+            Log.Checkpoint(f"Dragged '{func}' tool to the edit page.")
+            Applicationutility.wait_in_seconds(3000, 'Wait')
+            return
+    Applicationutility.take_screenshot()
+    Log.Error("Could not find the tool or destination to perform drag-and-drop.")
+    
+###########################################################################################  
+# Function : right_click_on_transformation_item_in_GTE
+# Description: Finds a transformation item by its identifier in the GTE editor and performs a right-click on it.
+# Parameter : identifier (str) - The unique identifier of the transformation item to find.
+# Example : right_click_on_transformation_item_in_GTE("transform_123")
+###########################################################################################
+def right_click_on_transformation_item_in_GTE(identifier):
+  Editor = gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'TransformNodeControl', 100)
+  for item in Editor:
+    if item.DataContext.Identifier.OleValue == identifier:
+      item.ClickR()
+      Log.Checkpoint(f"Right-clicked on transformation item '{item.DataContext.Identifier.OleValue}'")
+      break
+  else:
+      Log.Error(f"{identifier} not found in the GTE Editor.")
+
+############################################################################################
+# Function  : multiselect_GTE_items
+# Description : Selects multiple items in the GTE editor (interface, function, input, 
+#               system parameter, element).
+#               Skips any item if its value is empty.
+# Parameter : param (str) – String with 5 values separated by "$$":
+#                 element$$function$$input$$interface$$sysparam
+# Example : multiselect_GTE_items("DigitalInput$$Name$$_DInputGP$$PV$$$Area")
+#           multiselect_GTE_items("DigitalInput$$$$$")  # Selects only element
+##############################################################################################
+
+def multiselect_GTE_items(param):
+    element, function, input_value, interface, sysparam = param.split("$$")
+    if interface:
+        for inter in gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'GraphNodeHeader', 100):
+            if inter.DataContext.Identifier.OleValue == interface:
+                inter.Click(10, 10, skCtrl)
+                Log.Checkpoint(f"Interface '{interface}' is selected")
+                break
+        else:
+            Log.Error(f"Interface '{interface}' not found in the editor window")
+    else:
+        Log.Message("Skipping interface selection (no parameter provided)")
+    if function:
+        for node in gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", "FunctionNodeControl", 100):
+            if node.DataContext.Identifier == function:
+                node.Click(10, 10, skCtrl)
+                Log.Checkpoint(f"Function '{function}' is selected")
+                break
+        else:
+            Log.Error(f"Function '{function}' not found in the editor window")
+    else:
+        Log.Message("Skipping function selection (no parameter provided)")
+    if input_value:
+        for value in gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'InputValueNodeControl', 100):
+            if value.DataContext.DisplayInformation.OleValue == input_value:
+                value.Click(10, 10, skCtrl)
+                Log.Checkpoint(f"Input value '{input_value}' is selected")
+                break
+        else:
+            Log.Error(f"Input value '{input_value}' not found in the editor window")
+    else:
+        Log.Message("Skipping input value selection (no parameter provided)")
+    if sysparam:
+        for sys_param in gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'ParameterNodeControl', 100):
+            if sys_param.DataContext.Identifier.OleValue == sysparam:
+                sys_param.Click(10, 10, skCtrl)
+                Log.Checkpoint(f"Parameter '{sysparam}' is selected")
+                break
+        else:
+            Log.Error(f"Parameter '{sysparam}' not found in the editor window")
+    else:
+        Log.Message("Skipping system parameter selection (no parameter provided)")      
+    if element:
+        for elem in gte_obj.compositeeditorreadview.object.FindAllChildren('ClrClassName', 'GraphNodeHeader', 100):
+            if elem.DataContext.Identifier.OleValue == element:
+                elem.Click(10, 10, skCtrl)
+                Log.Checkpoint(f"Element '{element}' is selected")
+                break
+        else:
+            Log.Error(f"Element '{element}' not found in the editor window")
+    else:
+        Log.Message("Skipping element selection (no parameter provided)")
+        
+##############################################################################################
+# Function   : RClick_link_in_Interface_Editor
+# Description: Searches for a graphical link in the Interface Editor where 
+#              'IsPortA' is True and 'OleValue' is "String". If found, performs 
+#              a right-click on the link and logs a checkpoint. Waits 3 seconds 
+#              after clicking.
+# Parameter  : None
+# Example    : RClick_link_in_Interface_Editor()
+#############################################################################################
+  
+def RClick_link_in_Interface_Editor():
+    Editor = gte_obj.compositeeditorreadview.object
+    graphic_links = Editor.FindAllChildren('ClrClassName', 'TextBlock', 1000)
+    for link in graphic_links:
+        if bool(getattr(link.DataContext, 'IsPortA', False)) and str(getattr(link.Text, 'OleValue', '')) == "String":
+            Editor.ClickR(link.Left+250+link.Width, link.Top-100)
+            Applicationutility.wait_in_seconds(3000, 'wait')
+            Log.Checkpoint("Right clicked on the graphical link")
+            break
+    else:
+        Log.Error("No matching link found")
+        
+#########################################################################################  
+
+# Function   : RClick_link_in_Composite_Editor
+# Description: Finds and right-clicks a graphical link in the composite editor 
+#              based on the given identifier.
+# Parameter  : identifier - The OleValue of the link to be right-clicked.
+# Example    : RClick_link_in_Composite_Editor("PIDStatus")
+
+#########################################################################################
+
+def RClick_link_in_Composite_Editor(identifier):
+    Editor = gte_obj.compositeeditorreadview.object
+    graphic_links = Editor.FindAllChildren('ClrClassName', 'TextBlock', 1000)
+    for link in graphic_links:
+        if getattr(getattr(link.DataContext, "Identifier", None), "OleValue", None) == identifier:
+            Editor.ClickR(link.Left+500+link.Width, link.Top+50)
+            Applicationutility.wait_in_seconds(3000, 'wait')
+            Log.Checkpoint("Right clicked on the graphical link")
+            break
+    else:
+        Log.Error("No matching link found")   
+        
+##########################################################################################
+# Function   : no_of_target_links_connector
+# Description: Verifies if a given connector is present in the composite editor and checks
+#              if it is connected. If connected, logs its source and destination paths.
+# Parameter  : connector_name - The partial or full name of the connector to validate.
+# Example    : no_of_target_links_connector('Connector')
+##########################################################################################    
+def no_of_target_links_connector(connector_name):
+  target_links =  gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", 'TextBlockTrimmer', 100)
+  for link in target_links:
+    connected = False
+    if connector_name in link.WPFControlText:
+      if link.DataContext.IsDestinationConnector:
+        Log.Checkpoint(f"The selected connector : {connector_name} , Source path is : {link.DataContext.SourceFullPath.OleValue}")
+        Log.Checkpoint(f"The selected connector : {connector_name} , Destination path is : {link.DataContext.DestinationFullPath.OleValue}")
+        connected = True
+        break
+      else:
+        Log.Error(f"The selected connector: {connector_name} is found but is not connected")
+  if not connected:
+    Log.Error(f"The connector: {connector_name} was **not found** in the list of target links")
+    
+##########################################################################################
+# Function   : verify_node_expanded_or_collapsed_enterkey_GT
+# Description: Verifies whether a node with the given identifier in the global template 
+#              tree is expanded or collapsed. Logs the state of the node accordingly.
+# Parameter  : identifier - The partial or full identifier of the node to verify.
+# Example    : verify_node_expanded_or_collapsed_enterkey_GT('NodeName')
+##########################################################################################  
+def verify_node_expanded_or_collapsed_enterkey_GT(identifier):
+  nodes = gte_obj.globaltemplatecoretextbox.object.FindAllChildren('ClrClassName','ExplorerNode',100)
+  for node in nodes:
+    if identifier in node.DataContext.Identifier.OleValue:
+      if node.IsExpanded:
+        Log.Checkpoint(f'{node.DataContext.Identifier.OleValue} : Node is expanded')
+      else:
+        Log.Checkpoint(f'{node.DataContext.Identifier.OleValue} : Node is collapsed')  
+        break 
+  else:
+    Log.Error(f'Node not found with name {identifier}')
+    
+##########################################################################################
+# Function   : select_module_of_template_composite_editor
+# Description: Searches for a module within the composite editor using the given identifier
+#              and performs a click action on it. Logs the action result accordingly.
+# Parameter  : Identifier - The partial or full identifier of the module to be clicked.
+# Example    : click_module_of_template_composite_editor('AnalogInput')
+##########################################################################################    
+def select_module_of_template_composite_editor(Identifier):
+  module = gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", 'GraphNodeHeader', 100)
+  for item in module:
+    if Identifier in item.DataContext.Identifier.OleValue:
+      if item.DataContext.IsSelected:
+        Log.Checkpoint(f'{item.DataContext.Description.OleValue} is selected')
+        break
+      else:
+        item.DataContext.IsSelected = True
+        Log.Checkpoint('{item.DataContext.Description.OleValue} is now selected')
+        break
+  else:
+    Log.Error('The module does not exists')
+
+##########################################################################################
+# Function   : Keyboard_actions
+# Description: Simulates a keyboard action by sending the specified key input to the system.
+# Parameter  : key - A string representing the key(s) to simulate. Supports special keys 
+#                    like "^c" (Ctrl+C), "^v" (Ctrl+V), "{Enter}", etc.
+# Example    : Keyboard_actions("^c")         # Simulates Ctrl+C (copy)
+##########################################################################################        
+def Keyboard_actions(key):
+  Sys.Keys(key)
+
+##########################################################################################
+# Function   : verify_module_renaming_state_composite_editor
+# Description: Checks whether a specified module in the composite editor is in renaming mode.
+#              Logs a checkpoint if the module is in renaming mode, otherwise logs an error.
+# Parameter  : Identifier - The partial or full identifier of the module to verify.
+# Example    : verify_module_renaming_state_composite_editor('Identifier')
+##########################################################################################  
+def verify_module_renaming_state_composite_editor(Identifier):
+  module = gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", 'GraphNodeHeader', 100)
+  for item in module:
+    if Identifier in item.DataContext.Identifier.OleValue:
+      if item.DataContext.IsRenaming:
+        Log.Checkpoint(f'{item.DataContext.Identifier.OleValue} is in renaming mode')
+        break
+      else:
+        Log.Error(f'{item.DataContext.Identifier.OleValue} is not in renaming mode') 
+  else:
+    Log.Error('The module does not exists') 
+    
+##########################################################################################
+# Function   : verify_newly_pasted_module_composite_editor
+# Description: Verifies if a module with the given identifier is present in the composite 
+#              editor after a paste operation. Logs a checkpoint if found.
+# Parameter  : Identifier - The partial or full identifier of the newly pasted module.
+# Example    : verify_newly_pasted_module_composite_editor('Identifier')
+##########################################################################################    
+def verify_newly_pasted_module_composite_editor(Identifier):
+  module = gte_obj.compositeeditorworkspacebutton.object.FindAllChildren("ClrClassName", 'GraphNodeHeader', 100)
+  for item in module:
+    if Identifier in item.DataContext.Identifier.OleValue:
+      Log.Checkpoint(f'{item.DataContext.Identifier.OleValue} : is newly pasted in composite editor')
+      break
+    else:
+      Log.Error(f'There is no module {Identifier} pasted newly')
+  else:
+    Log.Error('The module does not exists')
+    
+#########################################################################################
+# Function   : search_and_Dblclick_facet_eitor
+# Description: Searches for a facet in the facet editor using the given name and identifier,
+#              and double-clicks it if found in the search results. Logs a checkpoint if 
+#              the identifier matches; logs an error otherwise.
+# Parameter  : param - A string containing the facet name and identifier separated by '$$'.
+# Example    : search_and_rclick_facet_eitor('FacetName$$Identifier')
+##########################################################################################    
+def search_and_Dblclick_facet_eitor(param):
+  name,identifier = param.split('$$')
+  facet_editor = gte_obj.compositeeditorreadview.object
+  facet_editor.Keys('^f')
+  facet_editor.Keys(name)
+  facet_editor.Keys('[Enter]')
+  element = facet_editor.FindChild('ClrClassName','GridViewRow')
+  if identifier in element.DataContext.Identifier.OleValue:
+    Applicationutility.wait_in_seconds(2000, 'wait')
+    element.DblClick()
+    Log.Checkpoint(f'Double clicked on {element.DataContext.Identifier.OleValue}')
+  else:
+    Log.Error('Identifier not found in the search results')
+
+##########################################################################################
+# Function   : verify_module_renaming_state_interface_editor
+# Description: Verifies whether a module in the interface editor is currently in renaming 
+#              mode based on its identifier. Logs a checkpoint if it is; logs an error 
+#              otherwise.
+# Parameter  : Identifier - The partial or full identifier of the module to verify.
+# Example    : verify_module_renaming_state_interface_editor('MyModuleIdentifier')
+##########################################################################################    
+def verify_module_renaming_state_interface_editor(Identifier):
+  module = gte_obj.compositeeditorreadview.object.FindAllChildren("ClrClassName", 'PortNodeControl', 100)
+  for item in module:
+    if Identifier in item.DataContext.Identifier.OleValue:
+      if item.DataContext.IsRenaming:
+        Log.Checkpoint(f'{item.DataContext.Identifier.OleValue} is in renaming mode')
+        break
+      else:
+        Log.Error(f'{item.DataContext.Identifier.OleValue} is not in renaming mode')
+  else:
+    Log.Error('The module does not exists')
+    
+def verify_newly_pasted_module_facet_editor(Description):
+  module = gte_obj.compositeeditorreadview.object.FindChild("ClrClassName", 'IncludePortNodeControl')
+  if Description in module.DataContext.Identifier.OleValue:
+    Log.Checkpoint(f'{module.DataContext.Identifier.OleValue} : is newly pasted in facet editor')
+  else:
+    Log.Error(f'There is no module {Description} pasted newly')
+
+ 
+       
+  
+

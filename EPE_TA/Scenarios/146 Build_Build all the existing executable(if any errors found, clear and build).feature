@@ -21,6 +21,7 @@ When I RClick control project browser project browser in project explorer as '<p
 And I Select context menu item EC project browser in project explorer as '<project browser2>'
 And I click modal dialog window project browser in project explorer as '<project browser3>'
 
+@GenerateAndBuild_ControlEcecutable_1
 Examples:
   | SlNo. | project browser1    | project browser2   | project browser3 |
   | 1     | ControlExecutable_1 | Generate and Build | OK               |
@@ -34,6 +35,7 @@ When I RClick control project browser project browser in project explorer as '<p
 And I Select context menu item EC project browser in project explorer as '<project browser2>'
 And I click modal dialog window project browser in project explorer as '<project browser3>'
 
+@Build_ControlEcecutable_1
 Examples:
   | SlNo. | project browser1    | project browser2 | project browser3 |
   | 1     | ControlExecutable_1 | Build            | OK               |

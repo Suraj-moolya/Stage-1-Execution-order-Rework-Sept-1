@@ -43,6 +43,12 @@ class DialogCEWorkFlow:
         DialogCEWorkFlow.dialogce_obj.dialogokcebutton.click()
         #DialogCEWorkFlow.refoff_obj.parentdialogwindowcebutton.object.WaitProperty('Exists', 'None')
         
+    def buttondialogcancelceselected(self):
+        """dialogce_obj.dialogcancelcebutton"""
+        DialogCEWorkFlow.dialogce_obj.dialogcancelcebutton.click()    
+        
+
+        
         
     def labelmessagedisplayed(self,content):
         """dialogce_obj.messagelabel"""
@@ -63,6 +69,13 @@ class DialogCEWorkFlow:
             Controlexpertutility.change_Port_Number_PLC_Simulator()
         except Exception as ex:
             raise Exception(ex) from ex
+            
+    def textboxchangeportnumberinplcsimulator(self, port):
+            """textboxchangeportnumberinplcsimulator"""
+            try:
+                Controlexpertutility.change_Port_Number_in_PLC_Simulator(port)
+            except Exception as ex:
+                raise Exception(ex) from ex
             
     def buttonlistofmodifiedyesbuttonceselected(self):
             """dialogce_obj.listofmodifiedyesbuttoncebutton"""

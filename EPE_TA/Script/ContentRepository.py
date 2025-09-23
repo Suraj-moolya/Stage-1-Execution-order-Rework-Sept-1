@@ -18,3 +18,10 @@ class ContentRepository(MapBase):
     def contentrepositorytextbox(self):
         """contentrepositorytextbox"""
         return self.get_element("CRtextbox_ContentRepository")
+
+    @property
+    def workframecontroltextbox(self):
+        """workframecontroltextbox"""
+        return self.get_element("WorkFrameControl_ContentRepository")
+        
+        

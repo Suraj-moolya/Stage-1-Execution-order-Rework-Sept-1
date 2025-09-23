@@ -10,7 +10,7 @@ Scenario Outline: Create Folder in Application Explorer
   @Create_Folder 
   Examples:
     | ApplicationBrowserRoot | ContextItem   |
-    | System_1               | Create Folder |
+    | System                 | Create Folder |
 
 @90881_1
 Scenario Outline: Drag and Drop Instance from Template Browser to Application Browser
@@ -192,27 +192,29 @@ Scenario Outline: Perform Delete at Folder From Root Level While Instance Proper
 Scenario Outline: Assigning Facet in Project Explorer After Closing Instance Properties Panel
   When I navigate to explorers MainToolBar in system explorer as '<MainToolBar1>'
   And I Navigate to '<CP_SP_Tab>' tab in project explorer tab
+  And I Dclick Control project broswer project browser in project explorer as '<projectBrowser1>'
   And I drag and Drop the Each instance to Each Sections as '<PropertieName>' '<ControllerName>'
   And I click modal dialog window project browser in project explorer as '<Button>'
   Then Verify Action message in notification pannel container dock in project explorer as '<NotificationPanel1>'
 
   @creating_control_project_and_trying_to_assign_facet_after_closing_InstanceEditor
   Examples:
-    | MainToolBar1     | Button | PropertieName | NotificationPanel1       | ControllerName  | CP_SP_Tab            |
-    | Project Explorer | OK     | Folder_1      | Facet Assign (Completed) | M580_Standalone | UnityProjectTreePane |
+    | MainToolBar1     | Button | PropertieName | NotificationPanel1       | ControllerName  | CP_SP_Tab            | projectBrowser1 |
+    | Project Explorer | OK     | Folder_1      | Facet Assign (Completed) | M580_Standalone | UnityProjectTreePane | Containers      |
     
     
 @90881_13
 Scenario Outline: Assigning Facet in Supervision After Closing Instance Properties Panel
   When I Navigate to '<CP_SP_Tab>' tab in project explorer tab 
+  And I Dclick Control project broswer project browser in project explorer as '<projectBrowser1>'
   And I drag and Drop the Each instance to Each Sections as '<PropertieName>' '<ControllerName>'
   And I click modal dialog window project browser in project explorer as '<Button>'
   Then Verify Action message in notification pannel container dock in project explorer as '<NotificationPanel1>'
 
   @creating_supervision_project_and_trying_to_assign_facet_after_closing_InstanceEditor
   Examples:
-    | CP_SP_Tab          | PropertieName | ControllerName   | Button | NotificationPanel1       |
-    | SupervisionProject | Folder_1      | Supervision_Test | OK     | Facet Assign (Completed) |
+    | CP_SP_Tab          | PropertieName | ControllerName   | Button | NotificationPanel1       | projectBrowser1 |
+    | SupervisionProject | Folder_1      | Supervision_Test | OK     | Facet Assign (Completed) | Containers      |
     
 @90881_14
 Scenario Outline: Replace Template from Context Menu in Application Explorer After Closing Instance Properties

@@ -50,7 +50,7 @@ Examples:
 @TC_EPE_WS_0011c
 Scenario Outline: Close Refine online window and yes on popup
 When I selected Close Refine Offline in refine offline
-#And I click modal dialog window project browser in project explorer as '<Button>'
+And I click modal dialog window project browser in project explorer as '<Button>'
 Then Verify Action message in notification pannel container dock in project explorer as '<container dock3>'
 
 Examples:

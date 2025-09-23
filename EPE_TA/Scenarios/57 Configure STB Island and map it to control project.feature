@@ -83,7 +83,7 @@ Examples:
 Scenario Outline: Map STB Island to control project
 When I Click '<tabname>' on service mapping edittor window
 And I Drag and drop the EPE Managed Device from devices to channels as '<node_name2>'
-And I Click on '<buttonname>' in the dialog box
+#And I Click on '<buttonname>' in the dialog box
 
 Examples: 
   | SlNo. | tabname               | node_name2  | buttonname |

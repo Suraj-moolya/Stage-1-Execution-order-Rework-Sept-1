@@ -16,6 +16,7 @@ from SupervisionProject import SupervisionProject
 import datetime
 import os
 import csv
+import Controlexpertutility
 
 eng_obj = EngineeringClient()
 topo_obj = TopologyExplorerTab()
@@ -286,6 +287,30 @@ def right_click_container_dock_context_menu_item_PE(param):
   else:
     Log.Error('No Container objects present')  
     Applicationutility.take_screenshot() 
+
+###############################################################################
+# Function : right_click_container_dockPE
+# Description : Performs a right-click on a container dock item.
+# Parameter : 
+#   param (str) - A string in the format "identifier" where:
+#                 - identifier: The unique identifier of the container dock item.
+# Example : right_click_container_dockPE("Page_1")
+###############################################################################    
+      
+def right_click_container_dockPE(identifier):
+  container_dock = proj_obj.containerdocktextbox
+  container_list = container_dock.find_children_for_grid_view_row()
+  if container_list:
+    for item in container_list:
+      if item.Visible:
+        if identifier in item.DataContext.Identifier.OleValue:
+          item.ClickR()
+          break
+    else:
+      Log.Error(f"{identifier} not in container") 
+  else:  
+    Applicationutility.take_screenshot()
+    Log.Error('No Container objects present')
 
 ###############################################################################
 # Function : Executables_Properties
@@ -1122,24 +1147,25 @@ def verify_device_available(variables):
 #   server (str) - The name of the server (device) to drag and drop.
 # Example : drag_and_drop_device_to_channel("ServerName")
 ###############################################################################
-def drag_and_drop_device_to_channel(server):
+def drag_and_drop_device_to_channel(servers):
   devices = proj_obj.servercommunicationcounterpartsdeviceio.object.FindAllChildren('ClrClassName', 'GridViewCell', 100)
   channels = proj_obj.communicationchanneltab.object.FindAllChildren('ClrClassName', 'GridViewCell', 100)
-  for device in devices:
-    if device.WPFControlText == server:
-      from_x = device.ScreenLeft + (device.Width / 2)
-      from_y = device.ScreenTop + (device.Height / 2)
-      break
-  else:
-    Log.Error(f"No visible device found with identifier: {server}")
-    return
-  for channel in channels:
-    if channel.WPFControlText == "Free":
-      to_x = channel.ScreenLeft + (channel.Width / 2)
-      to_y = channel.ScreenTop + (channel.Height / 2)
-      break
-  device.Drag(from_x - device.ScreenLeft, from_y - device.ScreenTop, to_x - from_x, to_y - from_y)
-  Log.Message(f"Dragging from ({from_x}, {from_y}) to ({to_x}, {to_y}) completed.")
+  servers = servers.split("$$")
+  for server in servers:
+    device = next((d for d in devices if d.WPFControlText == server), None)
+    if device is None:
+      Log.Error(f"No visible device found with identifier: {server}")
+      continue
+    channel = next((c for c in channels if c.WPFControlText == "Free"), None)
+    if channel is None:
+      Log.Error("No free channel available")
+      return
+    from_x, from_y = device.ScreenLeft + device.Width/2, device.ScreenTop + device.Height/2
+    to_x, to_y = channel.ScreenLeft + channel.Width/2, channel.ScreenTop + channel.Height/2
+    device.Drag(from_x - device.ScreenLeft, from_y - device.ScreenTop, to_x - from_x, to_y - from_y)
+    Log.Message(f"Dragged '{server}' to Free channel at ({to_x}, {to_y})")
+    Actionutility.modal_dialog_window_button("OK")
+    Applicationutility.wait_in_seconds(1000, 'wait')
 
 ###############################################################################
 # Function : right_click_communication_channel
@@ -1267,34 +1293,44 @@ def verify_instance(template):
 # Parameter : 
 #   appfacet (str) - Application facets separated by "$$".
 # Example : project_to_hardware("Facet1$$Facet2")
-###############################################################################
+###############################################################################      
 def project_to_hardware(appfacet):
   facets = appfacet.split('$$')
   scrollable_area = proj_obj.hardwareinstancetab.object
+  channels = proj_obj.communicationchanneltab.object.FindAllChildren('ClrClassName', 'GridViewCell', 100)
+
   for facet in facets:
-    channels = proj_obj.communicationchanneltab.object.FindAllChildren('ClrClassName', 'GridViewCell', 100)
-    for channel in channels:
-      if getattr(channel.DataContext, 'Identifier', None) and getattr(channel.DataContext.Identifier, 'OleValue', None) == facet:
-        project_facet_value = str(channel.DataContext.MappingInterfaceTemplateIdentifier)
-        from_x, from_y = channel.ScreenLeft + channel.Width / 2, channel.ScreenTop + channel.Height / 2
-        break    
-    while True:
+    channel = next((c for c in channels 
+                    if getattr(c.DataContext, 'Identifier', None) 
+                    and getattr(c.DataContext.Identifier, 'OleValue', None) == facet), None)
+
+    if channel is None:
+      Log.Error(f"Facet '{facet}' not found in communication channels.")
+      continue
+
+    project_facet_value = str(channel.DataContext.MappingInterfaceTemplateIdentifier)
+    from_x, from_y = channel.ScreenLeft + channel.Width / 2, channel.ScreenTop + channel.Height / 2
+
+    max_scroll = scrollable_area.ChildCount * 2
+    for _ in range(max_scroll):
       hardware = scrollable_area.FindAllChildren('ClrClassName', 'GridViewRow', 100)
-      for hard in hardware:
-        data_context = getattr(hard, 'DataContext', None)
-        if data_context is not None:
-          hardware_template = getattr(data_context, 'MappingInterfaceTemplateIdentifier', None)
-          project_facet = getattr(data_context, 'ProjectFacetIdentifier', None)
-          if hardware_template == project_facet_value and not project_facet:
-            to_x, to_y = hard.ScreenLeft + hard.Width / 2, hard.ScreenTop + hard.Height / 2
-            if hard.VisibleOnScreen:
-              channel.Drag(from_x - channel.ScreenLeft, from_y - channel.ScreenTop, to_x - from_x, to_y - from_y)
-              Log.Checkpoint(f"Dragged {facet} to hardware.")
-              break
-      else:
-        scrollable_area.MouseWheel(-1)
-        continue
-      break
+      target = next((h for h in hardware 
+                     if getattr(getattr(h, 'DataContext', None), 'MappingInterfaceTemplateIdentifier', None) == project_facet_value 
+                     and not getattr(getattr(h, 'DataContext', None), 'ProjectFacetIdentifier', None)), None)
+
+      if target is not None:
+        if not target.VisibleOnScreen:
+          scrollable_area.MouseWheel(-1)
+          continue
+        to_x, to_y = target.ScreenLeft + target.Width / 2, target.ScreenTop + target.Height / 2
+        channel.Drag(from_x - channel.ScreenLeft, from_y - channel.ScreenTop, to_x - from_x, to_y - from_y)
+        Log.Checkpoint(f"Dragged {facet} to hardware.")
+        break
+    else:
+      Log.Error(f"No visible hardware found for facet '{facet}' after scrolling.")
+      
+def fkd():
+  project_to_hardware("ATV61AS_1_ATV")
 
 ###############################################################################
 # Function : verify_facets_in_hardware_mapping_editor
@@ -1416,6 +1452,7 @@ def click_button_on_sp_editpage(button):
     if tooltip == button:
       pro.Click()
       Log.Checkpoint(f"'{button}' Was Clicked in Properties.")
+      
       Applicationutility.wait_in_seconds(1000, 'Wait')
       break
   else:
@@ -2249,6 +2286,17 @@ def drag_and_drop_remote_to_local_P2P(param):
       break
   device.Drag(from_x - device.ScreenLeft, from_y - device.ScreenTop, to_x - from_x, to_y - from_y)
   Log.Message(f"Dragging from ({from_x}, {from_y}) to ({to_x}, {to_y}) completed.")
+ 
+   
+def verify_variables_mapping(param):
+  aqUtils.Delay(60000)
+  rows = proj_obj.sourcevariablebutton.object.FindAllChildren("ClrClassName", "GridViewRow", 100)
+  for identifier in param.split("$$"):
+    row = next((r for r in rows if identifier in str(getattr(r.DataContext, "Identifier", ""))), None)
+    assert row is not None, f"Variable '{identifier}' not found"
+    aqObject.CheckProperty(row.DataContext, "Status", cmpEqual, "Mapped")
+    Log.Checkpoint(f"Variable '{identifier}' is correctly mapped.")
+
 ###############################################################################
 # Function : Edit_IODevice_Properties
 # Description : Edits the properties of an I/O device.
@@ -2601,5 +2649,168 @@ def expand_folder_instance_browser_PE(folder_name):
     Applicationutility.take_screenshot()
     Log.Error("No instances found in the instance dock.")
 
+##################################################################################################  
+# Function    : click_on_maintenance_mode_in_Refine_Online
+# Description : Finds the "maintenance_scheduled" button in the Refine Online application
+#               and performs a click action on it to enable or activate maintenance mode.
+# Parameter   : None
+# Example     : click_on_maintenance_mode_in_Refine_Online()
+###################################################################################################
 
+def click_on_maintenance_mode_in_Refine_Online():
+  maintenance_button = ref_obj.Maintenancebutton.object
+  if maintenance_button.Exists:
+      maintenance_button.Click()
+      Log.Checkpoint("Clicked on the Maintenance Mode button in Refine Online.")
+  else:
+      Log.Error("Maintenance Mode button not found in Refine Online.")
   
+############################################################################################  
+# Function    : click_on_safety_mode_in_Refine_Online
+# Description : Finds the "security" button in the Refine Online application
+#               and performs a click action on it to enable or activate safety mode.
+# Parameter   : None
+# Example     : click_on_safety_mode_in_Refine_Online()
+############################################################################################  
+def click_on_safety_mode_in_Refine_Online():
+  safety_button = ref_obj.Safetybutton.object
+  if safety_button.Exists:
+    safety_button.Click()
+    Log.Checkpoint("Clicked on the Safety Mode button in Refine Online.")
+  else:
+      Log.Error("Safety Mode button not found in Refine Online.")
+   
+######################################################################################################  
+# Function    : verify_safety_mode_text_in_Refine_Online
+# Description : Verifies if the "SAFETY" text is present in the status bar of the Refine Online
+#               application to confirm that safety mode is active. Logs a checkpoint if found,
+#               otherwise logs an error.
+# Parameter   : None
+# Example     : verify_safety_mode_text_in_Refine_Online()
+######################################################################################################      
+def verify_safety_mode_text_in_Refine_Online():
+  safety_text = ref_obj.Safetytext.object
+  if safety_text.Exists and safety_text.Text == "SAFETY":
+    Log.Checkpoint(f"The status in control participant is {safety_text.Text}")
+  else:
+     Log.Error("No safety control participant status found in the Refine Online window")
+        
+########################################################################################################  
+# Function    : verify_maintenance_mode_text_in_Refine_Online
+# Description : Verifies if the "MAINTENANCE" text is present in the status bar of the Refine Online
+#               application to confirm that maintenance mode is active. Logs a checkpoint if found,
+#               otherwise logs an error.
+# Parameter   : None
+# Example     : verify_maintenance_mode_text_in_Refine_Online()
+#########################################################################################################    
+def verify_maintenance_mode_text_in_Refine_Online():
+  maintenance_text = ref_obj.Maintenancetext.object
+  if maintenance_text.Exists and maintenance_text.Text == "MAINTENANCE":
+    Log.Checkpoint(f"The status in control participant is {maintenance_text.Text}")
+  else:
+    Log.Error("No maintenance control participant status found in the Refine Online window")
+
+def handle_export_import_in_hardware_mapping(action):
+  for btn in proj_obj.exportimportbutton.object.FindAllChildren("ClrClassName", "ContentPresenter", 10):
+    if btn is None: 
+      raise Exception("Export/Import button not found")
+    if action in str(btn.DataContext.ToolTip):
+      btn.Click()
+      Log.Checkpoint(f"{btn.DataContext.ToolTip} clicked in Hardware Mapping")
+      return
+  raise Exception(f"No matching button found for action: {action}")
+  
+  
+def click_button_in_CE_Conflicts(button):
+  for btn in proj_obj.ceconflictswin.object.FindAllChildren("ClrClassName", "Button", 10):
+    if button in btn.WPFControlText:
+      btn.Click()
+      Log.Checkpoint(f"{btn.WPFControlText} clicked in Conflict Window")
+      return
+  raise Exception(f"No matching button found for action: {button}")
+
+def P2P_communication_config_select_combo(param):
+  combo_name, select_combo = param.split('$$')
+  if combo_name == 'Project':
+    pro = Sys.Process("EngineeringClient").WPFObject("HwndSource: ModalDialogWindow", "").WPFObject("ModalDialogWindow", "", 1).WPFObject("ManagePeerToPeer", "", 1).WPFObject("Grid", "", 1).WPFObject("LoadP2PVariablesTabControl").WPFObject("Border", "", 1).WPFObject("Grid", "", 1).WPFObject("Grid", "", 1).WPFObject("CmbSourceProject")
+    Log.Message('Checking Project Combo box')
+    Select_P2P_combo_item(pro, select_combo)
+    pass
+  elif combo_name in 'Executable':
+    Exe = Sys.Process("EngineeringClient").WPFObject("HwndSource: ModalDialogWindow", "").WPFObject("ModalDialogWindow", "", 1).WPFObject("ManagePeerToPeer", "", 1).WPFObject("Grid", "", 1).WPFObject("LoadP2PVariablesTabControl").WPFObject("Border", "", 1).WPFObject("Grid", "", 1).WPFObject("Grid", "", 1).WPFObject("CmbSourceExecutable")
+    Log.Message('Checking Executable Combo box')
+    Select_P2P_combo_item(Exe, select_combo)
+    pass
+  elif combo_name in 'Data Server':
+    DS = Sys.Process("EngineeringClient").WPFObject("HwndSource: ModalDialogWindow", "").WPFObject("ModalDialogWindow", "", 1).WPFObject("ManagePeerToPeer", "", 1).WPFObject("Grid", "", 1).WPFObject("LoadP2PVariablesTabControl").WPFObject("Border", "", 1).WPFObject("Grid", "", 1).WPFObject("Grid", "", 1).WPFObject("CmbSourceDataServer")
+    Log.Message('Checking Data Server Combo box')
+    Select_P2P_combo_item(DS, select_combo)
+    pass
+  else:
+    Log.Error(f'No Combo Name Not in [Project, Executable, Data Server]')
+
+def Select_P2P_combo_item(obj, select_combo):
+  count = obj.wItemCount
+  for i in range(count):
+    if select_combo in obj.wItem[i]:
+      obj.SelectedIndex = i
+      obj.WaitProperty('Text', select_combo, 3000)
+      if obj.Text == select_combo:
+        Log.Checkpoint(f'The Combo item {obj.Text} is selected for {obj.WPFControlName}')
+        break
+      else:
+        Log.Error(f'The Combo item {obj.Text} is selected for {obj.WPFControlName} instead of : {select_combo}')
+        break
+  else:
+    Log.Error(f'The {select_combo} not found !')
+    
+def afvcwesfd():
+  P2P_communication_config_select_combo('Project$$M580_Standalone3')
+################################################################################################################# 
+# Function : verify_Validity_Status_project_browser_PE
+# Description: Verifies th validity status in the project browser.
+# Parameter : identifier (str) - Identifier of the instance to verify the status
+################################################################################################################
+def verify_Validity_Status_project_browser_PE(param):
+  identifier,status = param.split('$$')
+  template_list = proj_obj.projectbrowsertextbox.object.FindAllChildren('ClrClassName', 'TreeListViewRow', 1000)
+  if template_list:
+    for item in template_list:
+      if item.Visible:
+       if identifier in str(item.DataContext.Identifier.OleValue):
+        if item.DataContext.IsProgressStateVisible:
+          tooltip = item.DataContext.ValidityStatus.OleValue
+          if status in tooltip:
+            Log.Checkpoint(f'The validity status is : {tooltip}')
+            break
+          else:
+            Log.Error(f"Validity status is not at expected")
+            break
+    else:
+      Log.Error(f"Validity status is not visible for identifier: {identifier}")
+  else:
+    Log.Error("No templates found.")  
+############################################################################################################################################
+# Function : verify_validity_Status_Containers_project_browser_PE
+# Description: Verifies th validity status of containers in the project browser.
+# Parameter : identifier (str) - Identifier of the instance to verify the status
+##########################################################################################################################  
+def verify_validity_Status_Containers_project_browser_PE(param):
+  identifier,Status = param.split('$$')
+  template_list = proj_obj.containerdocktextbox.object.FindAllChildren('ClrClassName', 'GridViewRow', 1000)
+  if template_list:
+    for item in template_list:
+      if item.Visible:
+        if identifier in str(item.DataContext.Identifier.OleValue):
+          if item.DataContext.IsProgressStateVisible:
+            tooltip = item.DataContext.Validitystatus.OleValue
+            if  Status in tooltip: 
+              Log.Checkpoint(f'The progress status is : {tooltip}')
+              break
+            else:
+               Log.Message("Validity status is not at expected")
+               break
+    else:
+      Log.Error("Instance not found in the list.")
+  else:
+    Log.Error("No templates found.")  

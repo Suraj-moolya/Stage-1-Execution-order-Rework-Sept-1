@@ -3,6 +3,7 @@ from RefineOfflineWorkFlow import RefineOfflineWorkFlow
 import CommonUtil
 import Applicationutility
 import Engineeringclientutility
+import Controlexpertutility
 
 obj=RefineOfflineWorkFlow()
 
@@ -131,7 +132,10 @@ def step_impl(projectBrowserRo2):
     """I Edit Parameter Value AdvSettings SVP Project Browser RO in refine offline as '<Project Browser RO2>'"""
     obj.textboxprojectbrowserroeditparametervalueadvsettingssvp(projectBrowserRo2)
   
-
+@when("I Delete instance in FBDRefine window as {arg}")
+def step_impl(FBDSection):
+    """I Delete instance in FBDRefine window as '<FBDSection>'"""
+    Controlexpertutility.Delete_Instance_in_Refine(FBDSection)
     
 @when("I selected Close Refine Offline in refine offline")
 def step_impl():
@@ -307,3 +311,28 @@ def step_impl(param):
 def step_impl():
     """I select Automatic blocking of service port EIO in control expert"""
     obj.selectautomaticserviceportCE()
+    
+@then("I create a New Section under Logic in control expert as {arg}")
+def step_impl(value):
+  """I create a New Section under Logic in control expert"""
+  obj.createnewsectionCE(value)
+  
+@when("I enter the query in modal window for control expert as {arg}")
+def step_impl(query_value):
+  """I enter the query in modal window for control expert"""
+  obj.enterqueryinmodalwindow(query_value)
+  
+@then("I close the modal window in control expert as {arg}")
+def step_impl(btn_value):
+  """I close the modal window in control expert"""
+  obj.closemodalwindow(btn_value)
+  
+@when("I create a move block in refine offline for a particular section as {arg}")
+def step_impl(value):
+  """I create a move block in refine offline for a particular section"""
+  obj.addmoveblock(value)
+  
+@when("I click on button in refine offline for move block as {arg}")
+def step_impl(value):
+  """I click on button in refine offline for move block """
+  Controlexpertutility.close_move_block_window(value)

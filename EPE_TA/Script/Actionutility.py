@@ -11,6 +11,7 @@ from ProjectExplorerTab import ProjectExplorerTab
 from SystemExplorerScreen import SystemExplorerScreen
 from TopologyExplorerTab import TopologyExplorerTab
 from Topology import Topology
+import Applicationexplorertabutility
 
 import os
 import datetime
@@ -204,16 +205,16 @@ def modal_dialog_window_button(button_name):
     buttons_list = msg_obj.modaldialogwindowtextbox.object.FindAllChildren('ClrClassName', 'Button', 1000)
     take_screenshot('Taking Screenshot of the Message Window.')
     for button in buttons_list:
-      if button_name in str(button.WPFControlText) :
-        if not button.Enabled:
-          Applicationutility.wait_in_seconds(5000, 'Wait')
-        button.click()
-        Log.Checkpoint('Clicked ' + str(button.WPFControlText) + ' button.')
-        break
+      if button_name in str(button.WPFControlText):
+        if button.Exists:
+          button.WaitProperty("Enabled", True, 30000)
+          button.Click()
+          Log.Checkpoint(f'Clicked {button.WPFControlText} button.')
+          break
     else:
-      Log.Error("Button name mentioned doesnt exists")
-  except:
-    Log.Error('Expected Pop up not present')  
+      Log.Error(f'Button "{button_name}" does not exist')
+  except Exception as e:
+    Log.Error(f'Expected pop-up not present. Details: {e}')
     
 ###############################################################################
 #Author : Preetham S R
@@ -273,6 +274,21 @@ def close_tab_items_EC(identifier):
   else:
      Log.Error("Tab Item mentioned is not Valid")
 
+def close_all_similar_tab_items_EC(identifier):
+  template = eng_obj.mainscreenbutton.object
+  template_list = template.FindAllChildren('ClrClassName', 'CloseableTabItem', 1000)
+  found = False
+  for i in range(len(template_list)):
+    if template_list[i].Visible: 
+      if identifier in str(template_list[i].Header.OleValue):
+        template_list[i].Click((template_list[i].Width-15), (template_list[i].Height/2)) 
+        Log.Message(f'The Tab {template_list[i].DataContext.TitleToolTip.OleValue} is closed !')
+        found = True
+  if found:
+    pass
+  else:
+     Log.Error(f"Tab Item mentioned : {identifier} is not Valid \ or Not Present")
+    
 ###############################################################################
 #Author : Gunachanthiran k
 #Function : Checking Instance Loding Timing is Within 2 seconds or Not.
@@ -339,8 +355,7 @@ def modal_dialog_window_dialog(param):
   else:
     Log.Error('Dialog Window not found!')
       
-def afvds(): #Template update operation not started. Unable to find a template of a later version for selected instances.	10:58:51	Normal			0.00
-  modal_dialog_window_dialog('Unable to find a template of a later version')
+
 ###############################################################################
 #Author : Preetham S R
 #Function : To select dropdown value in PopUp Dialog Window
@@ -468,7 +483,7 @@ def Import_File(file_name):
     file_name = Project.Variables.VariableByName[file_name]
   folder = get_default_file_path()
   loc_box = aet_obj.addressbandtextbox
-  loc_box.click_at(30, loc_box.object.Height / 2)
+  loc_box.click_at(loc_box.object.Width - 55, loc_box.object.Height / 2)
   Sys.Keys(folder)
   Sys.Keys("[Enter]")
   name_box = aet_obj.comboboxtextbox.object
@@ -625,6 +640,81 @@ def changing_values_in_csv(file_name, instance_name, headings):
   with open(file_path, 'w', newline='', encoding='utf-8') as f:
     csv.writer(f).writerows(rows)
   Log.Checkpoint("CSV file updated successfully.")
+
+###############################################################################
+# Function   : verify_menu_item_status
+# Description: Verifies if a menu item is "Enabled" or "Disabled" and logs
+#              a Checkpoint if the state matches the expected status,
+#              otherwise logs an Error.
+# Parameter  : item_name (str) - The header text of the menu item to verify.
+#              status (str)    - Expected state ("Enabled" or "Disabled").
+# Example    : verify_menu_item_status("Last Action Summary", "Enabled")
+###############################################################################  
+  
+def verify_menu_item_status(item_name, status):
+  for item in SystemExplorerScreen1.rclickmenuitemsbutton.object.FindAllChildren("ClrClassName", "MenuItem", 50):
+    if item.Header == item_name:
+      actual = "Enabled" if item.IsEnabled else "Disabled"
+      Log.Checkpoint(f"{item_name} is {actual}") if actual == status else Log.Error(f"{item_name} is {actual}")
+      return
+  Log.Error(f"Menu item '{item_name}' not found")
+  
+###############################################################################
+# Function   : verify_exported_csv_headers
+# Description: Verifies that the exported CSV files ("<file_name>_Pending.csv" 
+#              and "<file_name>_HWMapping.csv") contain the correct headers.  
+#              Logs a Checkpoint if headers match, otherwise raises an Exception.
+# Parameter  : file_name (str) - The base name of the exported CSV files.
+#              folder (str)    - Optional folder path. Defaults to Test_Import_Files.
+# Example    : verify_exported_csv_headers("EX1")
+###############################################################################
+
+def verify_exported_csv_headers(file_name, folder=None):
+  folder = folder or get_default_file_path()
+  pending_headers = ["AppInstance","AppFacet","AppTemplate","AppMappingInterface","AppInterfaceType"]
+  hwmapping_headers = ["HWInstance","HWTemplate","HWMappingInterface","HWInterfaceType",
+                       "AppInstance","AppFacet","AppTemplate","AppMappingInterface","AppInterfaceType"]
+
+  pf, hf = os.path.join(folder, f"{file_name}_Pending.csv"), os.path.join(folder, f"{file_name}_HWMapping.csv")
+
+  if os.path.exists(pf):
+    with open(pf, newline='', encoding="utf-8") as f:
+      if next(csv.reader(f), []) != pending_headers: raise Exception("Pending.csv header mismatch")
+      Log.Checkpoint(f"{file_name}_Pending.csv headers verified")
+
+  if os.path.exists(hf):
+    with open(hf, newline='', encoding="utf-8") as f:
+      next(f)
+      if next(csv.reader(f), []) != hwmapping_headers: raise Exception("HWMapping.csv header mismatch")
+      Log.Checkpoint(f"{file_name}_HWMapping.csv headers verified")
+      
+###############################################################################
+# Function   : get_template_names
+# Description: Extracts all template names from the exported CSV files 
+#              ("<file_name>_Pending.csv" and "<file_name>_HWMapping.csv") 
+#              and logs them for verification. 
+# Parameter  : file_name (str) - The base name of the exported CSV files.
+#              folder (str)    - Optional folder path. Defaults to Test_Import_Files.
+# Example    : get_template_names("EX1")
+###############################################################################
+def get_template_names(file_name, folder=None):
+    folder = folder or get_default_file_path()
+    templates = {"Pending": [], "HWMapping": []}
+    files = {
+        "Pending": (os.path.join(folder, f"{file_name}_Pending.csv"), 2),
+        "HWMapping": (os.path.join(folder, f"{file_name}_HWMapping.csv"), 6)
+    }
+    for key, (path, col) in files.items():
+        if os.path.exists(path):
+            with open(path, newline='', encoding="utf-8") as f:
+                reader = csv.reader(f); next(reader, None)
+                for row in reader:
+                    if len(row) > col and row[col].strip():
+                        templates[key].append(row[col].strip())
+        templates[key] = list(dict.fromkeys(templates[key]))
+        if templates[key]:
+            Log.Checkpoint(f"{key} Templates: {', '.join(templates[key])}")
+    return templates
   
 ###############################################################################
 # Function   : modal_dialog_window_navigate_asset_worskspace
@@ -656,3 +746,67 @@ def verify_modal_dialog_window_navigate_asset_worskspace():
       Log.Message(f"The current instance is available in {item.DataContext.Identifier.OleValue}")
     else:
       Log.Warning(f"{item.DataContext.Identifier.OleValue} not found")
+###############################################################################
+# Function   : Copy_keyboard_action
+# Description: Performs copy (CTRL+C) using keyboard action.
+# Parameter  : None
+###############################################################################     
+def Copy_keyboard_action():
+    Sys.Keys("^c") 
+    Applicationutility.take_screenshot()
+
+###############################################################################
+# Function   : Paste_keyboard_action
+# Description: Performs paste (CTRL+V) using keyboard action. 
+# Parameter  : None
+###############################################################################   
+def Paste_keyboard_action():
+    Sys.Keys("^v")
+    Applicationutility.take_screenshot()
+
+###############################################################################
+# Function   : Up_arrow_keyboard_action
+# Description: Simulates pressing the Up Arrow key and takes a screenshot. 
+# Parameter  : None
+############################################################################### 
+def Up_arrow_keyboard_action():
+    Sys.Keys("[Up]")
+    Applicationutility.take_screenshot() 
+    
+###############################################################################
+# Function   : Down_arrow_keyboard_action
+# Description: Simulates pressing the Down Arrow key and takes a screenshot.. 
+# Parameter  : None
+###############################################################################      
+def Down_arrow_keyboard_action():
+    Sys.Keys("[Down]")
+    Applicationutility.take_screenshot()
+
+###############################################################################
+# Function   : Delete_keyboard_action
+# Description: Simulates pressing the Left Arrow key and takes a screenshot. 
+# Parameter  : None
+###############################################################################    
+def Left_arrow_keyboard_action():
+    Sys.Keys("[Left]")
+    Applicationutility.take_screenshot()
+    
+###############################################################################
+# Function   : Right_arrow_keyboard_action
+# Description: Simulates pressing the Right Arrow key and takes a screenshot.
+# Parameter  : None
+###############################################################################
+def Right_arrow_keyboard_action():
+        Sys.Keys("[Right]")
+        Applicationutility.take_screenshot()
+ 
+###############################################################################
+# Function   : Delete_keyboard_action
+# Description: Performs delete using keyboard action. 
+# Parameter  : None
+###############################################################################      
+def Delete_keyboard_action():
+        Sys.Keys("[Del]")
+        Applicationutility.take_screenshot()
+        
+    

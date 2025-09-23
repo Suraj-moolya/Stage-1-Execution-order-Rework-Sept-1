@@ -47,7 +47,7 @@ Then Verify changeslog window is displayed
 @click_on_editor_menu_and_open_changes_Log
 Examples:
   | SlNo. | menu item        |
-  | 1     | Show Changes Log | 
+  | 1     | Show Changes Log |
   
   
 @TC_EPE_GT_PGSQL_92672_004

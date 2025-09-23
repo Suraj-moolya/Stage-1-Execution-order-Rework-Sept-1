@@ -10,3 +10,9 @@ Examples:
 |SlNo.|project browser1|container dock2|content|
 |1|Containers|FBDSection_1|NA|
 
+
+@Open_ST_section
+Examples:
+|SlNo.|project browser1|container dock2|content|
+|1|Containers|Sample_TON|NA|
+

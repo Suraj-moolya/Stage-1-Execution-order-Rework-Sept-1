@@ -163,6 +163,11 @@ def step_impl(assertWorkspaceEditor9):
 def step_impl(rsprangedpvranged):
     """I Link from range node to range node AE Node Instance in application explorer as 'RSPRanged$$PVRanged'"""
     obj.buttonnodeinstancelinkfromrangenodetorangenodeae(rsprangedpvranged)
+    
+@when("I link property '(.*)' of instance '(.*)' to property '(.*)' of instance '(.*)' in application explorer")
+def step_impl(from_instance, from_property, to_instance, to_property):
+    """I link property '<from_property>' of instance '<from_instance>' to property '<to_property>' of instance '<to_instance>' in application explorer"""
+    obj.linkinstanceae(from_instance, from_property, to_instance, to_property)
   
 @then("Verify Link Status Node Instance in application explorer")
 def step_impl():
@@ -248,6 +253,7 @@ def step_impl(instanceEditor6):
  
 @then("I take photo evidence in Engineering Client") 
 @when("I take evidence Instance Editor in application explorer")
+@then("I Verify FBD Section in Locked")
 def step_impl():
     """I take evidence Instance Editor in application explorer"""
     obj.textboxinstanceeditortakeevidence()
@@ -680,8 +686,7 @@ def step_impl(Message):
 @when("I drag Template from Template browser and drop to Application browser '(.*)' times with template as '(.*)'")
 def step_impl(count, param):
     """I drag Template from Template browser and drop to Application browser '<count>' times with template as '<param>' """
-    count_int = int(count)
-    Applicationexplorertabutility.run_drag_and_drop_multiple_times(param, count_int)
+    Applicationexplorertabutility.run_drag_and_drop_multiple_times(param, count)
     
     
 @then("I Verifies time taken to load the Application Tree Pane")
@@ -748,6 +753,18 @@ def step_impl(identifier):
 def step_impl(direction, identifier):
     """I press the '<direction>' arrow key on the '<identifier>' folder in Template browser"""
     Applicationexplorertabutility.key_action_template_browser_folder(identifier, direction)
+  
+@then("the exported CSV '(.*)' should have correct headers")
+def step_impl(ExportFileName):
+    """the exported CSV '<ExportFileName>' should have correct headers"""
+    Actionutility.verify_exported_csv_headers(ExportFileName)
+    Applicationutility.take_screenshot("Full Screenshot")
+  
+@then("the exported CSV '(.*)' should list template names")
+def step_impl(ExportFileName):
+    """the exported CSV '<ExportFileName>' should list template names"""
+    Actionutility.get_template_names(ExportFileName)
+    Applicationutility.take_screenshot("Full Screenshot")
 
 @then("Verify the status of Identifier in application browser with instance editor window")
 def step_impl():
@@ -809,6 +826,11 @@ def step_impl():
     """I verify instance is added in multiple workspace in context menu listing"""
     Actionutility.verify_modal_dialog_window_navigate_asset_worskspace()
     
+@when("I Click on the module name in the instance editor of application explorer as {arg}")
+def step_impl(param):
+    """ I Click on the module name in the instance editor of application explorer as '<Name>'"""
+    obj.clickmodulenameinstanceeditor(param)
+
 @then("I add and verify that instances are successfully added in different folders in the Application Browser with value {arg}")
 def step_impl(instance_value):
   """I add and verify that instances are successfully added in different folders in the Application Browser with value '<instance_value>'"""
@@ -870,3 +892,60 @@ def step_impl():
 def step_impl():
     """I click on the Grid/Tree view icon in Application Browser"""
     obj.clickontogglebuttoninappbrowser() 
+    
+@then("I enter the value for the alias field of properties in Application Browser as {arg}")
+def step_impl(value):
+    """I enter the value for the alias field of properties in Application Browser"""
+    Applicationexplorertabutility.enter_alias_name(value)
+    
+    
+@then("I check the checkbox of the instance editor window in Application Broswer as {arg}")
+def step_impl(value):
+  """I check the checkbox of the instance editor window in Application Broswer"""
+  Applicationexplorertabutility.uncheck_instance_editor_values(value)
+  
+  
+@then("I verify the alias name is present for the folder in Application Broswer as {arg}")
+def step_impl(value):
+  """I verify the alias name is present for the folder in Application Broswer"""
+  Applicationexplorertabutility.verify_folder_alias_value(value)
+  
+@then("I drag and drown the template from one folder to another in Application Broswer as {arg}")
+def step_impl(value):
+  """I drag and drown the template from one folder to another in Application Broswer"""
+  Applicationexplorertabutility.drag_instance_folder_folder(value)
+  
+@then("I add the value for the paramters description in Application Broswer of Instance Editor as {arg}")
+def step_impl(value):
+  """I add the value for the paramters description in Application Broswer of Instance Editor"""
+  Applicationexplorertabutility.check_instance_description_and_add_Value_AE_instance_editor(value)
+  
+@then("I select a particular sub template value in Application Broswer of Instance Editor as {arg}")
+def step_impl(value):
+  """I select a particular sub template value in Application Broswer of Instance Editor"""
+  Applicationexplorertabutility.select_template_instance_ediotr(value)
+
+@then("I verify the validity status of the instances in application browser")
+def step_impl():
+    """I rclick application browser folder and create nested folders in AE as '<identifier_levels_menuitem>'"""
+    obj.verifyvaliditystatus()
+    
+@when("I Drag and Drop instance from one folder to another in Application Browser as {arg}")
+def step_impl(param):
+    """I Drag and Drop instance from one folder to another in Application Browser as '<source_target>'"""
+    obj.draganddropfromfoldertofolderinae(param)
+
+@then("The Zoom button is visible in the bottom of Link Editor screen in Application Broswer as {arg}")
+def step_impl(value):
+  """The Zoom button is visible in the bottom of Link Editor screen in Application Broswer"""
+  Applicationexplorertabutility.verify_zoom_buttons(value)
+  
+@then("I verify the context options of instance of Link Editor screen in Application Browser as {arg}")
+def step_impl(value):
+  """I verify the context options of instance of Link Editor screen in Application Browser"""
+  Applicationexplorertabutility.verify_link_instance_options(value)
+  
+@then("I select a value from context option to filter the values of instance of link editor screen in Application Broswer as {arg}")
+def step_impl(value):
+  """I select a value from context option to filter the values of instance of link editor screen in Application Broswer"""
+  Applicationexplorertabutility.click_instance_option_link(value)

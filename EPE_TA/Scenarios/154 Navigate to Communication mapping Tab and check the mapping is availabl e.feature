@@ -7,7 +7,7 @@ When I Dclick Control project broswer project browser in project explorer as '<p
 And I Click '<tabname>' on service mapping edittor window
 And I Verify if the added device is available for mapping as '<server>'
 And I Drag and drop the EPE Managed Device from devices to channels as '<server>'
-And I Click on '<button>' in the dialog box
+#And I Click on '<button>' in the dialog box
 Examples:
   | SlNo. | tabname               | server      | button | button1 | contextmenu_item1 | contextmenu_item2  | Project Browser RO1 | content                                | projectBrowser3     | projectBrowser2 |
   | 1     | Communication Mapping | ETesysTHW_1 | OK     | Yes     | Build All         | Open Built Project | ETesysTHW_1         | Close Built Project Editor (Completed) | ControlExecutable_1 |  Executables    |

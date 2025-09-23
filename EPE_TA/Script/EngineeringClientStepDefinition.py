@@ -4,7 +4,7 @@ import CommonUtil
 import Applicationutility
 import Systemserverutility
 import Engineeringclientutility
-
+import Actionutility
 
 obj=EngineeringClientWorkFlow()
        
@@ -172,7 +172,7 @@ def step_impl(FolderName):
     
 @when("I Close the Tab by Clicking on Close in EC as {arg}")
 def step_impl(tabname):
-    """I Close the Tab by Clicking on Close in EC as '<tabname>''"""
+    """I Close the Tab by Clicking on Close in EC as '<tabname>'"""
     obj.closetabec(tabname)
     
 @when("I update the report details with {arg}, {arg}, {arg}, {arg}, {arg}, {arg}, {arg}, {arg}")
@@ -180,6 +180,18 @@ def step_impl(customer_name, site_name, report_desc, report_author, page_size, o
     """I update the report details with '<customer_name>', '<site_name>', '<report_desc>', '<report_author>', '<page_size>', '<orientation>', '<report_footer>', '<report_header>'"""
     obj.updatereport(customer_name, site_name, report_desc, report_author, page_size, orientation, report_footer, report_header)
     
+@then("the menu item '(.*)' should be '(.*)'")
+def step_impl(item_name, status):
+    """the menu item '<item_name>' should be '<status>'"""
+    obj.verifymeuitemstsatus(item_name, status)
+    
+
+    
+@when("I Double Click on nodes System Explorer Node in system explorer as {arg}")
+def step_impl(tabname):
+    """I Double Click on nodes System Explorer Node in system explorer as '<tabname>'"""
+    Engineeringclientutility.double_click_node_SE(tabname)
+
 @when("I click on filter button in the filter window")
 def step_impl():
     """I click on filter button in the filter window"""
@@ -209,3 +221,19 @@ def step_impl():
 def step_impl():
     """I clear the applied filter in Assert Workspace pane"""
     obj.clearfilterinassetworkspace()
+
+@when("I select the header item in EC as {arg}")
+def step_impl():
+    """I select the header item in EC as '<Header_value>'"""
+    obj.selectheaderpanelitemEC()  
+    
+@when("I click on the tab in Header Panel as {arg}")
+def step_impl(tab_name):
+    """I click on the tab in Header Panel as '<Headername>'"""
+    Engineeringclientutility.Click_tabs_header_panel_EC(tab_name)
+
+@when("I close similar tab by clicking on Close in EC as {arg}")
+def step_impl(tab_name):
+    """I close similar tab by clicking on Close in EC as'"""
+    Actionutility.close_all_similar_tab_items_EC(tab_name)
+

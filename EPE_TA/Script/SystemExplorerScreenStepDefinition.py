@@ -14,6 +14,7 @@ def step_impl():
     obj.buttonprogressbarverifytopologyinitialized()
     Applicationutility.take_screenshot("Full Screenshot")
   
+@when("I Dclick on topology Explorer Node in topology as {arg}")
 @when("I Right Click on nodes System Explorer Node in system explorer as {arg}")
 def step_impl(systemsExplorer):
     """I Right Click on nodes System Explorer Node in system explorer as 'Systems Explorer'"""
@@ -228,3 +229,8 @@ def step_impl():
 def step_impl():
     """I selected Create System in context menu"""
     obj.buttoncreatesystemselectedwithpassword()
+    
+@when("I perform close action using keyboard shortcut cntrlw")
+def step_impl():
+    """I perform close action using keyboard shortcut cntrlw"""
+    obj.closewindowshortkeysctrlw()

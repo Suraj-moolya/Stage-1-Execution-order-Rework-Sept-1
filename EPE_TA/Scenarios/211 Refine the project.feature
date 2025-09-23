@@ -16,7 +16,6 @@ Examples:
   | 1     | M580_Safety      | Refine       | Open Control Project Editor |
   
   
-  
 @TC_EPE_PE_CP_00
 Scenario Outline: Close Refine window and yes on popup
 When I selected Close Refine Offline in refine offline

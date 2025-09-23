@@ -2,7 +2,7 @@
 <Scenarios>
 	<Folder Name="Stage 1">
 		<Folder Name="Alternate Scenarios">
-			<Feature Path="AS6 Import the empty pages in supervision project and check the pages are created with the default page which is selected in the project settings.feature" />
+			<Feature Path="AS6 Import the empty pages in supervision project and check the pages are created.feature" />
 			<Feature Path="AS1 Map associated control project to the tag container in properties.feature" />
 			<Feature Path="AS2 Create one more Tag container, create one IO Device and map the IO Device to tag container.feature" />
 			<Feature Path="AS3 Map the port to the new tag container and map the device in the communication mapping.feature" />
@@ -136,7 +136,6 @@
 				<Feature Path="52 Open configure window and switch to full screen, add modules and synch the changes.feature" />
 				<Feature Path="53 Add communication modules, add Drops and synch the changes.feature" />
 				<Feature Path="54 Map logical network to all communication modules.feature" />
-				<Feature Path="55 Map the EPE devices to controller.feature" />
 				<Feature Path="56 Configure HART modules and map the communication(Distributed IO&apos;s).feature" />
 				<Feature Path="57 Configure STB Island and map it to control project.feature" />
 				<Feature Path="58 Configure PRM and map it to control project.feature" />
@@ -149,6 +148,7 @@
 				<Feature Path="66 Do some modification in configure and deploy the project to controller.feature" />
 				<Feature Path="67 Do Some modification in configure side in refine online and update the project and check configure(add_delete communication_DIO_AIO modules).feature" />
 				<Feature Path="68 Import the TM backup with Update(check configuration, all the mappings, IP address, physical view and logical network) 1 case 12steps.feature" />
+				<Feature Path="55 Map the EPE devices to controller.feature" />
 			</Folder>
 			<Folder Name="Import and Export EPE Devices">
 				<Feature Path="91 Configure EPE device to M340 Controller.feature" />
@@ -181,7 +181,7 @@
 			<Feature Path="90876 - Update Template in AE with PostGre SQL Database on Fresh System..feature" />
 			<Feature Path="90827 - Export or Import of application in AE with PostGre SQL.feature" />
 			<Feature Path="90877 - Inspect Instance in AE with PostGre SQL.feature" />
-			<Feature Path="90880 - To verify, the loading Create_Modify_Replace_Update_Delete 5k_10k_20k instances in different Systems with different template types. (Performance).feature" />
+			<Feature Path="90880 - loading 5k_10k_20k instances (Performance).feature" />
 			<Feature Path="90881 - To Test Locking use cases in Application explorer with PostGre SQL Database on Fresh System..feature" />
 			<Feature Path="90882 - To Test the Progress Status of Instances when assigned instance is imported with PostGre SQL.feature" />
 			<Feature Path="90883 - To Test the Progress Status if Instances Updated_Replaced with PostGre SQL..feature" />
@@ -189,29 +189,109 @@
 			<Feature Path="90828 - Export or import from Asset Workspace in AE with PostGre SQL..feature" />
 			<Feature Path="90990 - Navigation from the Application Instance to the respective Workspace.feature" />
 			<Feature Path="90979 - To Test the selection behavior of instances &amp; folders in application explorer.feature" />
-			<Feature Path="90820-To Test the Instance Data Status in Application explorer with PostGre SQL.feature" />
-			<Feature Path="90787-To Test the UI &amp; Functionality of instance pane in Application explorer with PostGre SQL.feature" />
+			<Feature Path="90820 - Instance Data Status in Application explorer with PostGre SQL.feature" />
+			<Feature Path="90787 - UI &amp; Functionality of instance pane in Application explorer with PostGre SQL.feature" />
 			<Feature Path="90829 - To Test Edit of CSV file exported &amp; import of Asset Workspace.feature" />
 			<Feature Path="91034 - To Test the Status filter options with various combinations.feature" />
+			<Feature Path="90814 - To Test the UI &amp; Functionality of parameter pane in Application explorer with PostGre SQL.feature" />
+			<Feature Path="90866 - To Test the Progress Status of Instances in Application explorer with PostGre SQL.feature" />
+			<Feature Path="91036 - To Test the Validity Indicator at Instance &amp; Folder levels.feature" />
+			<Feature Path="90980 - Columns in tree view &amp; grid view of application explorer.feature" />
+			<Feature Path="90872 - Progress Status when assigned facets are in non-assigned state with PostGre SQL..feature" />
+			<Feature Path="91020 - To Test the loading of 100 instances with linking in the single Asset workspace.feature" />
+			<Feature Path="90822 - To Test the Link editor in Application explorer with PostGre SQL.feature" />
+			<Feature Path="89916 - Multi Simulator - Check Backup_Deploy Data for simulators.feature" />
 		</Folder>
 		<Folder Name="90692 - Control Project PostGre SQL">
 			<Feature Path="81081 - Check the consistency in refine offline project.feature" />
 			<Feature Path="91111 - To test Generate, Incremental generate, Build and Build all Functionality with Service mapping on Executable.feature" />
 			<Feature Path="91104 - Create FBD Section, Insert FBD Section &amp; Create Tag Container in Assignment Editor.feature" />
-			<Feature Path="91114 - After assign_Unassign_Reassign_Auto Assign &amp;Unlink_Relink facets check the behavior of generation, Incremental generation, Build and Build all.feature" />
+			<Feature Path="91114 - After assign_Unassign_Reassign_Auto Assign &amp;Unlink_Relink facets check the behavior of generation.feature" />
 			<Feature Path="91119 - To Test the context menu command _Last Action Summary_ on a all applicable entities.feature" />
+			<Feature Path="91099 - Validate Generate, Incremental Generate &amp; Build after adding variables to MAST_FAST Task in Non-FBD (IL_ST).feature" />
 			<Feature Path="91451 - Check the abort operation while process of Export CP .feature" />
+			<Feature Path="91101 - Verify Generate, Incremental Generate, Build &amp; Build All after EFB changes in MAST_FAST tasks.feature" />
+			<Feature Path="89968 - Export &amp; import_partial import operation (P2P) when the Import operation is under progress.feature" />
+			<Feature Path="91115 - Check for the lock generation of facets with various state in different FBD section..feature" />
+			<Feature Path="91356 - Check for Validity status on Control project explorer-2.feature" />
+			<Feature Path="91514 - Check the P2P old method functionality by incrementally adding the network variables.feature" />
+			<Feature Path="91093 - Verify Incremental Generate and Build All after Adding or Deleting Elementary DDT and IO Derived Variables in MAST FBD Section via Section Edit..feature" />
+			<Feature Path="91094 - Verify Generate and Build functions after variable changes in FAST FBD Section..feature" />
+			<Feature Path="91102 - Verify Generate Incremental Generate Build and Build All after Add Delete Move Modify Copy Paste of EFB DFB instances in MAST FAST FBD Section..feature" />
+			<Feature Path="91100 - Test Generate Incremental Generate Build &amp; Build All after Create Delete Link in FBD.feature" />
+			<Feature Path="91103 - Generate,Build all after Creating DDT_DFB Type_Elementary FB.feature" />
 		</Folder>
 		<Folder Name="90693 - Content Repository PostGre SQL">
 			<Feature Path="91923 - Check for the selection of folder and content.feature" />
-			<Feature Path="91920-Check for the content editor after creating content inside user created folder.feature" />
+			<Feature Path="91920 - Check for the content editor after creating content inside user created folder.feature" />
+			<Feature Path="91919 - Check for the creation of content inside user created folder.feature" />
+			<Feature Path="91917 - Check for the layout in CR for User content folder..feature" />
+			<Feature Path="91918 - Menu on CR root folder and User content&#32;&#32;folder, User Created Folder and content properties .feature" />
 		</Folder>
 		<Folder Name="91217 - Supervision Project with PostGre SQL">
 			<Feature Path="91398 - Check to create the customized Page Templates.feature" />
 		</Folder>
+		<Folder Name="90694 - Manage Export/Import in Hardware Mapping">
+			<Feature Path="92320 - To Test Export of HWMappings into a CSV file with or without mapping .feature" />
+			<Feature Path="95249 - Verify the creation and configuration of Modbus TCP Using Explicit Communication.feature" />
+			<Feature Path="92323 - To Test performing Application related operation when HW mapping export is in progress..feature" />
+		</Folder>
 		<Folder Name="90695 - Global Templates PostGre SQL">
 			<Feature Path="92672 - Show Changes log from Editor menu in composite editor, Facet editor, Interface editor.feature" />
-			<Feature Path="92764 - To Test &apos;New&apos; from the editor menu in Composite editor, Facet editor, Interface editor.feature" />
+			<Feature Path="92781 - To Test copy and paste across control and supervision composites.feature" />
+			<Feature Path="92782 - Check the copy and paste action with combination of shortcut key and context menu options.feature" />
+			<Feature Path="92675 - To Test &apos;Edit&apos; from the editor menu in Composite editor, Facet editor.feature" />
+			<Feature Path="92673 - To Test &apos;Close&apos; from the editor menu in composite editor, Facet editor, interface editor.feature" />
+			<Feature Path="92676 - To Test &apos;View&apos; from the editor menu in composite editor, facet editor, Interface editor.feature" />
+			<Feature Path="92698 - context menu options Graphical links, Composite &amp; Facet editor in Edit.feature" />
+			<Feature Path="92674 - To Test &apos;New&apos; from the editor menu in Composite editor, Facet editor, Interface editor.feature" />
+			<Feature Path="92776 - Copy &amp; Paste all items of composite template, Facet template within same template editor.feature" />
+			<Feature Path="92777 - Copy and paste behavior inside the Composite editor, facet editor &amp; interface editor.feature" />
+			<Feature Path="92696 - context menu options toolbox items, graphical links, workspace at Interface editor in read only &amp; edit mode.feature" />
+			<Feature Path="92695 - To Test the context menu options on Elements, Functions, Parameters, and work space .feature" />
+			<Feature Path="92675 - To Test &apos;Edit&apos; from the editor menu in Composite editor, Facet editor.feature" />
+			<Feature Path="92767 - To Test the Selections_Highlight, Copy and Paste, Un selection, deletion of blocks with context menu.feature" />
+			<Feature Path="92768 - To Test the selection of different type of panes in Composite Editor &amp; Facet Editor.feature" />
 		</Folder>
+		<Folder Name="Security Editor">
+			<Feature Path="95507 - To test the User Password Validity setting in Security Editor for Control Expert..feature" />
+			<Feature Path="95508 - To test the User Password Validity setting in Security Editor for Process Expert..feature" />
+			<Feature Path="94674 - Check &amp; Perform the full deployment action for the controller having R-CRA.feature" />
+			<Feature Path="94444 - Export R_CRA in TM.feature" />
+			<Feature Path="94675 - Check &amp; Perform the Deploy changes action from Offline to online for the controller having R-CRA..feature" />
+			<Feature Path="94676 - Check &amp; Perform the Re-Deploy action for the controller having R-CRA..feature" />
+			<Feature Path="94446 - Check the Import a M580 HSBY configured with Redundant CRA in fresh System..feature" />
+		</Folder>
+		<Folder Name="92200 - Topology Explorer with PostGre SQL">
+			<Feature Path="95251 - Verify the creation and configuration of PRM.feature" />
+			<Feature Path="95253 - Verify the creation and configuration of Modbus RTU Communication with NOM module.feature" />
+			<Feature Path="95254 - Verify the creation and configuration of Modbus RTU Communication with Gateway.feature" />
+			<Feature Path="92697 - Check the context menu options with multiple selection of items.feature" />
+			<Feature Path="89912 - Multi simulator-Check safety and maintenance mode switching for workstation, safety password is disabled.feature" />
+			<Feature Path="89914 - Multi simulator-Check the Deploy changes for the Work station having multiple control services.feature" />
+			<Feature Path="92661 - Check when Control expert slot is not available.feature" />
+			<Feature Path="92797 - Check for the miscellaneous cases.feature" />
+			<Feature Path="92699 - Check the keyboard shortcuts at Composite Editor, Facet Editor, Interface Editor &amp; Link Editor.feature" />
+			<Feature Path="95246 - Verify Creation and Configuration of M580,M340 and Quantum Controller..feature" />
+			<Feature Path="95252 - Verify the creation and configuration of CAN-Open Communication.feature" />
+			<Feature Path="89915 - Multi-Simulator - Check Deploy Changes_Redeploy functionalities.feature" />
+			<Feature Path="89913 - Multi simulator-P2P- Verify P2P functionality between two control project using multi simulators.feature" />
+		</Folder>
+		<Folder Name="94938 - Deploying to M580 Safety Cybersecurity Enabled Controller and Runtime">
+			<Feature Path="96855 - To Test the Manage Controller Password for M580 ePAC CyberSecurity enabled controller(FW 4.2 or later).feature" />
+			<Feature Path="96858 - To Test the Failure of Manage, Forgot &amp; Clear Passwords for M580 ePAC CyberSecurity enabled controller(FW 4.2 or later).feature" />
+			<Feature Path="94038 - To Test the Manage Controller Password for M580 ePAC CyberSecurity enabled controller(FW 4.2 or later).feature" />
+			<Feature Path="95112 - To Test the Deploy Data of the M580 ePAC CyberSecurity enabled controller.feature" />
+		</Folder>
+		<Folder Name="90719 - Perform Refine Online and Update Project on Cybersecurity enabled Controller">
+			<Feature Path="94034 - To Test the CCOTF changes in refine online of the M580 ePAC CyberSecurity enabled controller(FW 4.3).feature" />
+			<Feature Path="94112 - To Test the Import with M580 ePAC CyberSecurity enabled controller(FW 4.2 or later).feature" />
+			<Feature Path="94113 -&#32;&#32;To Test the error while Import with M580 ePAC CyberSecurity enabled controller(FW 4.2 or later).feature" />
+		</Folder>
+		<Folder Name="94939 - Perform Deploy, Deploy changes, and Re-Deploy to M580 Safety ePAC Cybersecurity enabled Controller">
+			<Feature Path="96836 - To Test the Re-deploy of the M580 ePAC CyberSecurity enabled controller(FW 4.2 or later).feature" />
+			<Feature Path="96838 - To Check the error while deploy of the M580 ePAC CyberSecurity enabled controller(FW 4.2 or later).feature" />
+		</Folder>
+		<Feature Path="95252 - Verify the creation and configuration of CAN-Open Communication.feature" />
 	</Folder>
 </Scenarios>

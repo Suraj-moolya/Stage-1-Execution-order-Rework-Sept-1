@@ -217,4 +217,9 @@ class SystemExplorerScreenWorkFlow:
                 """systemexplorerscreen_obj.createsystembutton"""
                 SystemExplorerScreenWorkFlow.systemexplorerscreen_obj.createsystembutton.click()
         
-        
+    def closewindowshortkeysctrlw(self):
+                """closewindowshortkeysctrlw"""
+                try:
+                    Engineeringclientutility.Keyboard_action_CntlW()
+                except Exception as ex:
+                    raise Exception(ex) from ex        

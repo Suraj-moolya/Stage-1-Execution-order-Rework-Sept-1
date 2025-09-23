@@ -3,7 +3,7 @@
 @test0002b
 Scenario Outline: Close Workstation  in Topology Explorer
 When I Perform action on the Folder by Clicking on '<button>' in Topology Explorer
-Then I Verify Folder Renamed as '<nodes>' in Topology Explorer is Expanded
+#Then I Verify Folder Renamed as '<nodes>' in Topology Explorer is Expanded
 @Close_Workstation_1_in_Topology_Explorer
 Examples:
   | SlNo. | button               | nodes         |

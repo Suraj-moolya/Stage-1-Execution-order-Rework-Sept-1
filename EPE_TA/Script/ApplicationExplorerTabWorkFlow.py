@@ -105,6 +105,13 @@ class ApplicationExplorerTabWorkFlow:
         except Exception as ex:
             raise Exception(ex) from ex
         
+    def linkinstanceae(self,from_instance, from_property, to_instance, to_property):
+        """buttonnodeinstancelinkfromrangenodetorangenodeae"""
+        try:
+            Applicationexplorertabutility.Link_instance_in_AssetWorkspaceEdittor(from_instance, from_property, to_instance, to_property)
+        except Exception as ex:
+            raise Exception(ex) from ex
+        
     def buttonnodeinstanceverifylinkstatus(self):
         """buttonnodeinstanceverifylinkstatus"""
         try:
@@ -272,10 +279,10 @@ class ApplicationExplorerTabWorkFlow:
         
     def textboxwarningpopupwindowverifyinstancelockpopup(self,message):
         """textboxwarningpopupwindowverifyinstancelockpopup"""
-#        try:
-        Applicationexplorertabutility.Verify_Warning_Popup_locked_instance_AE(message)
-#        except Exception as ex:
-#            raise Exception(ex) from ex
+        try:
+            Applicationexplorertabutility.Verify_Warning_Popup_locked_instance_AE(message)
+        except Exception as ex:
+            raise Exception(ex) from ex
         
     def buttonaewarningpopupokselected(self):
         """applicationexplorertab_obj.aewarningpopupokbutton"""
@@ -745,6 +752,13 @@ class ApplicationExplorerTabWorkFlow:
             Actionutility.modal_dialog_window_navigate_asset_worskspace(identifier)
         except Exception as ex:
             raise Exception(ex) from ex
+    
+    def clickmodulenameinstanceeditor(self,param):
+      """clickmodulenameinstanceeditor"""
+      try:
+        Applicationexplorertabutility.Click_module_name_instance_editor(param)
+      except Exception as ex:
+        raise Exception(ex) from ex
             
     def modifycsv(self, param1, param2):
         """modifycsv"""
@@ -782,8 +796,22 @@ class ApplicationExplorerTabWorkFlow:
             raise Exception(ex) from ex
                                       
     def clickontogglebuttoninappbrowser(self):
-         """clickontogglebuttoninappbrowser"""
+        """clickontogglebuttoninappbrowser"""
+        try:
+            Applicationexplorertabutility.click_on_grid_view_icon_in_application_browser()
+        except Exception as ex:
+            raise Exception(ex) from ex
+              
+    def verifyvaliditystatus(self):
+        """verifyvaliditystatus"""
+        try:
+            Applicationexplorertabutility.verify_validity_indicator_status_of_instances_in_AE()
+        except Exception as ex:
+            raise Exception(ex) from ex
+                                    
+    def draganddropfromfoldertofolderinae(self, param):
+         """draganddropfromfoldertofolderinae"""
          try:
-              Applicationexplorertabutility.click_on_grid_view_icon_in_application_browser()
+              Applicationexplorertabutility.drag_instance_from_folder_to_folder_in_AE(param)
          except Exception as ex:
               raise Exception(ex) from ex

@@ -28,6 +28,12 @@ class DialogCE(MapBase):
     def dialogokcebutton(self):
         """dialogokcebutton"""
         return self.get_element("DialogOKCE_DialogCE")
+        
+    @property
+    def dialogcancelcebutton(self):
+        """dialogcancelcebutton"""
+        return self.get_element("DialogCancelCE_DialogCE")
+        
               
     @property
     def dialoglistboxcetextbox(self):

@@ -26,6 +26,12 @@ def step_impl():
     """I selected Dialog OK CE in dialog ce"""
     obj.buttondialogokceselected()
 
+@when("I selected Dialog Cancel CE in dialog ce")
+def step_impl():
+    """I selected Dialog Cancel CE in dialog ce"""
+    obj.buttondialogcancelceselected()
+    
+
 @when("I Select bottom listitem dialog panel item CE Dialog List box CE1 in dialog ce as {arg}")
 def step_impl(dialogListBoxCe5):
     """I Select bottom listitem dialog panel item CE Dialog List box CE in dialog ce as '<Dialog List box CE5>'"""
@@ -35,11 +41,18 @@ def step_impl(dialogListBoxCe5):
 def step_impl():
     """I click on Start button on PLC Simulator"""
     obj.buttondialogstartsimulatorbutton()
-    
+
+@when("I change port number of simulator to 505")
+@when("I change port number of simulator to 504")        
 @when("I change port number of simulator to 503")
 def step_impl():
     """I change port number of simulator to 503"""
     obj.textboxchangeportnumberplcsimulator()
+    
+@when("I change port number of simulator {arg}")
+def step_impl(port):
+    """I change port number of simulator '<Port>'"""
+    obj.textboxchangeportnumberinplcsimulator(port)
     
 @when("I selected List of modified Yes button CE in dialog ce")
 def step_impl():

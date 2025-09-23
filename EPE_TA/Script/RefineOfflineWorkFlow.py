@@ -367,4 +367,33 @@ class RefineOfflineWorkFlow:
     def selectautomaticserviceportCE(self):
         """refineoffline_obj.BlockserviceportEIOcheckbox"""
         RefineOfflineWorkFlow.refineoffline_obj.BlockserviceportEIOcheckbox.check()
+        
+    def createnewsectionCE(self,param):
+        """createnewsectionCE"""
+        try:
+            Controlexpertutility.create_new_section(param)
+            Applicationutility.take_screenshot('Taking Screenshot')
+        except Exception as ex:
+            raise Exception(ex) from ex
+            
+    def enterqueryinmodalwindow(self,param):
+      """enterqueryinmodalwindow"""
+      try:
+        Controlexpertutility.enter_query_in_move_blocks(param)
+        Applicationutility.take_screenshot('Taking Screenshot')
+      except Exception as ex:
+            raise Exception(ex) from ex
               
+    def closemodalwindow(self,param):
+          """closemodalwindow"""
+          try:
+            Controlexpertutility.close_move_block_window(param)
+          except Exception as ex:
+                raise Exception(ex) from ex
+                
+    def addmoveblock(self,param):
+              """addmoveblock"""
+              try:
+                Controlexpertutility.add_move_block(param)
+              except Exception as ex:
+                    raise Exception(ex) from ex

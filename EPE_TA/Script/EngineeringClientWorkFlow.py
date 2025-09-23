@@ -216,5 +216,18 @@ class EngineeringClientWorkFlow:
         try:
             Engineeringclientutility.update_report_details(customer_name, site_name, report_desc, report_author, page_size, orientation, report_footer, report_header)
         except Exception as ex:
-            raise Exception(ex) from ex   
+            raise Exception(ex) from ex  
             
+    def selectheaderpanelitemEC(self,header_value):
+        """selectheaderpanelitemEC"""
+        try:
+            Engineeringclientutility.select_header_panel_items_EC(header_value)
+        except Exception as ex:
+            raise Exception(ex) from ex 
+            
+    def verifymeuitemstsatus(self,item_name, state):
+        """verifymeuitemstsatus"""
+        try:
+            Actionutility.verify_menu_item_status(item_name, state)
+        except Exception as ex:
+            raise Exception(ex) from ex    

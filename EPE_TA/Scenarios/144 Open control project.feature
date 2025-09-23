@@ -75,6 +75,11 @@ Examples:
   | SlNo. | project browser1 | context menu | controller_name |
   | 1     | ControlProject_1 | Rename       | M580_Safety     |
   
+@Rename_controller_M580_Safety2 
+Examples:
+  | SlNo. | project browser1 | context menu | controller_name |
+  | 1     | ControlProject_2 | Rename       | M580_Safety2    |
+  
   
 @TC_EPE_PE_CP_0009
 @test0009

@@ -1,7 +1,7 @@
 ﻿from OperationClient import OperationClient
-
+ 
 opc_obj = OperationClient()
-
+ 
 ###############################################################################
 # Function   : double_click_on_editor
 # Description: This function locates a specific item in the editor tree view 
@@ -21,5 +21,3 @@ def double_click_on_editor(identifier):
         Delay(2000, "Wait")
       else:
         Log.Checkpoint(item.DataContext.Identifier.OleValue + ' is already expanded.')
-
-

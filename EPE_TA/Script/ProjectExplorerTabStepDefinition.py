@@ -4,6 +4,7 @@ import CommonUtil
 import Applicationutility
 import Projectexplorertabutility
 import ProjectExplorerTab
+import Controlexpertutility
 
 obj=ProjectExplorerTabWorkFlow()
 
@@ -20,6 +21,7 @@ def step_impl(projectBrowser2):
     Applicationutility.wait_in_seconds(1500, 'Wait')
     obj.textboxprojectbrowserselectcontextmenuitemec(projectBrowser2)
     
+@when("I Select Submenu item from Context menu of toolbar in GT as {arg}")    
 @when("I Select controller in context menu as {arg}")
 def step_impl(controller):
     """I Select controller in context menu as '<controller name>'"""
@@ -141,6 +143,11 @@ def step_impl(assignmentsdock2):
 def step_impl(assignmentsdock3):
     """I Right click container dock context menu item PE assignmentsdock in project explorer as '<assignmentsdock3>'"""
     obj.textboxassignmentsdockrightclickcontainerdockcontextmenuitempe(assignmentsdock3)
+    
+@when("I Right click on container dock in project explorer as {arg}")
+def step_impl(assignmentsdock3):
+    """I Right click on container dock in project explorer as '<assignmentsdock3>'"""
+    obj.textboxassignmentsdockrightclickcontainerdockpe(assignmentsdock3)
   
 @when("I Wait for Execution assignmentsdock in project explorer")
 def step_impl():
@@ -307,7 +314,8 @@ def step_impl(button_name):
 def step_impl(container):
     """I Right Click on the Particular Section and Click on Generate '<container>'"""
     obj.rightclickandgeneratecontainerssection(container)
-    
+
+@then("I verify the section is generated successfully as {arg}")       
 @then("I verify the section is generated successfully as '(.*)' '(.*)'")
 def step_impl(facet_names, generation_state):
     """I verify the section is generated successfully as '<param>'"""
@@ -498,6 +506,11 @@ def step_impl(projectBrowser1):
     """I RClick on Block Refine Offline project browser in project explorer as '<project browser1>'"""
     obj.textboxprojectbrowserrclickonblockrefineoffline(projectBrowser1)
     
+@when("I RClick on Instance Refine Offline project browser in project explorer as {arg}")
+def step_impl(projectBrowser1):
+    """I RClick on Instance Refine Offline project browser in project explorer as '<project browser1>'"""
+    Controlexpertutility.Right_Click_Instance_in_FBDRefine(projectBrowser1)
+    
 @when("I drag and drop P2P to channel Communication Peer to Peer Pannel in communication mapping as {arg}")
 def step_impl(communicationPeerToPeerPannel1):
     """I drag and drop P2P to channel Communication Peer to Peer Pannel in communication mapping as '<Communication Peer to Peer Pannel1>'"""
@@ -560,7 +573,8 @@ def step_impl(options):
 def step_impl(options):
     """I change SettingsHeader  in settings window as '<Setting_Header>'"""
     Projectexplorertabutility.Click_on_Settings_Header(options)
-    
+ 
+@when("I Click Yes button in P2P Message Box")   
 @when("I click on Yes button in Message Box")
 def step_impl():
     """I click on Yes button in Message Box"""
@@ -665,7 +679,9 @@ def step_impl(server):
 def step_impl():
     """I Select page templates sp settings button in project explore"""
     obj.pagetemplatesspsettingsbuttonclick()
-    
+
+@then("I Verify through default configuration in Ethernet_1 Communication window in control expert as {arg}")        
+@when("I Click tabitem in Ethernet_1 Communication window in control expert as {arg}")    
 @when("I click add page template button in project explorer")
 def step_impl():
     """I click add page template button in project explorer"""
@@ -705,5 +721,54 @@ def step_impl(template):
 @when("I Expand folder in Instance Dock PE when opened as {arg}")
 def step_impl(Folder):
     """Verify the progress status of instance in Instance browser PE"""
-    obj.projectexplorertabutility_expand_folder_instance_browser_PE(Folder)   
+    obj.projectexplorertabutility_expand_folder_instance_browser_PE(Folder)  
+    
+@when("I click on the Switch to Maintenance Mode button in Refine Online window") 
+def step_impl():
+    """I click on the Switch to Maintenance Mode button in Refine Online window"""
+    obj.maintenancemodeinrefineonline()   
+     
+@when("I click on the Switch to Safety Mode button in Refine Online window") 
+def step_impl():
+    """I click on the Switch to Safety Mode button in Refine Online window"""
+    obj.safetymodeinrefineonline()
+    
+@then("I verify the Maintenance Mode button in Refine Online window") 
+def step_impl():
+    """I verify the Maintenance Mode button in Refine Online window"""
+    obj.verifymaintenancemodestatus()
+    
+@then("I verify the Safety Mode button in Refine Online window") 
+def step_impl():
+    """I verify the Safety Mode button in Refine Online window"""
+    obj.verifysafetymodestatus()
+    
+@when("I click the {arg} button in the Hardware Mapping window")
+def step_impl(action):
+    """I click the '<action>' button in the Hardware Mapping window"""
+    obj.performexportimportinhardwaremapping(action) 
+    
+@when('I click the button {arg} in the CE Conflict Window')
+def step_impl(button):
+    """I click the button '<button>' in the CE Conflict Window"""
+    Projectexplorertabutility.click_button_in_CE_Conflicts(button)
+    
+@then('I verify that the variable {arg} are mapped in the Peer to Peer Configuration')
+def step_impl(identifier):
+    """I verify that the variable '<identifier>' are mapped in the Peer to Peer Configuration"""
+    Projectexplorertabutility.verify_variables_mapping(identifier)
+@when("I select modal dialog window combobox value in project explorer as {arg}")
+def step_impl(projectBrowser3):
+    """I select modal dialog window combobox value in project explorer as '<project browser3>'"""
+    Projectexplorertabutility.P2P_communication_config_select_combo(projectBrowser3)
+    
+@then("Verify the validity status of control project in project browser PE as {arg}")
+def step_impl(param):
+    """Verify the validity status of control project in project browser PE as '<status1>'"""
+    obj.verifyvaliditystatusprojectbrowserpe(param)  
+     
+@then("Verify the validity status of containerblock in project browser PE as {arg}")
+def step_impl(param):
+    """Verify the validity status of containerblock in project browser PE"""
+    obj.verifyvaliditystatuscontainersprojectbrowserpe(param)    
     

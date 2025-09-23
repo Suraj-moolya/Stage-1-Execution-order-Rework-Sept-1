@@ -40,6 +40,11 @@ class GlobalTemplatesTab(MapBase):
         return self.get_element("toolbox_GlobalTemplatesTab")
               
     @property
+    def documentoutlinebutton(self):
+        """documentoutlinebutton"""
+        return self.get_element("DocumentOutline_GlobalTemplatesTab")
+              
+    @property
     def toolbooxtabletextbox(self):
         """toolbooxtabletextbox"""
         return self.get_element("toolbooxtable_GlobalTemplatesTab")
@@ -192,7 +197,12 @@ class GlobalTemplatesTab(MapBase):
     @property
     def selectvariabletabgte(self):
       """selectvariabletabgte"""
-      return self.get_element("GlobalTemplatesSelectVariables_GlobalTemplatesTab") 
+      return self.get_element("GlobalTemplatesSelectVariables_GlobalTemplatesTab")    
+      
+    @property
+    def interfacecontrolgte(self):
+      """funcnodecontrolgte"""
+      return self.get_element("InterfaceControl_GlobalTemplatesTab") 
       
     @property
     def compositeeditorreadview(self):
@@ -212,13 +222,54 @@ class GlobalTemplatesTab(MapBase):
     @property
     def clickeditormenubutton(self):
         """clickeditormenubutton"""
-        return self.get_element("Globaltemplateeditormenubutton_GlobalTemplatesTab")
-        
-    
+        return self.get_element("Globaltemplateeditormenubutton_GlobalTemplatesTab")  
+   
     @property
     def nodeinformation(self):
         """nodeinformation"""
         return self.get_element("Nodeinfo_GlobalTemplatesTab")
+         
+    @property
+    def browsersgte(self):
+        """browsersgte"""
+        return self.get_element("Browser_GlobalTemplatesTab")       
+    
+    @property
+    def elementrulesgte(self):
+        """elementrulesgte"""
+        return self.get_element("ElementRules_GlobalTemplatesTab")
+           
+    @property
+    def interfacerulesgte(self):
+        """interfacerulesgte"""
+        return self.get_element("InterfaceRules_GlobalTemplatesTab")  
+    
+    @property
+    def propertiesgte(self):
+        """propertiesgte"""
+        return self.get_element("Properties_GlobalTemplatesTab")  
+    
+    @property
+    def dependenciesgte(self):
+        """dependenciesgte"""
+        return self.get_element("DependenciesTree_GlobalTemplatesTab")  
+    
+    @property
+    def usedbygte(self):
+        """usedbygte"""
+        return self.get_element("UsedBy_GlobalTemplatesTab")  
+    
+    @property
+    def externelrefgte(self):
+        """externelrefgte"""
+        return self.get_element("ExternalReferences_GlobalTemplatesTab")
 
-
+    @property
+    def AInputSignalheadertext(self):
+        """AInputSignalheadertext"""
+        return self.get_element("AInputSignalRealHeader_GlobalTemplatesTab")
       
+    @property
+    def Doblockinterfaceeditor(self):
+        """Doblockinterfaceeditor"""
+        return self.get_element("DOblockHeader_GlobalTemplatesTab")

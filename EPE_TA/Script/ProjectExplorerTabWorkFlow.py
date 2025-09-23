@@ -205,6 +205,13 @@ class ProjectExplorerTabWorkFlow:
             Projectexplorertabutility.verify_facet_assignment(param)
         except Exception as ex:
             raise Exception(ex) from ex
+            
+    def textboxassignmentsdockrightclickcontainerdockpe(self,identifier):
+            """textboxassignmentsdockrightclickcontainerdockpe"""
+            try:
+                Projectexplorertabutility.right_click_container_dockPE(identifier)
+            except Exception as ex:
+                raise Exception(ex) from ex
 
     def textboxcontainerdockrightclickcontainerdockcontextmenuitempe(self,param):
         """textboxcontainerdockrightclickcontainerdockcontextmenuitempe"""
@@ -969,5 +976,53 @@ class ProjectExplorerTabWorkFlow:
         try:
             Projectexplorertabutility.expand_folder_instance_browser_PE(Folder)
         except Exception as ex:
+               raise Exception(ex) from ex	
+
+    def maintenancemodeinrefineonline(self):
+        """maintenancemodeinrefineonline"""
+        try:
+            Projectexplorertabutility.click_on_maintenance_mode_in_Refine_Online()
+        except Exception as ex:
+               raise Exception(ex) from ex   
+                   
+    def safetymodeinrefineonline(self):
+        """safetymodeinrefineonline"""
+        try:
+            Projectexplorertabutility.click_on_safety_mode_in_Refine_Online()
+        except Exception as ex:
+               raise Exception(ex) from ex
+                       
+    def verifymaintenancemodestatus(self):
+        """verifymaintenancemodestatus"""
+        try:
+            Projectexplorertabutility.verify_maintenance_mode_text_in_Refine_Online()
+        except Exception as ex:
+               raise Exception(ex) from ex
+               
+    def verifysafetymodestatus(self):
+            """verifysafetymodestatus"""
+            try:
+                Projectexplorertabutility.verify_safety_mode_text_in_Refine_Online()
+            except Exception as ex:
+                   raise Exception(ex) from ex
+
+    def performexportimportinhardwaremapping(self,action):
+        """performexportimportinhardwaremapping"""
+        try:
+            Projectexplorertabutility.handle_export_import_in_hardware_mapping(action)
+        except Exception as ex:
                raise Exception(ex) from ex		
-       
+
+    def verifyvaliditystatusprojectbrowserpe(self,param):
+            """verifyvaliditystatusprojectbrowserpe"""
+            try:
+                ProjectExplorerTabWorkFlow.verify_Validity_Status_project_browser_PE(param)
+            except Exception as ex:
+                raise Exception(ex) from ex
+                
+    def verifyvaliditystatuscontainersprojectbrowserpe(self,param):
+                """ verifyvaliditystatuscontainersprojectbrowserpe"""
+                try:
+                    ProjectExplorerTabWorkFlow.verify_validity_Status_Containers_project_browser_PE(param)
+                except Exception as ex:
+                    raise Exception(ex) from ex
