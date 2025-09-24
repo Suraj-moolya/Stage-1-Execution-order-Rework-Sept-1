@@ -15384,7 +15384,7 @@
 										<environments activeCloud="SWT" />
 										<children />
 									</testItem>
-									<testItem name="ProjectTestItem11_2_1_1_2" key="{2CB36518-E894-42D7-974F-1B7CA656B3B7}" group="False" parallel="False" enabled="True" load="False" testMoniker="*|@Inspect_Instance_of_MotorGP1.0.127" count="1" timeout="0" stopOnError="3" stopOnException="2" description="" tmsData="" testCase="False" lnID="{00000000-0000-0000-0000-000000000000}">
+									<testItem name="ProjectTestItem11_2_1_1_2" key="{2CB36518-E894-42D7-974F-1B7CA656B3B7}" group="False" parallel="False" enabled="True" load="False" testMoniker="ApplicationExplorer|Inspect instance - Rclick on the inspect instance and verify the tab and click on ok" count="1" timeout="0" stopOnError="3" stopOnException="2" description="" tmsData="" testCase="False" lnID="{00000000-0000-0000-0000-000000000000}">
 										<testParameters />
 										<environments activeCloud="SWT" />
 										<children />
@@ -15394,7 +15394,7 @@
 										<environments activeCloud="SWT" />
 										<children />
 									</testItem>
-									<testItem name="ProjectTestItem130_2" key="{14DBE723-BA65-4450-B59C-D9D5496F7F12}" group="False" parallel="False" enabled="True" load="False" testMoniker="*|@Copy_Paste_Instance_Folder2_MotorGp-1.0.127" count="1" timeout="0" stopOnError="3" stopOnException="2" description="" tmsData="" testCase="False" lnID="{00000000-0000-0000-0000-000000000000}">
+									<testItem name="ProjectTestItem130_2" key="{14DBE723-BA65-4450-B59C-D9D5496F7F12}" group="False" parallel="False" enabled="True" load="False" testMoniker="ApplicationExplorer|Copy and paste the Instance - copy instance from context menu and paste" count="1" timeout="0" stopOnError="3" stopOnException="2" description="" tmsData="" testCase="False" lnID="{00000000-0000-0000-0000-000000000000}">
 										<testParameters />
 										<environments activeCloud="SWT" />
 										<children />

@@ -1,28 +1,6 @@
 ﻿Feature: 91356 - Check for Validity status on Control project explorer-2
 
 
-Scenario Outline: Create instance in Application Explorer
-When I navigate to explorers MainToolBar in system explorer as '<MainToolBar1>'
-Then verify Tabs Explorer tab in system explorer as '<Explorer tab2>'
-When I search text template browser AE Templates browser in application explorer as '<Templates browser1>'
-And I drag composite template drop application browser system1 AE Templates browser in application explorer as '<Templates browser2>'
-Then Verify the template is present in Application browser as '<Templates browser1>'
-
-@Navigate_to_System1_AE
-Examples:
-  | SlNo. | Systems Explorer | MainToolBar1                      | Explorer tab2 |
-  | 1     | System_1         | Open Application Explorer (Alt+A) | Application   |
-
-@create_instance 
-Examples:
-  | SlNo. | Templates browser1 | Templates browser2     |
-  | 1     | Analog             | AnalogOutputGP$$1.0.93 |
-  | 2     | Analog             | AnalogInputGP$$1.0.138 |
-  | 3     | MotorGP            | MotorGP$$1.0.123       |
-  | 4     | ValveGP            | ValveGP$$1.0.100       |
-  | 5     | MValveGP           | MValveGP$$1.0.85       |
-  
-
 Scenario Outline:Add and Link the instance to asset workspace
 When I rclick asset workspace folder AE Asset workspace in application explorer as '<AssetRoot>'
 And I Select context menu item EC Asset workspace in application explorer as '<AssetAction>'

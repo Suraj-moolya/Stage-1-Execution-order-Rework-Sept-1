@@ -535,6 +535,7 @@ def step_impl(instanceDock2):
 def step_impl(CP_SP_Tab):
     """I Navigate to '<CP_SP_Tab>' tab in project explorer tab"""
     obj.Navigate_to_supervision_controlproject_tab(CP_SP_Tab)
+    Applicationutility.wait_in_seconds(3000, 'Wait')
     
 @then("I Verify Navigation tab in project explorer")
 def step_impl():
