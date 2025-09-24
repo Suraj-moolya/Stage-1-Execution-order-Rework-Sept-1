@@ -1,16 +1,5 @@
 ﻿Feature: 89915 - Multi-Simulator - Check Deploy Changes_Redeploy functionalities
 
-Scenario Outline: Create a Control Project for M580_Standalone
-When I Right Click on nodes System Explorer Node in system explorer as '<Folder Name>'
-And I Select context menu item EC project browser in project explorer as '<context menu>'
-And I Select controller in context menu as '<controller>'
-Then Verify Action message in notification pannel project browser in project explorer as '<project browser1>'
-
-@Create_First_Controller_for_standlone
-Examples:
-  | SlNo. | Folder Name | context menu      | controller | project browser1  |
-  | 1     | System_7    | Create Controller | M580       | Create Controller |
-  
   
 Scenario Outline: Create OFS,Control Service in Workstation
 When I Right Click on nodes System Explorer Node in system explorer as '<Folder>'

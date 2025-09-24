@@ -11,10 +11,10 @@ class WindowsExplorerWorkFlow:
         
     def buttonshowhiddeniconopensystemserverconsole(self):
         """buttonshowhiddeniconopensystemserverconsole"""
-        try:
-            Systemserverutility.rclick_system_server_show_server_console()
-        except Exception as ex:
-            raise Exception(ex) from ex
+        #try:
+        Systemserverutility.rclick_system_server_show_server_console()
+        #except Exception as ex:
+         #   raise Exception(ex) from ex
         
     def parentwindowslaunchengineeringclient(self):
         """parentwindowslaunchengineeringclient"""

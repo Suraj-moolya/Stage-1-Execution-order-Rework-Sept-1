@@ -4,7 +4,7 @@
 Scenario Outline: Change CPU Version of controller 
 When I selected select PLC bus combobox item CE in refine offline as '<Cpu_version>'
 
-@Change_CPU_Version_of_controller__BME_P58_4040_03.20
+#@Change_CPU_Version_of_controller__BME_P58_4040_03.20
 Examples:
   | SlNo. | Cpu_version          |
   | 1     | BME H58 6040   04.40 |

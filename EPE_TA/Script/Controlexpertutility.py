@@ -506,7 +506,7 @@ def drag_instance_drop_container_page_SP(template):
                 fromy = template_list[i].Height/2
                 Log.Message('The object selected to drag is : ' + str(template_list[i].DataContext.Identifier.OleValue))
                 Applicationutility.wait_in_seconds(2000, 'Wait')
-                template_list[i].Click()
+                #template_list[i].Click()
                 Applicationutility.wait_in_seconds(2000, 'Wait')
                 template_list[i].Drag(fromx-70, fromy, tox+100, 0)
                 Applicationutility.wait_in_seconds(2000, 'Wait')

@@ -146,7 +146,8 @@ Scenario Outline: Map EtherNet IP device to Controller - add Ethernet Network fo
 When I Right Click on nodes System Explorer Node in system explorer as '<Topology Explorer Tree1>'
 And I Select context menu item EC project browser in project explorer as '<Topology Explorer Tree2>'
 And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree3>'
-And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree4>'
+# From Build 6400 the below line has been removed as it is unnecessary
+#And I modal dialog window select Item Topology Explorer Tree in topology as '<Topology Explorer Tree4>'
 When I click modal dialog window project browser in project explorer as '<Button>'
 Examples:
   | SlNo. | Topology Explorer Tree1 | Topology Explorer Tree2 | Topology Explorer Tree3        | Topology Explorer Tree4        | Button |

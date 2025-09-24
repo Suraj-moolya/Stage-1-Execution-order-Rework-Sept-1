@@ -122,32 +122,6 @@ Examples:
   | SlNo. | System_11 | Explorer tab2    |
   | 1     | System_1  | Project Explorer |
      
-
-@TC_EPE_TE_PGSQL_89916_007  
-Scenario Outline: Create a Controller for M580_Standalone
-When I RClick control project browser project browser in project explorer as '<project browser1>'
-And I Select context menu item EC project browser in project explorer as '<context menu>'
-And I Select controller in context menu as '<controller>'
-
-@Create_standalone_Control_Project_1
-Examples:
-  | SlNo. | project browser1 | context menu           | controller | 
-  | 1     | System_1         | Create Control Project | M580       |
-  
-@Create_standalone_Control_Project_2
-Examples:
-  | SlNo. | project browser1 | context menu           | controller | 
-  | 1     | System_1         | Create Control Project | M580       | 
-  
-@Create_standalone_Control_Project_3
-Examples:
-  | SlNo. | project browser1 | context menu           | controller | 
-  | 1     | System_1         | Create Control Project | M580       | 
-  
-@Create_standalone_Control_Project_4_M580_Safety
-Examples:
-  | SlNo. | project browser1 | context menu           | controller  |
-  | 1     | System_1         | Create Control Project | M580_Safety |
   
 @TC_EPE_TE_PGSQL_89916_008
 Scenario Outline: Right click on the Control Project and navigate to Assignment editor window in CP

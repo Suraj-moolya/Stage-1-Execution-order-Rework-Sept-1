@@ -84,7 +84,7 @@ def check_server_console_flowdocument(verify_message):
       Applicationutility.take_screenshot()
       break
     else:
-      Applicationutility.wait_in_seconds(12000, 'Wait for server ready!')
+      Applicationutility.wait_in_seconds(18000, 'Wait for server ready!')
       console_obj.Refresh()
   else:
     Log.Error(f"Message '{verify_message}' not found in the console.")
@@ -108,7 +108,7 @@ def verify_start_stop_disabled():
 # Parameter : None
 ###############################################################################
 def rclick_system_server_show_server_console(): 
-  if Sys.OSInfo.Name == 'Win10':
+  if Sys.OSInfo.Name == 'Win10' or 'Win10' in Sys.OSInfo.Name:
     Log.Message(f'Operating System : {Sys.OSInfo.Name}')
     win_obj.showhiddeniconbutton.object.Click()
     Applicationutility.wait_in_seconds(2500, "Wait")
